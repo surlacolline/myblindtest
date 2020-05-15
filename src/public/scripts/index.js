@@ -22,12 +22,20 @@ function getAllPlaylists() {
 
 function lecturePlaylist() {
   compteur++;
-  lecteurAudio.src = objAudio.tracks[compteur].preview_url;
-  lecteurAudio.autoplay = "true";
+  if (compteur < objAudio.tracks.length){
+    lecteurAudio.src = objAudio.tracks[compteur].preview_url;
+    lecteurAudio.autoplay = "true";
+   }  else {
+    lecteurAudio.src = null;
+    lecteurAudio.autoplay = "false";
+    result.innerHTML = "La partie est finie!"
+    }
+ 
+
 }
 
 function tryValue() {
-  if (value.value === objAudio.tracks[compteur].name) {
+  if (value.value === objAudio.tracks[compteur].name || value.value === objAudio.tracks[compteur].artist ) {
     result.innerHTML = "Bravo !!";
     lecturePlaylist();
   } else {

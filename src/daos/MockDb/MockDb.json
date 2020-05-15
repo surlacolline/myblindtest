@@ -1,5 +1,6 @@
 {"users":[{"name":"Sean Maxwell2","email":"sean.maxwell@gmail.com","id":159123164363},{"name":"Gordan Freeman","email":"gordan.freeman@halflife.com","id":906524522143},{"name":"John Smith","email":"jsmith@yahoo.com","id":357437875835},{"name":"Elise Juif","email":"elise.arenillas@gmail.com","id":651101817235}],"playlists":[ 
     {
+      "id": 696969,
      "description": "Having friends over for dinner? Here´s the perfect playlist.",
      "name": "Dinner with Friends",
      "tracks": [
@@ -7,24 +8,21 @@
          
            "artist": "Sam Smith",
            "name": "I'm Not The Only One - Radio Edit",
-           "preview_url": "https://p.scdn.co/mp3-preview/dd64cca26c69e93ea78f1fff2cc4889396bb6d2f",
-           "track_number": 1
-         
+           "preview_url": "https://p.scdn.co/mp3-preview/dd64cca26c69e93ea78f1fff2cc4889396bb6d2f"
+        
        },
        {
        
            "artist": "Mickael Jackson",
            "name": "BlaBla",
-           "preview_url": "https://p.scdn.co/mp3-preview/bbd82b3a633abdbb99bc429a38009d5d69a389db?cid=f6cd9756638b411bb4f994de4e33bd16",
-           "track_number": 1
-         
+           "preview_url": "https://p.scdn.co/mp3-preview/bbd82b3a633abdbb99bc429a38009d5d69a389db?cid=f6cd9756638b411bb4f994de4e33bd16"
+              
        },
        {
          
            "artist": "Queen",
            "name": "Bla",
-           "preview_url": "https://p.scdn.co/mp3-preview/401f09b63cf5b5d49000da2f26848af98a7746b5?cid=f6cd9756638b411bb4f994de4e33bd16",
-           "track_number": 1
+           "preview_url": "https://p.scdn.co/mp3-preview/401f09b63cf5b5d49000da2f26848af98a7746b5?cid=f6cd9756638b411bb4f994de4e33bd16"
          
        }
      ]
