@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import UserRouter from './Users';
-import PlaylistRouter from './Playlists';
+import UserRouter from './API/Users';
+import PlaylistRouter from './API/Playlists';
 
 // Init router and path
 const router = Router();
