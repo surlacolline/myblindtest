@@ -25,7 +25,7 @@ class PlaylistDao extends MockDaoMock implements IPlaylistDao {
     public async getAll(): Promise<IPlaylist[]> {
         try {
             const db = await super.openDb();
-            console.log("bite");
+            
             return db.playlists;
         } catch (err) {
             throw err;

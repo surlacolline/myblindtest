@@ -12,18 +12,27 @@ export interface ITrack{
 }
 class Playlist implements IPlaylist {
 
-    public id: number;
-    public name: string;
-    public description: string;
-    public tracks: ITrack[];
+    public id!: number;
+    public name!: string;
+    public description!: string ;
+    public tracks: ITrack[] = [];
 
-    constructor(playlist:  IPlaylist) {
+    constructor(playlist?:  IPlaylist) {
+        if (playlist){
             this.name = playlist.name;
             this.description = playlist.description;
             this.id = playlist.id;
-            this.tracks = playlist.tracks;
-    }
+            this.tracks = playlist.tracks;}
+    };
 
+}
+
+// tslint:disable-next-line: max-classes-per-file
+export class Track implements ITrack {
+    artist!: string;
+    name!: string;
+    // tslint:disable-next-line: variable-name
+    preview_url!: string;
 }
 
 export default Playlist;

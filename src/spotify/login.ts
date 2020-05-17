@@ -10,10 +10,15 @@
 import app from '../Server';
 import express, { Response, Router } from 'express';
 import request from 'es6-request';
+import Playlist, { ITrack , Track} from '@entities/Playlist';
+
+import PlaylistDao from '@daos/playlist/playlistDao.mock';
 
 // let cors = require('cors');
 const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
+
+const playlistDao = new PlaylistDao();
 
 let testToken: any;
 
@@ -216,6 +221,27 @@ export function getOnePlaylist(req: any , res : any) {
   };
 
   request.get(authOptions.url, authOptions).then((  body : any  ) => {
+  const MyData =  JSON.parse(body[0])
+// lire le body et ecrire un nouveau json
+const playlist : Playlist = new Playlist();
+playlist.id = MyData.id;
+playlist.description = MyData.description;
+// Boucle pour parcourir les tracks
+// tslint:disable-next-line: forin
+for (const track  of MyData.tracks.items)
+{
+  const myTrack : ITrack = new Track();
+  myTrack.name = track.track.name;
+  myTrack.artist = track.track.artists[0].name;
+  myTrack.preview_url = track.track.preview_url;
+  if ( myTrack.preview_url ){
+    playlist.tracks.push(myTrack);
+  }
+ 
+}
+playlistDao.add(playlist);
+
+console.log(playlist);
           res.send({
            data: JSON.parse(body[0]),
   });
