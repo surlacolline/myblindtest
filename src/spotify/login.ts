@@ -184,63 +184,43 @@ export function callback(  req: any,
 //   });
 // });
 
-// //Get Playlists
-// app.get('/playlists', function (
-//   req: { query: { refresh_token: any } },
-//   res: { send: (arg0: { data: any }) => void }
-// ) {
-//   // requesting access token from refresh token
-//   let refresh_token = req.query.refresh_token;
-//   let token =
-//     'BQDc8bJRpClIRSBkqQ6uWR0XCRT67Usy0bYWhYXAWWMtyiw5bwFomUjZH_Og-0LbITq7_zQJo59nyOvrgrFXBY5w-l0La0ZqCUfbYn7qp6b0yuuO5apT0XMlwzdW83eKaMKB9emRMMyy4iAxQkCi2jQVJW0wOfvMktfWFa70cis-Tg';
-//   let authOptions = {
-//     url: 'https://api.spotify.com/v1/users/11120922355/playlists',
-//     headers: { Authorization: 'Bearer ' + testToken },
-//     json: true,
-//   };
+export function getPlaylists (
+  req: any,
+  res: any) {
+  // requesting access token from refresh token
+  let refresh_token = req.query.refresh_token;
+  let token =
+    'BQDc8bJRpClIRSBkqQ6uWR0XCRT67Usy0bYWhYXAWWMtyiw5bwFomUjZH_Og-0LbITq7_zQJo59nyOvrgrFXBY5w-l0La0ZqCUfbYn7qp6b0yuuO5apT0XMlwzdW83eKaMKB9emRMMyy4iAxQkCi2jQVJW0wOfvMktfWFa70cis-Tg';
+  let authOptions = {
+    url: 'https://api.spotify.com/v1/users/11120922355/playlists',
+    headers: { Authorization: 'Bearer ' + testToken },
+    json: true,
+  };
 
-//   request.get(authOptions, function (
-//     error: any,
-//     response: { statusCode: number },
-//     body: { access_token: any; items: any }
-//   ) {
-//     if (!error && response.statusCode === 200) {
-//       let access_token = body.access_token;
-//       console.log(body);
-//       res.send({
-//         data: body.items,
-//       });
-//     }
-//   });
-// });
+  request.get('https://api.spotify.com/v1/users/11120922355/playlists', authOptions)
+  .then( ( body : any) => {
+      let access_token = body.access_token;
+      res.send({
+        data: JSON.parse(body[0])
+      });
+  });
+};
 
-// //Get One Playlist
-// app.get('/playlist', function (
-//   req: { query: { idPlaylist: any } },
-//   res: { send: (arg0: { data: any }) => void }
-// ) {
-//   // requesting access token from refresh token
-//   let idPlaylist = req.query.idPlaylist;
-//   let authOptions = {
-//     url: 'https://api.spotify.com/v1/playlists/' + idPlaylist,
-//     headers: { Authorization: 'Bearer ' + testToken },
-//     json: true,
-//   };
+export function getOnePlaylist(req: any , res : any) {
+  // requesting access token from refresh token
+  let idPlaylist = req.query.idPlaylist;
+  let authOptions = {
+    url: 'https://api.spotify.com/v1/playlists/' + idPlaylist,
+    headers: { Authorization: 'Bearer ' + testToken },
+    json: true,
+  };
 
-//   request.get(authOptions, function (
-//     error: any,
-//     response: { statusCode: number },
-//     body: { access_token: any }
-//   ) {
-//     if (!error && response.statusCode === 200) {
-//       let access_token = body.access_token;
-//       console.log(body);
-//       res.send({
-//         data: body,
-//       });
-//     }
-//   });
-// });
+  request.get(authOptions.url, authOptions).then((  body : any  ) => {
+          res.send({
+           data: JSON.parse(body[0]),
+  });
+});
+};
 
 
 function login(

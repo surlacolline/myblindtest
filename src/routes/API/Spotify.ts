@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { BAD_REQUEST, CREATED, OK } from 'http-status-codes';
 import { ParamsDictionary } from 'express-serve-static-core';
-import log, {callback}  from '../../spotify/login';
+import log, {callback, getPlaylists, getOnePlaylist}  from '../../spotify/login';
 
 
 import { paramMissingError } from '@shared/constants';
@@ -20,8 +20,16 @@ router.get('/login', async (req: Request, res: Response) => {
 });
 
 router.get('/callback', async (req: Request, res: Response) => {
-  let cookie;
   const result = callback(req, res);
+});
+
+
+router.get('/playlists', async (req: Request, res: Response) => {
+  const result = getPlaylists(req, res);
+});
+
+router.get('/playlist', async (req: Request, res: Response) => {
+  const result = getOnePlaylist(req, res);
 });
 
 export default router;

@@ -22,18 +22,7 @@
 <div id = "playlistOne"> Charger la 1ère playlist</div>
 <div id="clear">Vider la fenêtre</div>
 <div id="listPlaylists"> </div> 
-<div id="lecteur">
- 
-  <audio autoplay = "true" id ="lecteurAudio"
-      controls
-      src="https://p.scdn.co/mp3-preview/bc2c6f0b4cac457f47516cc13a13128b19615e0c?cid=f6cd9756638b411bb4f994de4e33bd16">
-          Your browser does not support the
-          <code>audio</code> element.
-  </audio>
-  <input id="valueToTry">
-  </input>
-  <button id="try">Je me lance</button>
-  <div id="resultat"></div>
+<div id="resultat"></div>
 </div>
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
@@ -54,7 +43,7 @@
 
     function chargement() {
     $.ajax({
-      url: "/playlists"
+      url: "/api/spotify/playlists"
       }).done(function (data) {
       items = data;
       listPlaylists.innerHTML = JSON.stringify(data) ;
@@ -63,7 +52,7 @@
   
     function chargementFirstPlaylist() {
     $.ajax({
-      url: "/playlist",
+      url: "/api/spotify/playlist",
       data: {
                 'idPlaylist': '2abve9rYdQualeWIFD9jJC'
               }
@@ -73,48 +62,7 @@
       });
     };
 
-    //chargement()
-let compteur =-1;
-    const listeAudio = ["https://p.scdn.co/mp3-preview/bbd82b3a633abdbb99bc429a38009d5d69a389db?cid=f6cd9756638b411bb4f994de4e33bd16",
-"https://p.scdn.co/mp3-preview/7d3ecea1581ebf076502c7f164a22eb967826aac?cid=f6cd9756638b411bb4f994de4e33bd16",
-"https://p.scdn.co/mp3-preview/401f09b63cf5b5d49000da2f26848af98a7746b5?cid=f6cd9756638b411bb4f994de4e33bd16"];
 
-const objAudio = [{titre : "titre0" , audio : "https://p.scdn.co/mp3-preview/bc2c6f0b4cac457f47516cc13a13128b19615e0c?cid=f6cd9756638b411bb4f994de4e33bd16"},
-{titre : "titre1", audio : "https://p.scdn.co/mp3-preview/bbd82b3a633abdbb99bc429a38009d5d69a389db?cid=f6cd9756638b411bb4f994de4e33bd16"},
-{titre : "titre2", audio : "https://p.scdn.co/mp3-preview/7d3ecea1581ebf076502c7f164a22eb967826aac?cid=f6cd9756638b411bb4f994de4e33bd16"},
-{titre : "titre3", audio : "https://p.scdn.co/mp3-preview/401f09b63cf5b5d49000da2f26848af98a7746b5?cid=f6cd9756638b411bb4f994de4e33bd16"}];
-
-const lecteurDiv = document.getElementById("lecteur");
-const lecteurAudio = document.getElementById("lecteurAudio");
-const btnTry = document.getElementById("try");
-const value = document.getElementById("valueToTry");
-const result = document.getElementById("resultat");
-btnTry.addEventListener("click", tryValue);
-lecteurAudio.addEventListener("ended", lecturePlaylist);
-
-
-
-function lecturePlaylist() {
-  compteur++;
-  lecteurAudio.src = objAudio[compteur].audio;
-  lecteurAudio.autoplay = "true";
-
-
-};
-
-function tryValue(){
-  if (value.value === objAudio[compteur].titre)
-  {
-    result.innerHTML = "Bravo !!"
-    lecturePlaylist();
-
-  }else{
-    result.innerHTML = "Nope..."
-  }
-
-};
-
-lecturePlaylist();
 
 
 </script>

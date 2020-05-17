@@ -63,5 +63,6 @@ app.get('', (req: Request, res: Response) => {
     res.sendFile('index.html', {root: viewsDir});
 });
 
+
 // Export express instance
 export default app;
