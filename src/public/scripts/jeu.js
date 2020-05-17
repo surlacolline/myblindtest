@@ -1,22 +1,33 @@
-let compteur = -1;
-let objAudio;
+let compteurTrack = -1;
+let compteurPlaylist = 0;
+let currentPlaylist;
+let allPlaylists;
 const lecteurDiv = document.getElementById("lecteur");
 const lecteurAudio = document.getElementById("lecteurAudio");
 const btnTry = document.getElementById("try");
-const btnNext = document.getElementById("next");
+const btnNextTrack = document.getElementById("nextTrack");
+const btnNextPlaylist = document.getElementById("nextPlaylist");
 const value = document.getElementById("valueToTry");
 const result = document.getElementById("resultat");
 const divavancement = document.getElementById("avancement");
+const choixPlaylist = document.getElementById("choixPlaylist");
 btnTry.addEventListener("click", tryValue);
-btnNext.addEventListener("click", lecturePlaylist);
+btnNextTrack.addEventListener("click", lecturePlaylist);
+btnNextPlaylist.addEventListener("click", nextPlaylist);
 lecteurAudio.addEventListener("ended", lecturePlaylist);
 
+function nextPlaylist(){
+  compteurPlaylist ++;
+  compteurTrack = -1;
+  currentPlaylist = allPlaylists[compteurPlaylist];
+  lecturePlaylist();
+}
 function getAllPlaylists() {
   httpGet("/api/playlists/all")
     .then((response) => response.json())
     .then((response) => {
-      var allPlaylists = response.playlists;
-      objAudio = allPlaylists[2];
+       allPlaylists = response.playlists;
+      currentPlaylist = allPlaylists[compteurPlaylist];
     })
     .then(() => {
       lecturePlaylist();
@@ -24,12 +35,14 @@ function getAllPlaylists() {
 }
 
 function lecturePlaylist() {
-  compteur++;
-  if (compteur < objAudio.tracks.length){
-    lecteurAudio.src = objAudio.tracks[compteur].preview_url;
+  compteurTrack++;
+  if (compteurTrack < currentPlaylist.tracks.length){
+    lecteurAudio.src = currentPlaylist.tracks[compteurTrack].preview_url;
     lecteurAudio.autoplay = "true";
-    const avancement = ' ' + compteur + ' / ' + objAudio.tracks.length;
+    const avancement = ' ' + (compteurTrack + 1) + ' / ' + currentPlaylist.tracks.length;
+    const avancementPlaylist = ' ' + (compteurPlaylist + 1) + ' / ' + allPlaylists.length;
     divavancement.innerHTML = avancement;
+    choixPlaylist.innerHTML = avancementPlaylist;
    }  else {
     lecteurAudio.src = null;
     lecteurAudio.autoplay = "false";
@@ -40,7 +53,7 @@ function lecturePlaylist() {
 }
 
 function tryValue() {
-  if (value.value === objAudio.tracks[compteur].name || value.value === objAudio.tracks[compteur].artist ) {
+  if (value.value === currentPlaylist.tracks[compteurTrack].name || value.value === currentPlaylist.tracks[compteurTrack].artist ) {
     result.innerHTML = "Bravo !!";
     lecturePlaylist();
   } else {

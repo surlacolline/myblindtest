@@ -45,8 +45,16 @@
     $.ajax({
       url: "/api/spotify/playlists"
       }).done(function (data) {
-      items = data;
-      listPlaylists.innerHTML = JSON.stringify(data) ;
+        listPlaylists.innerHTML = '';
+      items = data.data.items;
+      listPlaylists.innerHTML = '<ul>'
+      for (item of items){
+        listPlaylists.innerHTML+= '<li onclick="chargementOnePlaylist(\''+item.id  +  '\')"> '  + item.name + ' </li>' 
+        }
+
+listPlaylists.innerHTML+=  '</ul>'
+
+  
       });
     };
   
@@ -62,7 +70,16 @@
       });
     };
 
-
+    function chargementOnePlaylist(id) {
+    $.ajax({
+      url: "/api/spotify/playlist",
+      data: {
+                'idPlaylist': id
+              }
+      }).done(function (data) {
+      items = data;
+      });
+    };
 
 
 </script>
