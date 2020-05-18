@@ -226,6 +226,7 @@ export function getOnePlaylist(req: any , res : any) {
 const playlist : Playlist = new Playlist();
 playlist.id = MyData.id;
 playlist.description = MyData.description;
+playlist.name = MyData.name;
 // Boucle pour parcourir les tracks
 // tslint:disable-next-line: forin
 for (const track  of MyData.tracks.items)
