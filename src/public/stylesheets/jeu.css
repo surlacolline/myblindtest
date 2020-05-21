@@ -1,0 +1,110 @@
+body {
+    background-color: #32263a;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    color: white;
+  }
+  #jeu {
+height: 100vh;
+padding: 20px;
+  }
+#resultat {
+height: 50px;
+}
+.progress-bar {
+    background: #dbbcf1;
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    margin: 10px;
+    border-radius: 50px;
+    border-width: 2px;
+border-color: white;
+    overflow: hidden;
+    height: 50px;
+  }
+  
+  .progress {
+    width:  16.3%; 
+    background: linear-gradient(-170deg, #2376ae 0%, #c16ecf 100%);
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    color: white;
+    height: 100%;
+    position : relative;
+    border-width: 2px;
+border-color: white;
+  }
+
+  .progress-text {
+    width:  95%;
+    /* background: linear-gradient(-170deg, #2376ae 0%, #c16ecf 100%); */
+    font-weight: bold;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    height: 50px;
+    position : absolute;
+    outline:none;
+    padding-left: 1px;
+  }
+
+  .playpausebutton {
+    border: 0;
+    background: transparent;
+    box-sizing: border-box;
+    width: 0;
+    height: 37px;
+  
+    border-color: transparent transparent transparent #dbbcf1;
+    transition: 100ms all ease;
+    cursor: pointer;
+  
+    /* // play state */
+    border-style: solid;
+    border-width: 18px 0 18px 30px;}
+  
+    .playpausebutton.paused {
+      border-style: double;
+      border-width: 0px 0 0px 30px;
+    }
+  
+    .playpausebutton:hover {
+      border-color: transparent transparent transparent #8b769b;
+    }
+
+  
+      .button1{
+        display:inline-block;
+        padding:0.35em 1.2em;
+        border:0.1em solid #dbbcf1;
+        margin:0 0.3em 0.3em 0;
+        border-radius:0.12em;
+        box-sizing: border-box;
+        text-decoration:none;
+        font-family:'Roboto',sans-serif;
+        font-weight:300;
+        color:white;
+        text-align:center;
+        transition: all 0.2s;
+        }
+        .button1:hover{
+        color:#000000;
+        background-color:#dbbcf1;
+        }
+
+section#choix{
+  display:flex !important;
+}
+        .duo {
+          flex: 1;
+          border-style: solid;
+          border-color: brown;
+        }
+
+   
+        

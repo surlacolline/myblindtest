@@ -2,30 +2,38 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>ExpressGeneratorTypeScriptApp</title>
+        <title>My.Blind.Test.</title>
         <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+        <link rel="stylesheet" type="text/css" href="/stylesheets/jeu.css" />
     </head>
     <body>
         <section id="choix">
-        <div id="choixPlaylist"></div>
+        <div class="duo" id="listePlaylist"></div>
+        <div class="duo" id="titre">text</div>
     </section>
+
+
     <section id="jeu">
-        <button id="nextPlaylist"> NEXT</button>
+        
         <div id="avancement"></div>
         <div id="lecteur">
- 
-            <audio autoplay = "true" id ="lecteurAudio"
-                controls
-                src="">
-                    Your browser does not support the
-                    <code>audio</code> element.
-            </audio>
-            <input id="valueToTry">
-            </input>
-            <button id="try">Je me lance</button>
-            <button id="nextTrack"> NEXT</button>
-            <button id="changerPlaylist"> NEXT</button>
+ <div  class="progress-bar"  > 
+            <audio autoplay = "false" id ="lecteurAudio"  src="">
+                   Your browser does not support the
+                    <code>audio</code> element.  </audio>
+
+            <div class = "progress"></div>
+            <div class = "progress-text" id="valueToTry" contentEditable="true">Une idée du nom de la chanson ou de l'artiste?</div>
+        </div>
+      
+            <a class = "button1  bouncy" style="animation-delay:0.07s" id="try">Je me lance!</a>
+            <a class = "button1 bouncy" style="animation-delay:0.14s" id="nextTrack"> Aucune idée , Chanson suivante! </a>
+            <a class = "button1 bouncy" style="animation-delay:0.21s" id="changerPlaylist"> Changer de playlist</a>
+            <br>
             <div id="resultat"></div>
+            <button class='playpausebutton' id="PlayPause"></button>
+            
+            
           </div>
         </section>
 
