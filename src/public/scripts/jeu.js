@@ -61,7 +61,7 @@ function playMusique(){
 
 function changerPlaylist(){
   sectionJeu.style.display = "none";
-  sectionChoix.style.display = "flex";
+  afficherListe();
 }
 function nextPlaylist(){
   compteurPlaylist ++;
@@ -84,7 +84,7 @@ function getAllPlaylists() {
          let html = '<ul>';
 
       for (playlist of allPlaylists){
-        html+= '<li onclick="jouerOnePlaylist(\''+playlist.id  +  '\')"> '  + playlist.name + ' </li>' 
+        html+= '<li onclick="jouerOnePlaylist(\''+playlist.id  +  '\')"> <a>'  + playlist.name + ' </a></li>' 
         }
         html +=  '</ul>'
 
@@ -104,6 +104,12 @@ function masquerListe(){
   sectionChoix.style.display = "none";
   divListe.style.display = "none";
   divHero.style.display = "none";
+}
+
+function afficherListe(){
+  sectionChoix.style.display = "flex";
+  divListe.style.display = "";
+  divHero.style.display = "";
 }
        function getPlaylistFromId(id){
         for (playlist of allPlaylists){
