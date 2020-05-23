@@ -1,3 +1,9 @@
+:root {
+  --pink: pink;
+  --purple: #32263a;
+  --hoover: white;
+}
+
 body {
   padding: 20px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;

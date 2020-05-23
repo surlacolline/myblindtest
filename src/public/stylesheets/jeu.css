@@ -1,149 +1,171 @@
 body {
-    background-color: #32263a;
-    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-    color: white;
-  }
-  #jeu {
-height: 100vh;
-padding: 20px;
-  }
+  background-color: #32263a;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  color: var(--pink);
+}
+#jeu {
+  padding: 20px;
+}
 #resultat {
-height: 50px;
+  height: 50px;
 }
 .progress-bar {
-    background: #dbbcf1;
-    flex: 1;
-    display: flex;
-    align-items: flex-start;
-    margin: 10px;
-    border-radius: 50px;
-    border-width: 2px;
-border-color: white;
-    overflow: hidden;
-    height: 50px;
-  }
-  
-  .progress {
-    width:  16.3%; 
-    background: linear-gradient(-170deg, #2376ae 0%, #c16ecf 100%);
-    text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2px;
-    color: white;
-    height: 100%;
-    position : relative;
-    border-width: 2px;
-border-color: white;
-  }
-
-  .progress-text {
-    width:  95%;
-    /* background: linear-gradient(-170deg, #2376ae 0%, #c16ecf 100%); */
-    font-weight: bold;
-    color: black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2px;
-    height: 50px;
-    position : absolute;
-    outline:none;
-    padding-left: 1px;
-  }
-
-  .playpausebutton {
-    border: 0;
-    background: transparent;
-    box-sizing: border-box;
-    width: 0;
-    height: 37px;
-  
-    border-color: transparent transparent transparent #dbbcf1;
-    transition: 100ms all ease;
-    cursor: pointer;
-  
-    /* // play state */
-    border-style: solid;
-    border-width: 18px 0 18px 30px;}
-  
-    .playpausebutton.paused {
-      border-style: double;
-      border-width: 0px 0 0px 30px;
-    }
-  
-    .playpausebutton:hover {
-      border-color: transparent transparent transparent #8b769b;
-    }
-
-  
-      .button1{
-        display:inline-block;
-        padding:0.35em 1.2em;
-        border:0.1em solid #dbbcf1;
-        margin:0 0.3em 0.3em 0;
-        border-radius:0.12em;
-        box-sizing: border-box;
-        text-decoration:none;
-        font-family:'Roboto',sans-serif;
-        font-weight:300;
-        color:white;
-        text-align:center;
-        transition: all 0.2s;
-        }
-        .button1:hover{
-        color:#000000;
-        background-color:#dbbcf1;
-        }
-
-section#choix{
-  display:flex !important;
+  background: var(--pink);
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  margin: 10px;
+  border-radius: 50px;
+  border-width: 2px;
+  border-color: white;
+  overflow: hidden;
+  height: 50px;
 }
-        .duo {
-          flex: 1;
-       
-        }
-#titre{
-  flex : 2;
+
+.progress {
+  width: 16.3%;
+  background: linear-gradient(-170deg, #2376ae 0%, #c16ecf 100%);
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  color: white;
+  height: 100%;
+  position: relative;
+  border-width: 2px;
+  border-color: white;
+}
+
+.progress-text {
+  width: 95%;
+  /* background: linear-gradient(-170deg, #2376ae 0%, #c16ecf 100%); */
+  font-weight: bold;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  height: 50px;
+  position: absolute;
+  outline: none;
+  padding: 3px;
+}
+
+.playpausebutton {
+  border: 0;
+  background: transparent;
+  box-sizing: border-box;
+  width: 0;
+  height: 37px;
+  outline: none;
+  border-color: transparent transparent transparent var(--pink);
+  transition: 100ms all ease;
+  cursor: pointer;
+
+  /* // play state */
+  border-style: solid;
+  border-width: 18px 0 18px 30px;
+}
+
+.playpausebutton.paused {
+  border-style: double;
+  border-width: 0px 0 0px 30px;
+}
+
+.playpausebutton:hover {
+  border-color: transparent transparent transparent var(--hoover);
+}
+
+.button1 {
+  display: inline-block;
+  padding: 0.35em 1.2em;
+  border: 0.1em solid var(--pink);
+  margin: 0 0.3em 0.3em 0;
+  border-radius: 0.12em;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  color: var(--pink);
+  text-align: center;
+  transition: all 0.2s;
+}
+.button1:hover {
+  color: var(--purple);
+  background-color: var(--hoover);
+}
+
+section#choix {
+  display: flex !important;
+}
+.duo {
+  flex: 1;
+}
+#titre {
+  flex: 2;
   position: relative;
 }
 
-.cadreBlanc{
+.cadreBlanc {
   width: 500px;
   height: 200px;
   top: 10%;
-  right:  20%;
+  right: 20%;
   position: absolute;
-background-color: white;
-color: black;
-text-align: center;
-vertical-align: center;
+  background-color: white;
+  color: black;
+  text-align: center;
+  vertical-align: center;
 }
 
-.bordureCadre{
+.bordureCadre {
   width: 500px;
   height: 200px;
   top: 30%;
-  right:  18%;
+  right: 18%;
   position: absolute;
-background-color: transparent;
-border: solid;
-border-color: pink;
+  background-color: transparent;
+  border: solid;
+  border-color: var(--pink);
 }
 .cadreBlanc * {
- padding: 20px;
+  padding: 20px;
 }
 
-h1{
-  
+h1 {
 }
 
-#listePlaylist{
-  
+#listePlaylist {
 }
 
-   
+.fixed-div {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding: 15px;
+  margin-bottom: 10px;
+  margin-right: 50px;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--pink);
+  align-content: center;
+  text-align: center;
+  font-size: larger;
+  font-weight: bolder;
+  color: var(--pink);
+  transition: font-size 0.3s ease, color 0.3s ease;
+}
+
+.fixed-div:hover {
+  color: var(--hoover);
+  border-color: var(--hover);
+  width: 30px;
+  height: 30px;
+  font-size: x-large;
+}
+
 @import "compass/css3";
 
 .liste div {
@@ -165,7 +187,7 @@ ul {
 
 li {
   font: 200 20px/1.5 Helvetica, Verdana, sans-serif;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid var(--pink);
 }
 
 li:last-child {
@@ -174,18 +196,17 @@ li:last-child {
 
 li a {
   text-decoration: none;
-  
 
-  -webkit-transition: font-size 0.3s ease, background-color 0.3s ease;
-  -moz-transition: font-size 0.3s ease, background-color 0.3s ease;
-  -o-transition: font-size 0.3s ease, background-color 0.3s ease;
-  -ms-transition: font-size 0.3s ease, background-color 0.3s ease;
-  transition: font-size 0.3s ease, background-color 0.3s ease;
+  -webkit-transition: font-size 0.3s ease, color 0.3s ease;
+  -moz-transition: font-size 0.3s ease, color 0.3s ease;
+  -o-transition: font-size 0.3s ease, color 0.3s ease;
+  -ms-transition: font-size 0.3s ease, color 0.3s ease;
+  transition: font-size 0.3s ease, color 0.3s ease;
   display: block;
   width: 200px;
 }
 
 li a:hover {
   font-size: 22px;
-  background: #730c85;
+  color: var(--hoover);
 }

@@ -8,27 +8,14 @@
     <link rel="stylesheet" type="text/css" href="/stylesheets/popup.css" />
   </head>
   <body>
-    <section id="jeu">
-      <div id="avancement"></div>
-      <div id="lecteur">
-        <div class="progress-bar">
-          <audio autoplay="false" id="lecteurAudio" src="">
-            Your browser does not support the
-            <code>audio</code> element.
-          </audio>
-
-          <div class="progress"></div>
-          <div class="progress-text" id="valueToTry" contenteditable="true">
-            Une idée du nom de la chanson ou de l'artiste?
-          </div>
+    <section id="choix">
+      <div class="duo liste" id="listePlaylist"></div>
+      <div class="duo" id="titre">
+        <div class="cadreBlanc">
+          <h1>My.Blind.Test.</h1>
+          <p>Choisis une playlist et joue</p>
         </div>
-
-        <a class="button1" id="try">Je me lance!</a>
-        <a class="button1" id="nextTrack"> Aucune idée , Chanson suivante! </a>
-        <a class="button1" id="changerPlaylist"> Changer de playlist</a>
-        <br />
-        <div id="resultat"></div>
-        <button class="playpausebutton" id="PlayPause"></button>
+        <div class="bordureCadre"></div>
       </div>
       <div id="popup1" class="overlay">
         <div class="popup">
@@ -52,9 +39,12 @@
           </div>
         </div>
       </div>
-      <div class="fixed-div">i</div>
+
+      <a href="#popup1"> <div class="fixed-div">i</div> </a>
     </section>
   </body>
-  <script src="/scripts/commun.js"></script>
-  <script src="/scripts/jeu.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
+  <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+  <script src="scripts/commun.js"></script>
+  <script src="scripts/choixPlaylist.js"></script>
 </html>
