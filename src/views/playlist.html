@@ -10,6 +10,7 @@
   <body>
     <section id="jeu">
       <div id="avancement"></div>
+      <button class="playpausebutton" id="PlayPause"></button>
       <div id="lecteur">
         <div class="progress-bar">
           <audio autoplay="false" id="lecteurAudio" src="">
@@ -18,18 +19,18 @@
           </audio>
 
           <div class="progress"></div>
-          <div class="progress-text" id="valueToTry" contenteditable="true">
-            Une idée du nom de la chanson ou de l'artiste?
-          </div>
         </div>
       </div>
-
-      <a class="button1" id="try">Je me lance!</a>
-      <a class="button1" id="nextTrack"> Aucune idée , Chanson suivante! </a>
+      <input type="text" class="textTry" id="valueToTry" placeholder="Une idée du nom de la chanson ou de l'artiste?" size="50"></input>
+      
+      
+    <div class="wrapbtn"> <a class="button1" id="try">Je me lance!</a>
+      <a class="button1" id="nextTrack"> Aucune idée , Chanson suivante! </a></div> 
+      <div id="resultat"></div>
+   <div id="score"></div>
       <a class="button1" id="changerPlaylist"> Changer de playlist</a>
       <br />
-      <div id="resultat"></div>
-      <button class="playpausebutton" id="PlayPause"></button>
+   
       <div id="popup1" class="overlay">
         <div class="popup">
           <a class="close" href="#">&times;</a>

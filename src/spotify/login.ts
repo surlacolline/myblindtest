@@ -7,25 +7,25 @@
 //  * https://developer.spotify.com/web-api/authorization-guide/#authorization_code_flow
 //  */
 
-import app from '../Server';
-import express, { Response, Router } from 'express';
-import request from 'es6-request';
-import Playlist, { ITrack, Track } from '@entities/Playlist';
+import app from "../Server";
+import express, { Response, Router } from "express";
+import request from "es6-request";
+import Playlist, { ITrack, Track } from "@entities/Playlist";
 
-import PlaylistDao from '@daos/playlist/playlistDao.mock';
+import PlaylistDao from "@daos/playlist/playlistDao.mock";
 
 // let cors = require('cors');
-const querystring = require('querystring');
-const cookieParser = require('cookie-parser');
+const querystring = require("querystring");
+const cookieParser = require("cookie-parser");
 
 const playlistDao = new PlaylistDao();
 
 let testToken: any;
 
 // tslint:disable: variable-name
-const client_id = 'f6cd9756638b411bb4f994de4e33bd16'; // Your client id
-const client_secret = '01ac2e104d5a45dcae46448da7cb2e97'; // Your secret
-const redirect_uri = 'http://localhost:3000/api/spotify/callback'; // Your redirect uri
+const client_id = "f6cd9756638b411bb4f994de4e33bd16"; // Your client id
+const client_secret = "01ac2e104d5a45dcae46448da7cb2e97"; // Your secret
+const redirect_uri = "http://localhost:3000/api/spotify/callback"; // Your redirect uri
 
 /**
  * Generates a random string containing numbers and letters
@@ -33,9 +33,9 @@ const redirect_uri = 'http://localhost:3000/api/spotify/callback'; // Your redir
  * @return {string} The generated string
  */
 const generateRandomString = (length: number) => {
-  let text = '';
+  let text = "";
   const possible =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
   for (let i = 0; i < length; i++) {
     text += possible.charAt(Math.floor(Math.random() * possible.length));
@@ -43,12 +43,7 @@ const generateRandomString = (length: number) => {
   return text;
 };
 
-const stateKey = 'spotify_auth_state';
-
-
-
-
-
+const stateKey = "spotify_auth_state";
 
 export function callback(
   req: any,
@@ -63,30 +58,30 @@ export function callback(
 
   if (state === null || state !== storedState) {
     res.redirect(
-      '/#' +
+      "/#" +
         querystring.stringify({
-          error: 'state_mismatch',
+          error: "state_mismatch",
         })
     );
   } else {
     res.clearCookie(stateKey);
     const authOptions = {
-      url: 'https://accounts.spotify.com/api/token',
+      url: "https://accounts.spotify.com/api/token",
       form: {
         code,
         redirect_uri,
-        grant_type: 'authorization_code',
+        grant_type: "authorization_code",
       },
       headers: {
         Authorization:
-          'Basic ' +
-          new Buffer(client_id + ':' + client_secret).toString('base64'),
+          "Basic " +
+          new Buffer(client_id + ":" + client_secret).toString("base64"),
       },
       json: true,
     };
 
     request
-      .post('https://accounts.spotify.com/api/token', authOptions)
+      .post("https://accounts.spotify.com/api/token", authOptions)
       .sendForm(authOptions.form)
       .then(([bodyString, response]) => {
         // BodyType, http.IncomingMessageo
@@ -97,14 +92,14 @@ export function callback(
           testToken = access_token;
 
           const options = {
-            url: 'https://api.spotify.com/v1/me',
-            headers: { Authorization: 'Bearer ' + access_token },
+            url: "https://api.spotify.com/v1/me",
+            headers: { Authorization: "Bearer " + access_token },
             json: true,
           };
 
           // use the access token to access the Spotify Web API
           request
-            .get('https://api.spotify.com/v1/me', options)
+            .get("https://api.spotify.com/v1/me", options)
             .then((body: any) => {
               // tslint:disable-next-line: no-console
               console.log(body);
@@ -112,7 +107,7 @@ export function callback(
 
           // we can also pass the token to the browser to make requests from there
           res.redirect(
-            '/#' +
+            "/#" +
               querystring.stringify({
                 access_token,
                 refresh_token,
@@ -120,9 +115,9 @@ export function callback(
           );
         } else {
           res.redirect(
-            '/#' +
+            "/#" +
               querystring.stringify({
-                error: 'invalid_token',
+                error: "invalid_token",
               })
           );
         }
@@ -134,15 +129,15 @@ export function getPlaylists(req: any, res: any) {
   // requesting access token from refresh token
   const refresh_token = req.query.refresh_token;
   const token =
-    'BQDc8bJRpClIRSBkqQ6uWR0XCRT67Usy0bYWhYXAWWMtyiw5bwFomUjZH_Og-0LbITq7_zQJo59nyOvrgrFXBY5w-l0La0ZqCUfbYn7qp6b0yuuO5apT0XMlwzdW83eKaMKB9emRMMyy4iAxQkCi2jQVJW0wOfvMktfWFa70cis-Tg';
+    "BQDc8bJRpClIRSBkqQ6uWR0XCRT67Usy0bYWhYXAWWMtyiw5bwFomUjZH_Og-0LbITq7_zQJo59nyOvrgrFXBY5w-l0La0ZqCUfbYn7qp6b0yuuO5apT0XMlwzdW83eKaMKB9emRMMyy4iAxQkCi2jQVJW0wOfvMktfWFa70cis-Tg";
   const authOptions = {
-    url: 'https://api.spotify.com/v1/users/11120922355/playlists',
-    headers: { Authorization: 'Bearer ' + testToken },
+    url: "https://api.spotify.com/v1/users/11120922355/playlists",
+    headers: { Authorization: "Bearer " + testToken },
     json: true,
   };
 
   request
-    .get('https://api.spotify.com/v1/users/11120922355/playlists', authOptions)
+    .get("https://api.spotify.com/v1/users/11120922355/playlists", authOptions)
     .then((body: any) => {
       const access_token = body.access_token;
       res.send({
@@ -155,18 +150,18 @@ export function getOnePlaylist(req: any, res: any) {
   // requesting access token from refresh token
   const idPlaylist = req.query.idPlaylist;
   const authOptions = {
-    url: 'https://api.spotify.com/v1/playlists/' + idPlaylist,
-    headers: { Authorization: 'Bearer ' + testToken },
+    url: "https://api.spotify.com/v1/playlists/" + idPlaylist,
+    headers: { Authorization: "Bearer " + testToken },
     json: true,
   };
 
   request.get(authOptions.url, authOptions).then((body: any) => {
-    const MyData = JSON.parse(body[0]);
+    const MyData: any = JSON.parse(body[0]);
     // lire le body et ecrire un nouveau json
     const playlist: Playlist = new Playlist();
     playlist.id = MyData.id;
     playlist.description = MyData.description;
-    playlist.name = MyData.name;
+    playlist.name = MyData.name[0].toUpperCase() + MyData.name.slice(1);
     // Boucle pour parcourir les tracks
     // tslint:disable-next-line: forin
     for (const track of MyData.tracks.items) {
@@ -177,10 +172,14 @@ export function getOnePlaylist(req: any, res: any) {
       if (myTrack.preview_url) {
         playlist.tracks.push(myTrack);
       }
+      if (playlist.tracks.length === 20) {
+        break;
+      }
     }
-    playlistDao.add(playlist);
+    if (playlist.tracks.length === 20) {
+      playlistDao.add(playlist);
+    }
 
-    console.log(playlist);
     res.send({
       data: JSON.parse(body[0]),
     });
@@ -197,11 +196,11 @@ function login(
   const state = generateRandomString(16);
   res.cookie(stateKey, state);
   // your application requests authorization
-  const scope = 'user-read-private user-read-email playlist-read-private';
+  const scope = "user-read-private user-read-email playlist-read-private";
   res.redirect(
-    'https://accounts.spotify.com/authorize?' +
+    "https://accounts.spotify.com/authorize?" +
       querystring.stringify({
-        response_type: 'code',
+        response_type: "code",
         client_id,
         scope,
         redirect_uri,

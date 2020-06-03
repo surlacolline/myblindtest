@@ -21,13 +21,17 @@ body {
   width: 100%;
 }
 .duo {
-  min-width: 300px;
+  min-width: 400px;
 }
+
 .duo.hero {
   display: grid;
   max-width: 600px;
   grid-template-columns: 1fr;
   grid-template-rows: 1fr;
+  max-height: 200px;
+  align-self: self-end;
+  margin-bottom: 100px;
 }
 
 .cadreBlanc {
@@ -73,6 +77,7 @@ ul {
 li {
   font: 200 20px/1.5 Helvetica, Verdana, sans-serif;
   border-bottom: 1px solid var(--pink);
+  padding: 10px;
 }
 
 li:last-child {
@@ -88,7 +93,6 @@ li a {
   -ms-transition: font-size 0.3s ease, color 0.3s ease;
   transition: font-size 0.3s ease, color 0.3s ease;
   display: block;
-  width: 200px;
 }
 
 li a:hover {

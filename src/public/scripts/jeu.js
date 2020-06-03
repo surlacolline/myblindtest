@@ -1,6 +1,11 @@
 //Init var
 let compteurTrack = -1;
 let compteurPlaylist = 0;
+let score = 0;
+function templateScore(score) {
+  return `Score : ${score}/20`;
+}
+
 let currentPlaylist;
 let allPlaylists;
 let idCurrentPlaylist;
@@ -12,9 +17,10 @@ const btnTry = document.getElementById("try");
 const btnNextTrack = document.getElementById("nextTrack");
 const btnChangerPlaylist = document.getElementById("changerPlaylist");
 const btnNextPlaylist = document.getElementById("nextPlaylist");
-const value = document.getElementById("valueToTry");
+const textEditValue = document.getElementById("valueToTry");
 const result = document.getElementById("resultat");
 const divavancement = document.getElementById("avancement");
+const divscore = document.getElementById("score");
 
 const sectionJeu = document.getElementById("jeu");
 const progressBar = document.querySelector(".progress-bar");
@@ -23,8 +29,8 @@ const btnPlayPause = document.getElementById("PlayPause");
 
 //Function
 function clearText() {
-  if (value.innerText.includes("Une idée du nom de la chanson ou de")) {
-    value.innerText = "";
+  if (textEditValue.innerText.includes("Une idée du nom de la chanson ou de")) {
+    textEditValue.innerText = "";
   }
 }
 function progressMove() {
@@ -45,33 +51,13 @@ function playMusique() {
 }
 
 function changerPlaylist() {
-  sectionJeu.style.display = "none";
-  afficherListe();
+  window.location = "/playlist";
 }
 function nextPlaylist() {
   compteurPlaylist++;
   compteurTrack = -1;
   currentPlaylist = allPlaylists[compteurPlaylist];
   lecturePlaylist();
-}
-
-// sectionJeu.style.display = "block";
-// masquerListe();
-// idCurrentPlaylist = id;
-// currentPlaylist = getPlaylistFromId(idCurrentPlaylist);
-// lecturePlaylist();
-
-function masquerListe() {
-  sectionChoix.style.display = "none";
-  divListe.style.display = "none";
-  divHero.style.display = "none";
-}
-
-function afficherListe() {
-  window.location = "/playlist";
-  sectionChoix.style.display = "flex";
-  divListe.style.display = "";
-  divHero.style.display = "";
 }
 
 function getPlaylistFromId(id) {
@@ -101,10 +87,12 @@ function playPlaylist(id) {
 function lecturePlaylist() {
   compteurTrack++;
   result.innerHTML = "";
+  textEditValue.value = "";
+  divscore.innerHTML = templateScore(score);
   if (compteurTrack < currentPlaylist.tracks.length) {
     lecteurAudio.src = currentPlaylist.tracks[compteurTrack].preview_url;
-    lecteurAudio.autoplay = "false";
-    lecteurAudio.pause();
+    lecteurAudio.autoplay = "true";
+    //lecteurAudio.pause();
 
     const avancement =
       " " + (compteurTrack + 1) + " / " + currentPlaylist.tracks.length;
@@ -114,19 +102,44 @@ function lecturePlaylist() {
   } else {
     lecteurAudio.src = null;
     lecteurAudio.autoplay = "false";
-    result.innerHTML = "La partie est finie!";
+    result.innerHTML =
+      "La partie est finie! Bravo, votre score  est de" + templateScore;
+  }
+}
+function pressEnterToTryValue(e) {
+  if (e.key === "Enter") {
+    tryValue();
   }
 }
 
 function tryValue() {
   if (
-    value.value === currentPlaylist.tracks[compteurTrack].name ||
-    value.value === currentPlaylist.tracks[compteurTrack].artist
+    comparaisonSouple(
+      textEditValue.value,
+      currentPlaylist.tracks[compteurTrack].name
+    ) ||
+    comparaisonSouple(
+      textEditValue.value,
+      currentPlaylist.tracks[compteurTrack].artist
+    )
   ) {
     result.innerText = "Bravo !!";
+    textEditValue.focus();
+    textEditValue.value = "";
+    score++;
+    divscore.innerHTML = templateScore(score);
     lecturePlaylist();
   } else {
     result.innerText = "Nope...";
+    textEditValue.focus();
+  }
+}
+
+function comparaisonSouple(valueToTry, valueToCompare) {
+  if (valueToTry.toUpperCase() === valueToCompare.toUpperCase()) {
+    return true;
+  } else {
+    return false;
   }
 }
 function getAllPlaylists() {
@@ -148,9 +161,10 @@ function jouerOnePlaylist() {
 
 //Ajout events
 btnTry.addEventListener("click", tryValue);
+textEditValue.addEventListener("keypress", pressEnterToTryValue);
 btnNextTrack.addEventListener("click", () => {
-  value.innerText = "";
-  value.focus();
+  textEditValue.value = "";
+  textEditValue.focus();
   lecturePlaylist();
 });
 btnChangerPlaylist.addEventListener("click", changerPlaylist);

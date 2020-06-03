@@ -16,7 +16,24 @@ body {
   grid-template-rows: 1fr;
   justify-items: center;
   align-items: center;
+  grid-gap: 30px;
 }
 #resultat {
   height: 50px;
+}
+
+.textTry {
+  border: none;
+  border-bottom: solid 2px var(--purple);
+  background-color: rgb(255, 192, 203, 0.2);
+  text-align: center;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 0.12em;
+  outline: none;
+}
+
+::placeholder {
+  color: var(--pink);
+  font-size: 20px;
 }

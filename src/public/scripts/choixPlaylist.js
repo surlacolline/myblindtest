@@ -24,7 +24,10 @@ function getAllPlaylists() {
           playlist.id +
           "')\"> <a>" +
           playlist.name +
-          " </a></li>";
+          " </a></li> ";
+        // <button onclick=\"deleteOnePlaylist('" +
+        // playlist.id +
+        // "')\">  Supprimer </button>"
       }
       html += "</ul>";
 
@@ -35,6 +38,14 @@ function getAllPlaylists() {
 function jouerOnePlaylist(id) {
   //appel ajax
   window.location = "/playlist/" + id;
+}
+
+function deleteOnePlaylist(id) {
+  //appel ajax
+
+  httpDelete("/api/playlists/delete/" + id).then(() => {
+    getAllPlaylists();
+  });
 }
 
 //Lancement immédiat
