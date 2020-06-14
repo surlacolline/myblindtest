@@ -36,13 +36,10 @@ function getAllPlaylists() {
 }
 
 function jouerOnePlaylist(id) {
-  //appel ajax
   window.location = "/playlist/" + id;
 }
 
 function deleteOnePlaylist(id) {
-  //appel ajax
-
   httpDelete("/api/playlists/delete/" + id).then(() => {
     getAllPlaylists();
   });

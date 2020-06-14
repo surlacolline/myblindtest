@@ -15,7 +15,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(43, 30, 43, 0.8);
   transition: opacity 500ms;
   visibility: hidden;
   opacity: 0;
@@ -32,7 +32,8 @@
   border-radius: 20px/50px;
   width: 30%;
   position: relative;
-  transition: all 5s ease-in-out;
+  transition: all 1s ease-in-out;
+  font-weight: 600;
 }
 
 .popup h2 {

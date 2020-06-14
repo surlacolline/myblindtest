@@ -21,7 +21,6 @@ const textEditValue = document.getElementById("valueToTry");
 const result = document.getElementById("resultat");
 const divavancement = document.getElementById("avancement");
 const divscore = document.getElementById("score");
-
 const sectionJeu = document.getElementById("jeu");
 const progressBar = document.querySelector(".progress-bar");
 const progress = document.querySelector(".progress");
@@ -103,7 +102,7 @@ function lecturePlaylist() {
     lecteurAudio.src = null;
     lecteurAudio.autoplay = "false";
     result.innerHTML =
-      "La partie est finie! Bravo, votre score  est de" + templateScore;
+      "La partie est finie! Bravo, votre score  est de " + `${score}/20`;
   }
 }
 function pressEnterToTryValue(e) {
@@ -136,15 +135,33 @@ function tryValue() {
 }
 
 function comparaisonSouple(valueToTry, valueToCompare) {
-  if (valueToTry.toUpperCase() === valueToCompare.toUpperCase()) {
+  if (hammingDistance(valueToTry, valueToCompare) <= 1) {
     return true;
   } else {
     return false;
   }
 }
-function getAllPlaylists() {
-  //Masquer la partie jeu
+function hammingDistance(valueToTry, valueToCompare) {
+  var dist = 0;
+  valueToTry = valueToTry.toLowerCase();
+  valueToCompare = valueToCompare.toLowerCase();
+  for (
+    var i = 0, j = Math.max(valueToTry.length, valueToCompare.length);
+    i < j;
+    i++
+  ) {
+    if (
+      !valueToTry[i] ||
+      !valueToCompare[i] ||
+      valueToTry[i] !== valueToCompare[i]
+    ) {
+      dist++;
+    }
+  }
+  return dist;
+}
 
+function getAllPlaylists() {
   compteurTrack = 0;
 
   //

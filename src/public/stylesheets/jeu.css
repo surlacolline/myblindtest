@@ -22,6 +22,11 @@ body {
   height: 50px;
 }
 
+#score {
+  font-weight: 600;
+  font-size: medium;
+}
+
 .textTry {
   border: none;
   border-bottom: solid 2px var(--purple);

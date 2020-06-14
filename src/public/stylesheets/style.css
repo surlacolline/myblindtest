@@ -1,5 +1,6 @@
 :root {
   --pink: rgb(255, 192, 203);
+  --pink-transparent: rgb(255, 192, 203, 0.7);
   --purple: #32263a;
   --hoover: white;
 }
