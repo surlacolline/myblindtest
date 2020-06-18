@@ -10,9 +10,9 @@
 import app from "../Server";
 import express, { Response, Router } from "express";
 import request from "es6-request";
-import Playlist, { ITrack, Track } from "@entities/Playlist";
+import Playlist, { ITrack, Track } from "../entities/Playlist";
 
-import PlaylistDao from "@daos/playlist/playlistDao.mock";
+import PlaylistDao from "../daos/Playlist/PlaylistDao";
 
 // let cors = require('cors');
 const querystring = require("querystring");

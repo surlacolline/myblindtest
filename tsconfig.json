@@ -9,35 +9,23 @@
     "outDir": "dist",
     "removeComments": true,
     "sourceMap": true,
+    "declaration": false,
     "strict": true,
     "target": "es6",
     "moduleResolution": "node",
     "paths": {
-      "@daos/*": [
-        "src/daos/*"
-      ],
-      "@entities/*": [
-        "src/entities/*"
-      ],
-      "@shared/*": [
-        "src/shared/*"
-      ],
-      "@server": [
-        "src/Server"
-      ]
+      // "@daos/*": ["src/daos/*"],
+      // "@entities/*": ["src/entities/*"],
+      // "@shared/*": ["src/shared/*"],
+      // "@spotify/*": ["src/spotify/*"]
     },
-    "types": [
-      "node"
-    ],
-    "typeRoots": [
-      "node_modules/@types"
-    ]
+    "types": ["node"],
+    "typeRoots": ["node_modules/@types"]
   },
-  "include": [
-    "src/**/*.ts",
-    "spec/**/*.ts"
-  ],
+  "include": ["src/**/*.ts", "src/**/**/*.ts", "spec/**/*.ts"],
   "exclude": [
-    "src/public/"
+    "src/public/",
+    "node_modules/es6-request/index.d.ts",
+    "src/views/"
   ]
 }
