@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>My.Blind.Test.</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/jeu.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/popup.css" />
+  </head>
+  <body>
+    <section id="jeu">
+      <div id="avancement"></div>
+      <button class="playpausebutton" id="PlayPause"></button>
+      <div id="lecteur">
+        <div class="progress-bar">
+          <audio autoplay="false" id="lecteurAudio" src="">
+            Your browser does not support the
+            <code>audio</code> element.
+          </audio>
+
+          <div class="progress"></div>
+        </div>
+      </div>
+      <input type="search" class="textTry" id="valueToTry" placeholder="Une idée du nom de la chanson ou de l'artiste?" size="50"></input>
+      
+      
+    <div class="wrapbtn"> <a class="button1" id="try">Je me lance!</a>
+      <a class="button1" id="nextTrack"> Aucune idée , Chanson suivante! </a></div> 
+      <div id="resultat"></div>
+   <div id="score"></div>
+      <a class="button1" id="changerPlaylist"> Changer de playlist</a>
+      <br />
+      </div>
+
+      <div id="popup1" class="overlay">
+      </div>
+  
+
+      <a href="#popup1"> <div class="fixed-div">i</div></a>
+    </section>
+  </body>
+  <script src="/scripts/commun.js"></script>
+  <script src="/scripts/jeu.js"></script>
+</html>
