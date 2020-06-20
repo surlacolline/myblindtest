@@ -1,5 +1,5 @@
 {
-  "name": "MyBlindTest",
+  "name": "myblindtest",
   "version": "0.0.0",
   "engines": {
     "node": "12.x",
@@ -50,5 +50,8 @@
     "tsconfig-paths": "^3.9.0",
     "tslint": "^6.1.2",
     "typescript": "^3.8.3"
+  },
+  "prettier": {
+    "singleQuote": true
   }
 }
