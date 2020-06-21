@@ -1,18 +1,18 @@
-const fs = require("fs-extra");
-const childProcess = require("child_process");
+const fs = require('fs-extra');
+const childProcess = require('child_process');
 
 try {
   // Remove current build
-  fs.removeSync("./dist/");
+  fs.removeSync('./dist/');
   // Copy front-end files
-  fs.copySync("./src/public", "./dist/public");
-  fs.copySync("./src/views", "./dist/views");
+  fs.copySync('./src/public', './dist/public');
+  fs.copySync('./src/views', './dist/views');
   // Transpile the typescript files
-  const proc = childProcess.exec("tsc --build tsconfig.prod.json");
-  proc.on("close", (code) => {
+  const proc = childProcess.exec('tsc --build tsconfig.prod.json');
+  proc.on('close', (code) => {
     if (code !== 0) {
       console.log(code);
-      throw Error("Build failed");
+      //throw Error("Build failed");
     }
   });
 } catch (err) {
