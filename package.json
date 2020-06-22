@@ -6,7 +6,7 @@
     "npm": "6.x"
   },
   "scripts": {
-    "build": "node ./util/build.js && npm run transpile",
+    "build": "node ./util/build.js",
     "tsc": "tsc --build tsconfig.prod.json",
     "transpile": "npm run tsc",
     "lint": "tslint --project \"tsconfig.json\"",
