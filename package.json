@@ -10,7 +10,7 @@
     "tsc": "tsc --build tsconfig.prod.json",
     "transpile": "npm run tsc",
     "lint": "tslint --project \"tsconfig.json\"",
-    "start": "node ./dist",
+    "start": "node -r ./dist",
     "start:dev": "nodemon --config nodemon.json",
     "test": "nodemon --config nodemon.test.json",
     "debug": "nodemon --config nodemon.json"
