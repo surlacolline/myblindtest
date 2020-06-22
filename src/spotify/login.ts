@@ -25,8 +25,9 @@ let testToken: any;
 // tslint:disable: variable-name
 const client_id = 'f6cd9756638b411bb4f994de4e33bd16'; // Your client id
 const client_secret = '01ac2e104d5a45dcae46448da7cb2e97'; // Your secret
-const redirect_uri =
-  'https://myblindtest-dev.herokuapp.com/api/spotify/callback'; // Your redirect uri
+// const redirect_uri =
+//   'https://myblindtest-dev.herokuapp.com/api/spotify/callback'; // Your redirect uri
+const redirect_uri = 'http://localhost:3000/api/spotify/callback'; // Your redirect uri
 
 /**
  * Generates a random string containing numbers and letters
@@ -129,8 +130,6 @@ export function callback(
 export function getPlaylists(req: any, res: any) {
   // requesting access token from refresh token
   const refresh_token = req.query.refresh_token;
-  const token =
-    'BQDc8bJRpClIRSBkqQ6uWR0XCRT67Usy0bYWhYXAWWMtyiw5bwFomUjZH_Og-0LbITq7_zQJo59nyOvrgrFXBY5w-l0La0ZqCUfbYn7qp6b0yuuO5apT0XMlwzdW83eKaMKB9emRMMyy4iAxQkCi2jQVJW0wOfvMktfWFa70cis-Tg';
   const authOptions = {
     url: 'https://api.spotify.com/v1/users/11120922355/playlists',
     headers: { Authorization: 'Bearer ' + testToken },

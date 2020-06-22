@@ -1,13 +1,13 @@
-import { Request, Response, Router } from "express";
-import { BAD_REQUEST, CREATED, OK } from "http-status-codes";
-import { ParamsDictionary } from "express-serve-static-core";
+import { Request, Response, Router } from 'express';
+import { BAD_REQUEST, CREATED, OK } from 'http-status-codes';
+import { ParamsDictionary } from 'express-serve-static-core';
 import log, {
   callback,
   getPlaylists,
   getOnePlaylist,
-} from "../../spotify/login";
+} from '../../spotify/login';
 
-import { paramMissingError } from "../../shared/constants";
+import { paramMissingError } from '../../shared/constants';
 
 // Init shared
 const router = Router();
@@ -16,19 +16,19 @@ const router = Router();
  *                      Get All playlists - "GET /api/playlists/all"
  ******************************************************************************/
 
-router.get("/login", async (req: Request, res: Response) => {
+router.get('/login', async (req: Request, res: Response) => {
   const result = log(req, res);
 });
 
-router.get("/callback", async (req: Request, res: Response) => {
+router.get('/callback', async (req: Request, res: Response) => {
   const result = callback(req, res);
 });
 
-router.get("/playlists", async (req: Request, res: Response) => {
+router.get('/playlists', async (req: Request, res: Response) => {
   const result = getPlaylists(req, res);
 });
 
-router.get("/playlist", async (req: Request, res: Response) => {
+router.get('/playlist', async (req: Request, res: Response) => {
   const result = getOnePlaylist(req, res);
 });
 
