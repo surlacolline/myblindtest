@@ -8,9 +8,9 @@ try {
   fs.copySync('./src/public', './dist/public');
   fs.copySync('./src/views', './dist/views');
   // Transpile the typescript files
-  const proc = childProcess.exec('tsc --build tsconfig.prod.json', (error) => {
-    if (error) console.log('my log : ' + error);
-  });
+  // const proc = childProcess.exec('tsc --build tsconfig.prod.json', (error) => {
+  //   if (error) console.log('my log : ' + error);
+  // });
   // proc.on('close', (code) => {
   //   if (code !== 0) {
   //     console.log(code);
