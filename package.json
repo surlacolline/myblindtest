@@ -6,7 +6,9 @@
     "npm": "6.x"
   },
   "scripts": {
-    "build": "node ./util/build.js",
+    "build": "node ./util/build.js && npm run transpile",
+    "tsc": "tsc --build tsconfig.prod.json",
+    "transpile": "npm run tsc",
     "lint": "tslint --project \"tsconfig.json\"",
     "start": "node -r ./dist",
     "start:dev": "nodemon --config nodemon.json",
@@ -15,11 +17,12 @@
   },
   "_moduleAliases": {},
   "dependencies": {
+    "child-process": "^1.0.2",
     "command-line-args": "^5.1.1",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.4",
     "dotenv": "^8.2.0",
-    "es6-request": "^3.0.5",
+    "es6-request": "^2.3.7",
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",
     "helmet": "^3.22.0",
@@ -27,7 +30,10 @@
     "module-alias": "^2.2.2",
     "morgan": "^1.10.0",
     "querystring": "~0.2.0",
-    "winston": "^3.2.1"
+    "tslib": "^2.0.0",
+    "fs-extra": "^9.0.1",
+    "winston": "^3.2.1",
+    "typescript": "^3.8.3"
   },
   "devDependencies": {
     "@types/command-line-args": "^5.0.0",
@@ -41,7 +47,6 @@
     "@types/node": "^13.13.5",
     "@types/supertest": "^2.0.9",
     "find": "^0.3.0",
-    "fs-extra": "^9.0.0",
     "jasmine": "^3.5.0",
     "jsonfile": "^6.0.1",
     "nodemon": "^2.0.3",
