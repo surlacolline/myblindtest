@@ -5,12 +5,15 @@ import log, {
   callback,
   getPlaylists,
   getOnePlaylist,
+  getUserPlaylist,
 } from '../../spotify/login';
 
 import { paramMissingError } from '../../shared/constants';
+import path from 'path';
 
 // Init shared
 const router = Router();
+const viewsDir = path.join(__dirname, '../../views');
 
 /******************************************************************************
  *                      Get All playlists - "GET /api/playlists/all"
@@ -30,6 +33,14 @@ router.get('/playlists', async (req: Request, res: Response) => {
 
 router.get('/playlist', async (req: Request, res: Response) => {
   const result = getOnePlaylist(req, res);
+});
+
+router.get('/user/playlist', async (req: Request, res: Response) => {
+  const result = getUserPlaylist(req, res);
+});
+
+router.get('/callback', async (req: Request, res: Response) => {
+  res.sendFile('choixPlaylist.html', { root: viewsDir });
 });
 
 export default router;

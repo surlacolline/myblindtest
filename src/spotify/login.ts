@@ -108,13 +108,13 @@ export function callback(
             });
 
           // we can also pass the token to the browser to make requests from there
-          res.redirect(
-            '/#' +
-              querystring.stringify({
-                access_token,
-                refresh_token,
-              })
-          );
+          res.redirect('/playlist');
+          //  +
+          //     querystring.stringify({
+          //       access_token,
+          //       refresh_token,
+          //     })
+          // );
         } else {
           res.redirect(
             '/#' +
@@ -156,26 +156,9 @@ export function getOnePlaylist(req: any, res: any) {
   };
 
   request.get(authOptions.url, authOptions).then((body: any) => {
-    const MyData: any = JSON.parse(body[0]);
-    // lire le body et ecrire un nouveau json
-    const playlist: Playlist = new Playlist();
-    playlist.id = MyData.id;
-    playlist.description = MyData.description;
-    playlist.name = MyData.name[0].toUpperCase() + MyData.name.slice(1);
-    // Boucle pour parcourir les tracks
-    // tslint:disable-next-line: forin
-    for (const track of MyData.tracks.items) {
-      const myTrack: ITrack = new Track();
-      myTrack.name = track.track.name;
-      myTrack.artist = track.track.artists[0].name;
-      myTrack.preview_url = track.track.preview_url;
-      if (myTrack.preview_url) {
-        playlist.tracks.push(myTrack);
-      }
-      if (playlist.tracks.length === 20) {
-        break;
-      }
-    }
+    let playlist: Playlist = new Playlist();
+    playlist = getPlaylist(body[0]);
+
     if (playlist.tracks.length === 20) {
       playlistDao.add(playlist);
     }
@@ -183,6 +166,50 @@ export function getOnePlaylist(req: any, res: any) {
     res.send({
       data: JSON.parse(body[0]),
     });
+  });
+}
+function getPlaylist(playlistSpotify: string): Playlist {
+  const MyData: any = JSON.parse(playlistSpotify);
+  // lire le body et ecrire un nouveau json
+  const playlist: Playlist = new Playlist();
+  playlist.id = MyData.id;
+  playlist.description = MyData.description;
+  playlist.name = MyData.name[0].toUpperCase() + MyData.name.slice(1);
+  // Boucle pour parcourir les tracks
+  // tslint:disable-next-line: forin
+  for (const track of MyData.tracks.items) {
+    const myTrack: ITrack = new Track();
+    myTrack.name = track.track.name;
+    myTrack.artist = track.track.artists[0].name;
+    myTrack.preview_url = track.track.preview_url;
+    if (myTrack.preview_url) {
+      playlist.tracks.push(myTrack);
+    }
+    if (playlist.tracks.length === 20) {
+      break;
+    }
+  }
+  return playlist;
+}
+
+export function getUserPlaylist(req: any, res: any) {
+  // requesting access token from refresh token
+  const idPlaylist = req.query.idPlaylist;
+  const authOptions = {
+    url: 'https://api.spotify.com/v1/playlists/' + idPlaylist,
+    headers: { Authorization: 'Bearer ' + testToken },
+    json: true,
+  };
+
+  request.get(authOptions.url, authOptions).then((body: any) => {
+    let playlist: Playlist = new Playlist();
+    playlist = getPlaylist(body[0]);
+
+    res
+      .send({
+        data: JSON.stringify(playlist),
+      })
+      .catch((error: any) => console.log(error));
   });
 }
 

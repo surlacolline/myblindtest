@@ -27,7 +27,7 @@ router.get('/popup', async (req: Request, res: Response) => {
  ******************************************************************************/
 router.get('/:id', async (req: Request, res: Response) => {
   const { id } = req.params as ParamsDictionary;
-  res.sendFile('playlist.html', { root: viewsDir });
+  res.sendFile('jeu.html', { root: viewsDir });
 });
 
 export default router;

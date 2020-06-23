@@ -11,36 +11,36 @@ let allPlaylists;
 let idCurrentPlaylist;
 
 //select element DOM
-const lecteurDiv = document.getElementById("lecteur");
-const lecteurAudio = document.getElementById("lecteurAudio");
-const btnTry = document.getElementById("try");
-const btnNextTrack = document.getElementById("nextTrack");
-const btnChangerPlaylist = document.getElementById("changerPlaylist");
-const btnNextPlaylist = document.getElementById("nextPlaylist");
-const textEditValue = document.getElementById("valueToTry");
-const result = document.getElementById("resultat");
-const divavancement = document.getElementById("avancement");
-const divscore = document.getElementById("score");
-const sectionJeu = document.getElementById("jeu");
-const progressBar = document.querySelector(".progress-bar");
-const progress = document.querySelector(".progress");
-const btnPlayPause = document.getElementById("PlayPause");
+const lecteurDiv = document.getElementById('lecteur');
+const lecteurAudio = document.getElementById('lecteurAudio');
+const btnTry = document.getElementById('try');
+const btnNextTrack = document.getElementById('nextTrack');
+const btnChangerPlaylist = document.getElementById('changerPlaylist');
+const btnNextPlaylist = document.getElementById('nextPlaylist');
+const textEditValue = document.getElementById('valueToTry');
+const result = document.getElementById('resultat');
+const divavancement = document.getElementById('avancement');
+const divscore = document.getElementById('score');
+const sectionJeu = document.getElementById('jeu');
+const progressBar = document.querySelector('.progress-bar');
+const progress = document.querySelector('.progress');
+const btnPlayPause = document.getElementById('PlayPause');
 
 //Function
 function clearText() {
-  if (textEditValue.innerText.includes("Une idée du nom de la chanson ou de")) {
-    textEditValue.innerText = "";
+  if (textEditValue.innerText.includes('Une idée du nom de la chanson ou de')) {
+    textEditValue.innerText = '';
   }
 }
 function progressMove() {
   if (lecteurAudio.paused) {
   } else {
     const width = (lecteurAudio.currentTime * 100) / lecteurAudio.duration;
-    progress.style.width = "" + width + "%";
+    progress.style.width = '' + width + '%';
   }
 }
 function playMusique() {
-  btnPlayPause.classList.toggle("paused");
+  btnPlayPause.classList.toggle('paused');
   if (lecteurAudio.paused) {
     lecteurAudio.volume = 0.1;
     lecteurAudio.play();
@@ -50,7 +50,7 @@ function playMusique() {
 }
 
 function changerPlaylist() {
-  window.location = "/playlist";
+  window.location = '/playlist';
 }
 function nextPlaylist() {
   compteurPlaylist++;
@@ -61,52 +61,59 @@ function nextPlaylist() {
 
 function getPlaylistFromId(id) {
   if (!allPlaylists) {
-    httpGet("/api/playlists/all")
+    httpGet('/api/playlists/all')
       .then((response) => response.json())
       .then((response) => {
         allPlaylists = response.playlists;
       })
       .then(() => {
-        playPlaylist(id);
+        return playPlaylist(id);
       });
   } else {
-    playPlaylist(id);
+    return playPlaylist(id);
   }
 }
 
+function getPlaylistFromSessionStorage(id) {
+  let playlist = JSON.parse(sessionStorage.getItem(id));
+
+  currentPlaylist = playlist;
+  lecturePlaylist();
+  return playlist;
+}
 function playPlaylist(id) {
   for (playlist of allPlaylists) {
     if (playlist.id == id) {
       currentPlaylist = playlist;
       lecturePlaylist();
+      return playlist;
     }
   }
 }
 
 function lecturePlaylist() {
   compteurTrack++;
-  result.innerHTML = "";
-  textEditValue.value = "";
+  result.innerHTML = '';
+  textEditValue.value = '';
   divscore.innerHTML = templateScore(score);
   if (compteurTrack < currentPlaylist.tracks.length) {
     lecteurAudio.src = currentPlaylist.tracks[compteurTrack].preview_url;
-    lecteurAudio.autoplay = "true";
+    lecteurAudio.autoplay = 'true';
     //lecteurAudio.pause();
 
     const avancement =
-      " " + (compteurTrack + 1) + " / " + currentPlaylist.tracks.length;
-    const avancementPlaylist =
-      " " + (compteurPlaylist + 1) + " / " + allPlaylists.length;
+      ' ' + (compteurTrack + 1) + ' / ' + currentPlaylist.tracks.length;
+
     divavancement.innerHTML = avancement;
   } else {
     lecteurAudio.src = null;
-    lecteurAudio.autoplay = "false";
+    lecteurAudio.autoplay = 'false';
     result.innerHTML =
-      "La partie est finie! Bravo, votre score  est de " + `${score}/20`;
+      'La partie est finie! Bravo, votre score  est de ' + `${score}/20`;
   }
 }
 function pressEnterToTryValue(e) {
-  if (e.key === "Enter") {
+  if (e.key === 'Enter') {
     tryValue();
   }
 }
@@ -122,14 +129,14 @@ function tryValue() {
       currentPlaylist.tracks[compteurTrack].artist
     )
   ) {
-    result.innerText = "Bravo !!";
+    result.innerText = 'Bravo !!';
     textEditValue.focus();
-    textEditValue.value = "";
+    textEditValue.value = '';
     score++;
     divscore.innerHTML = templateScore(score);
     lecturePlaylist();
   } else {
-    result.innerText = "Nope...";
+    result.innerText = 'Nope...';
     textEditValue.focus();
   }
 }
@@ -170,24 +177,27 @@ function getAllPlaylists() {
 function jouerOnePlaylist() {
   const adresseActuelle = window.location;
 
-  const words = adresseActuelle.pathname.split("/");
+  const words = adresseActuelle.pathname.split('/');
 
   idCurrentPlaylist = words[words.length - 1];
-  currentPlaylist = getPlaylistFromId(idCurrentPlaylist);
+  currentPlaylist = getPlaylistFromSessionStorage(idCurrentPlaylist);
+  if (currentPlaylist == undefined) {
+    currentPlaylist = getPlaylistFromId(idCurrentPlaylist);
+  }
 }
 
 //Ajout events
-btnTry.addEventListener("click", tryValue);
-textEditValue.addEventListener("keypress", pressEnterToTryValue);
-btnNextTrack.addEventListener("click", () => {
-  textEditValue.value = "";
+btnTry.addEventListener('click', tryValue);
+textEditValue.addEventListener('keypress', pressEnterToTryValue);
+btnNextTrack.addEventListener('click', () => {
+  textEditValue.value = '';
   textEditValue.focus();
   lecturePlaylist();
 });
-btnChangerPlaylist.addEventListener("click", changerPlaylist);
-lecteurAudio.addEventListener("ended", lecturePlaylist);
-lecteurAudio.addEventListener("timeupdate", progressMove);
-btnPlayPause.addEventListener("click", playMusique);
-progressBar.addEventListener("click", clearText);
+btnChangerPlaylist.addEventListener('click', changerPlaylist);
+lecteurAudio.addEventListener('ended', lecturePlaylist);
+lecteurAudio.addEventListener('timeupdate', progressMove);
+btnPlayPause.addEventListener('click', playMusique);
+progressBar.addEventListener('click', clearText);
 
 jouerOnePlaylist();
