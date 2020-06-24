@@ -16,8 +16,7 @@ function getAllPlaylists() {
     .then((response) => {
       allPlaylists = response.playlists;
 
-      let html = '<ul>';
-
+      let html = '';
       for (playlist of allPlaylists) {
         html +=
           '<li onclick="jouerOnePlaylist(\'' +
@@ -29,8 +28,8 @@ function getAllPlaylists() {
         // playlist.id +
         // "')\">  Supprimer </button>"
       }
-      html += '</ul>';
 
+      html = `<ul>${html}</ul>`;
       divListe.innerHTML = html;
     });
 }
@@ -49,24 +48,25 @@ const btnPlaylist = document.getElementById('getPlaylistsUser');
 const listPlaylists = document.getElementById('collapseOne');
 
 btnPlaylist.addEventListener('click', chargement);
-
-function chargement() {
+let pagination = 0;
+function chargement(e, pagination) {
+  pagination = 20;
   $.ajax({
     url: '/api/spotify/playlists',
+    data: {
+      startIndex: pagination,
+    },
   }).done(function (data) {
     listPlaylists.innerHTML = '';
     items = data.data.items;
     listPlaylists.innerHTML = '<ul>';
     for (item of items) {
-      listPlaylists.innerHTML +=
-        '<li onclick="chargementOnePlaylist(\'' +
-        item.id +
-        '\')"> ' +
-        item.name +
-        ' </li>';
+      listPlaylists.innerHTML += `<li onclick="chargementOnePlaylist(${item.id})">
+          ${item.name}
+        </li>`;
     }
 
-    listPlaylists.innerHTML += '</ul>';
+    listPlaylists.innerHTML += `<li onclick="chargement(${pagination})">Plus de playlists</li></ul>`;
   });
 }
 

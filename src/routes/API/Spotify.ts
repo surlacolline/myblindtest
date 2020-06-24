@@ -28,7 +28,8 @@ router.get('/callback', async (req: Request, res: Response) => {
 });
 
 router.get('/playlists', async (req: Request, res: Response) => {
-  const result = getPlaylists(req, res);
+  const { startIndex } = req.query;
+  const result = getPlaylists(req, res, startIndex.toString());
 });
 
 router.get('/playlist', async (req: Request, res: Response) => {

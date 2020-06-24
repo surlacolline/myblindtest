@@ -127,11 +127,11 @@ export function callback(
   }
 }
 
-export function getPlaylists(req: any, res: any) {
+export function getPlaylists(req: any, res: any, indexStart: string) {
   // requesting access token from refresh token
   const refresh_token = req.query.refresh_token;
   const authOptions = {
-    url: 'https://api.spotify.com/v1/users/11120922355/playlists',
+    url: `https://api.spotify.com/v1/users/11120922355/playlists?offset=${Number}`,
     headers: { Authorization: 'Bearer ' + testToken },
     json: true,
   };

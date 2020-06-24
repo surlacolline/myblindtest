@@ -1,10 +1,10 @@
-@import "./btnPlayPause.css";
-@import "./progressBar.css";
-@import "./button1.css";
+@import './btnPlayPause.css';
+@import './progressBar.css';
+@import './button1.css';
 
 body {
   background: linear-gradient(to left, var(--pink), var(--purple));
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 14px 'Lucida Grande', Helvetica, Arial, sans-serif;
   color: var(--pink);
 }
 #jeu {
@@ -55,11 +55,10 @@ body {
   padding: 20px;
 }
 
-@import "compass/css3";
+@import 'compass/css3';
 
 .liste div {
-  width: 200px;
-  margin: 30px;
+  width: 500px;
 }
 
 h2 {
