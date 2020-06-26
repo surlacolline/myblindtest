@@ -19,13 +19,10 @@
     <link rel="stylesheet" type="text/css" href="/stylesheets/popup.css" />
   </head>
   <body>
-    <a href="/api/spotify/login" class="btn btn-primary"
-      >Connecter vous à Spotify pour choisir une playlist</a
-    >
+    <a href="/api/spotify/login" class="btn btn-primary">Connexion à Spotify</a>
 
     <div class="container">
       <div class="duo liste">
-        <div id="listePlaylist"></div>
         <div class="accordion" id="accordionExample">
           <div class="card">
             <div class="card-header" id="headingOne">
@@ -35,24 +32,47 @@
                   id="getUserPlaylists"
                   type="button"
                   data-toggle="collapse"
-                  data-target="#collapseOne"
-                  aria-expanded="false"
-                  aria-controls="collapseOne"
+                  data-target="#listePlaylist"
+                  aria-expanded="true"
+                  aria-controls="listePlaylist"
                 >
-                  Choisir une des mes playlists
+                  Choisir une playlist v
                 </button>
               </h2>
             </div>
 
             <div
-              id="collapseOne"
-              class="collapse show"
+              id="listePlaylist"
+              class="collapse"
               aria-labelledby="headingOne"
               data-parent="#accordionExample"
             >
-              <div class="card-body">
-                1
-              </div>
+              <div class="card-body"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header" id="headingOne">
+              <h2 class="mb-0">
+                <button
+                  class="btn btn-link btn-block text-left"
+                  id="getUserPlaylists"
+                  type="button"
+                  data-toggle="collapse"
+                  data-target="#collapseOne"
+                  aria-expanded="true"
+                  aria-controls="collapseOne"
+                >
+                  Choisir une des mes playlists Spotify v
+                </button>
+              </h2>
+            </div>
+            <div
+              id="collapseOne"
+              class="collapse"
+              aria-labelledby="headingOne"
+              data-parent="#accordionExample"
+            >
+              <div class="card-body"></div>
             </div>
           </div>
           <div class="card">
@@ -67,7 +87,7 @@
                   aria-expanded="false"
                   aria-controls="collapseTwo"
                 >
-                  Collapsible Group Item #2
+                  Choisir une catégorie Spotify v
                 </button>
               </h2>
             </div>
@@ -82,7 +102,7 @@
               </div>
             </div>
           </div>
-          <div class="card">
+          <div class="card" id="cardCategoryPlaylists">
             <div class="card-header" id="headingThree">
               <h2 class="mb-0">
                 <button
@@ -92,6 +112,7 @@
                   data-target="#collapseThree"
                   aria-expanded="false"
                   aria-controls="collapseThree"
+                  id="collapseThreeTitle"
                 >
                   Collapsible Group Item #3
                 </button>

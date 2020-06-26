@@ -72,11 +72,35 @@ ul {
   margin: 0;
   padding: 0;
 }
-
-li {
+.btn-link {
   font: 200 20px/1.5 Helvetica, Verdana, sans-serif;
-  border-bottom: 1px solid var(--pink);
+
   padding: 10px;
+  color: var(--pink);
+  text-decoration: none;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid var(--pink);
+}
+.card {
+  background-color: transparent;
+  border: none;
+}
+.btn-link:focus {
+  outline: none;
+  box-shadow: none;
+}
+.btn-link:hover {
+  color: var(--purple);
+}
+li {
+  font: 100 17px/1.5 Helvetica, Verdana, sans-serif;
+  /* border-bottom: 1px solid var(--pink); */
+  padding: 10px;
+}
+.card-header {
+  background-color: transparent;
+  border-bottom: none;
 }
 
 li:last-child {

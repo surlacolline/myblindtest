@@ -32,6 +32,8 @@ function getAllPlaylists() {
       html = `<ul>${html}</ul>`;
       divListe.innerHTML = html;
     });
+
+  document.getElementById('cardCategoryPlaylists').style.display = 'none';
 }
 
 function jouerOnePlaylist(id) {
@@ -65,19 +67,23 @@ function showUserPlaylists(e, blAfficherPlus) {
     data: {
       startIndex: pagination * 20,
     },
-  }).done(function (data) {
-    items = data.data.items;
+  })
+    .done(function (data) {
+      items = data.data.items;
 
-    for (item of items) {
-      html += `<li onclick="chargementOnePlaylist('${item.id}')">
+      for (item of items) {
+        html += `<li onclick="chargementOnePlaylist('${item.id}')">
           ${item.name}
         </li>`;
-    }
+      }
 
-    html += `<li onclick="afficherPlus()">Plus de playlists</li></ul>`;
-    html = `<ul>${html} </ul>`;
-    listUserPlaylists.innerHTML = html;
-  });
+      html += `<li onclick="afficherPlus()">Plus de playlists</li></ul>`;
+      html = `<ul>${html} </ul>`;
+      listUserPlaylists.innerHTML = html;
+    })
+    .catch(() => {
+      alert("Veuillez d'abord vous connecter à votre compte spotify");
+    });
 }
 
 function afficherPlus() {
@@ -114,7 +120,7 @@ function showSpotifyCategories(e, blAfficherPlus) {
     categories = data.data.categories.items;
 
     for (category of categories) {
-      html += `<li onclick="getCategoryPlaylists('${category.id}')">
+      html += `<li onclick="getCategoryPlaylists('${category.id}', '${category.name}')">
           ${category.name}
         </li>`;
     }
@@ -125,7 +131,7 @@ function showSpotifyCategories(e, blAfficherPlus) {
   });
 }
 
-function showCategoryPlaylists(id, blAfficherPlus) {
+function showCategoryPlaylists(id, categoryName, blAfficherPlus) {
   if (blAfficherPlus) {
     pagination++;
   }
@@ -149,10 +155,17 @@ function showCategoryPlaylists(id, blAfficherPlus) {
     html += `<li onclick="afficherPlus()">Plus de playlists</li></ul>`;
     html = `<ul>${html} </ul>`;
     listCategoryPlaylists.innerHTML = html;
+    document.getElementById(
+      'collapseThreeTitle'
+    ).innerHTML = `Choisir une playlist de la catégorie ${categoryName} v `;
+    document.getElementById('cardCategoryPlaylists').style.display = 'block';
+
+    listCategories.classList.remove('show');
+    listCategoryPlaylists.classList.add('show');
   });
 }
-function getCategoryPlaylists(id) {
-  let html = showCategoryPlaylists(id, false);
+function getCategoryPlaylists(id, categoryName) {
+  let html = showCategoryPlaylists(id, categoryName, false);
   listCategoryPlaylists.innerHTML = 'test';
 }
 function getMoreCategories() {
