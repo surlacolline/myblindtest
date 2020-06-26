@@ -131,13 +131,38 @@ export function getPlaylists(req: any, res: any, indexStart: string) {
   // requesting access token from refresh token
   const refresh_token = req.query.refresh_token;
   const authOptions = {
-    url: `https://api.spotify.com/v1/users/11120922355/playlists?offset=${Number}`,
+    url: `https://api.spotify.com/v1/users/11120922355/playlists`,
     headers: { Authorization: 'Bearer ' + testToken },
     json: true,
   };
 
   request
-    .get('https://api.spotify.com/v1/users/11120922355/playlists', authOptions)
+    .get(
+      `https://api.spotify.com/v1/users/11120922355/playlists?offset=${indexStart}`,
+      authOptions
+    )
+    .then((body: any) => {
+      const access_token = body.access_token;
+      res.send({
+        data: JSON.parse(body[0]),
+      });
+    });
+}
+
+export function getCategories(req: any, res: any, indexStart: string) {
+  // requesting access token from refresh token
+  const refresh_token = req.query.refresh_token;
+  const authOptions = {
+    url: `https://api.spotify.com/v1/browse/categories`,
+    headers: { Authorization: 'Bearer ' + testToken },
+    json: true,
+  };
+
+  request
+    .get(
+      `https://api.spotify.com/v1/browse/categories?offset=${indexStart}`,
+      authOptions
+    )
     .then((body: any) => {
       const access_token = body.access_token;
       res.send({
@@ -163,6 +188,24 @@ export function getOnePlaylist(req: any, res: any) {
       playlistDao.add(playlist);
     }
 
+    res.send({
+      data: JSON.parse(body[0]),
+    });
+  });
+}
+
+export function getCategoryPlaylists(req: any, res: any) {
+  // requesting access token from refresh token
+  const idCategory = req.query.idCategory;
+  const startIndex = req.query.startIndex;
+  const authOptions = {
+    url: `https://api.spotify.com/v1/browse/categories/${idCategory}/playlists?offset=${startIndex}`,
+    headers: { Authorization: 'Bearer ' + testToken },
+    json: true,
+  };
+
+  request.get(authOptions.url, authOptions).then((body: any) => {
+    const access_token = body.access_token;
     res.send({
       data: JSON.parse(body[0]),
     });

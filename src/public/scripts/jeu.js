@@ -78,6 +78,9 @@ function getPlaylistFromSessionStorage(id) {
   let playlist = JSON.parse(sessionStorage.getItem(id));
 
   currentPlaylist = playlist;
+  if (!playlist) {
+    return;
+  }
   lecturePlaylist();
   return playlist;
 }

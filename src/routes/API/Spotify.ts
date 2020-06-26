@@ -6,6 +6,8 @@ import log, {
   getPlaylists,
   getOnePlaylist,
   getUserPlaylist,
+  getCategories,
+  getCategoryPlaylists,
 } from '../../spotify/login';
 
 import { paramMissingError } from '../../shared/constants';
@@ -30,6 +32,15 @@ router.get('/callback', async (req: Request, res: Response) => {
 router.get('/playlists', async (req: Request, res: Response) => {
   const { startIndex } = req.query;
   const result = getPlaylists(req, res, startIndex.toString());
+});
+
+router.get('/categories', async (req: Request, res: Response) => {
+  const { startIndex } = req.query;
+  const result = getCategories(req, res, startIndex.toString());
+});
+
+router.get('/categoryPlaylists', async (req: Request, res: Response) => {
+  const result = getCategoryPlaylists(req, res);
 });
 
 router.get('/playlist', async (req: Request, res: Response) => {
