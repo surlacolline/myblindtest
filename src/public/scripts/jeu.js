@@ -25,6 +25,7 @@ const sectionJeu = document.getElementById('jeu');
 const progressBar = document.querySelector('.progress-bar');
 const progress = document.querySelector('.progress');
 const btnPlayPause = document.getElementById('PlayPause');
+const toast = document.querySelector('.toast');
 
 //Function
 function clearText() {
@@ -189,16 +190,36 @@ function jouerOnePlaylist() {
   }
 }
 
+var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+var toastList = toastElList.map(function (toastEl) {
+  return new bootstrap.Toast(toastEl, option);
+});
+
+const templateToast = ` <div class="toast-header">
+<img src="..." class="rounded mr-2" alt="...">
+<strong class="mr-auto">Bootstrap</strong>
+<small>11 mins ago</small>
+<button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+  <span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="toast-body">
+Hello, world! This is a toast message.
+</div>`;
 //Ajout events
 btnTry.addEventListener('click', tryValue);
 textEditValue.addEventListener('keypress', pressEnterToTryValue);
 btnNextTrack.addEventListener('click', () => {
   textEditValue.value = '';
   textEditValue.focus();
+  toast.show();
   lecturePlaylist();
 });
 btnChangerPlaylist.addEventListener('click', changerPlaylist);
-lecteurAudio.addEventListener('ended', lecturePlaylist);
+lecteurAudio.addEventListener('ended', () => {
+  toast.show();
+  lecturePlaylist();
+});
 lecteurAudio.addEventListener('timeupdate', progressMove);
 btnPlayPause.addEventListener('click', playMusique);
 progressBar.addEventListener('click', clearText);

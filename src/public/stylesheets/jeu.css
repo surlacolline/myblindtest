@@ -1,10 +1,10 @@
-@import "./btnPlayPause.css";
-@import "./progressBar.css";
-@import "./button1.css";
+@import './btnPlayPause.css';
+@import './progressBar.css';
+@import './button1.css';
 
 body {
   background: linear-gradient(to left, var(--pink), var(--purple));
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 14px 'Lucida Grande', Helvetica, Arial, sans-serif;
   color: var(--pink);
 }
 #jeu {
@@ -17,6 +17,13 @@ body {
   justify-items: center;
   align-items: center;
   grid-gap: 30px;
+}
+
+@media screen and (max-width: 700px) {
+  #jeu {
+  display: block;
+    grid-template-rows: none;
+ 
 }
 #resultat {
   height: 50px;

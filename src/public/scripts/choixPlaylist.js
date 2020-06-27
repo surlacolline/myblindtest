@@ -1,15 +1,17 @@
 let allPlaylists;
-
-const sectionChoix = document.getElementById('choix');
 const divListe = document.getElementById('listePlaylist');
-
+const btnPlaylist = document.getElementById('getUserPlaylists');
+const btnGetCategories = document.getElementById('getSpotifyCategories');
+const listUserPlaylists = document.getElementById('collapseOne');
+const listCategories = document.getElementById('collapseTwo');
+const listCategoryPlaylists = document.getElementById('collapseThree');
 const divHero = document.getElementById('titre');
 
+let paginationUsersPlaylist = 0;
+let paginationCategories = 0;
+let paginationCategoryPlaylists = 0;
+
 function getAllPlaylists() {
-  //Masquer la partie jeu
-
-  compteurTrack = 0;
-
   //
   httpGet('/api/playlists/all')
     .then((response) => response.json())
@@ -36,87 +38,64 @@ function getAllPlaylists() {
   document.getElementById('cardCategoryPlaylists').style.display = 'none';
 }
 
-function jouerOnePlaylist(id) {
-  window.location = '/playlist/' + id;
-}
-
 function deleteOnePlaylist(id) {
   httpDelete('/api/playlists/delete/' + id).then(() => {
     getAllPlaylists();
   });
 }
 
-const btnPlaylist = document.getElementById('getUserPlaylists');
-const btnGetCategories = document.getElementById('getSpotifyCategories');
-const listUserPlaylists = document.getElementById('collapseOne');
-const listCategories = document.getElementById('collapseTwo');
-const listCategoryPlaylists = document.getElementById('collapseThree');
-
-btnPlaylist.addEventListener('click', showUserPlaylists);
-btnGetCategories.addEventListener('click', showSpotifyCategories);
-let pagination = 0;
-
 function showUserPlaylists(e, blAfficherPlus) {
   if (blAfficherPlus) {
-    pagination++;
+    paginationUsersPlaylist++;
   }
 
   let html = '';
   $.ajax({
     url: '/api/spotify/playlists',
     data: {
-      startIndex: pagination * 20,
+      startIndex: paginationUsersPlaylist * 20,
     },
-  })
-    .done(function (data) {
-      items = data.data.items;
+  }).done(function (data) {
+    if (data.data?.error?.status === 401) {
+      listUserPlaylists.classList.remove('show');
+      alert("Veuillez d'abord vous connecter à votre compte spotify");
+      return;
+    }
+    items = data.data.items;
 
-      for (item of items) {
-        html += `<li onclick="chargementOnePlaylist('${item.id}')">
+    for (item of items) {
+      html += `<li onclick="chargementOnePlaylist('${item.id}')">
           ${item.name}
         </li>`;
-      }
+    }
 
-      html += `<li onclick="afficherPlus()">Plus de playlists</li></ul>`;
-      html = `<ul>${html} </ul>`;
-      listUserPlaylists.innerHTML = html;
-    })
-    .catch(() => {
-      alert("Veuillez d'abord vous connecter à votre compte spotify");
-    });
+    html += `<li onclick="afficherPlus()">Plus de playlists</li></ul>`;
+    html = `<ul>${html} </ul>`;
+    listUserPlaylists.innerHTML = html;
+  });
 }
 
 function afficherPlus() {
   showUserPlaylists(undefined, true);
 }
-function chargementOnePlaylist(id) {
-  $.ajax({
-    url: '/api/spotify/user/playlist',
-    data: {
-      idPlaylist: id,
-    },
-  }).done(function (data) {
-    playlistJson = JSON.parse(data.data);
-    sessionStorage.setItem(
-      playlistJson.id.toString(),
-      JSON.stringify(playlistJson)
-    );
-    window.location = '/playlist/' + playlistJson.id;
-  });
-}
 
 function showSpotifyCategories(e, blAfficherPlus) {
   if (blAfficherPlus) {
-    pagination++;
+    paginationCategories++;
   }
 
   let html = '';
   $.ajax({
     url: '/api/spotify/categories',
     data: {
-      startIndex: pagination * 20,
+      startIndex: paginationCategories * 20,
     },
   }).done(function (data) {
+    if (data.data?.error?.status === 401) {
+      listCategories.classList.remove('show');
+      alert("Veuillez d'abord vous connecter à votre compte spotify");
+    }
+
     categories = data.data.categories.items;
 
     for (category of categories) {
@@ -133,7 +112,7 @@ function showSpotifyCategories(e, blAfficherPlus) {
 
 function showCategoryPlaylists(id, categoryName, blAfficherPlus) {
   if (blAfficherPlus) {
-    pagination++;
+    paginationCategoryPlaylist++;
   }
 
   let html = '';
@@ -141,9 +120,14 @@ function showCategoryPlaylists(id, categoryName, blAfficherPlus) {
     url: '/api/spotify/CategoryPlaylists',
     data: {
       idCategory: id,
-      startIndex: pagination * 20,
+      startIndex: paginationCategoryPlaylist * 20,
     },
   }).done(function (data) {
+    if (data.data?.error?.status === 401) {
+      listCategoryPlaylists.classList.remove('show');
+      alert("Veuillez d'abord vous connecter à votre compte spotify");
+    }
+
     items = data.data.playlists.items;
 
     for (item of items) {
@@ -165,11 +149,38 @@ function showCategoryPlaylists(id, categoryName, blAfficherPlus) {
   });
 }
 function getCategoryPlaylists(id, categoryName) {
-  let html = showCategoryPlaylists(id, categoryName, false);
-  listCategoryPlaylists.innerHTML = 'test';
+  showCategoryPlaylists(id, categoryName, false);
 }
 function getMoreCategories() {
   showSpotifyCategories(undefined, true);
 }
+
+//Selection d'une playlist
+function chargementOnePlaylist(id) {
+  $.ajax({
+    url: '/api/spotify/user/playlist',
+    data: {
+      idPlaylist: id,
+    },
+  }).done(function (data) {
+    playlistJson = JSON.parse(data.data);
+    sessionStorage.setItem(
+      playlistJson.id.toString(),
+      JSON.stringify(playlistJson)
+    );
+    jouerOnePlaylist(playlistJson.id);
+  });
+}
+
+function jouerOnePlaylist(id) {
+  window.location = '/playlist/' + id;
+}
+const btnLogin = document.getElementById('loginSpotify');
+function loginSpotify() {
+  document.getElementById('loginSpotify').innerHTML = `Bienvenue`;
+}
+btnLogin.addEventListener('click', loginSpotify);
+btnPlaylist.addEventListener('click', showUserPlaylists);
+btnGetCategories.addEventListener('click', showSpotifyCategories);
 //Lancement immédiat
 getAllPlaylists();
