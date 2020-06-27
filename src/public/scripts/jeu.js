@@ -190,34 +190,36 @@ function jouerOnePlaylist() {
   }
 }
 
-var toastElList = [].slice.call(document.querySelectorAll('.toast'));
-var toastList = toastElList.map(function (toastEl) {
-  return new bootstrap.Toast(toastEl, option);
-});
+function launch_toast() {
+  const nom = currentPlaylist.tracks[compteurTrack].name;
+  const titre = currentPlaylist.tracks[compteurTrack].artist;
+  document.getElementById('snackbar').innerHTML = `C'était ${nom} de ${titre}`;
+  // Get the snackbar DIV
+  var x = document.getElementById('snackbar');
 
-const templateToast = ` <div class="toast-header">
-<img src="..." class="rounded mr-2" alt="...">
-<strong class="mr-auto">Bootstrap</strong>
-<small>11 mins ago</small>
-<button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-  <span aria-hidden="true">&times;</span>
-</button>
-</div>
-<div class="toast-body">
-Hello, world! This is a toast message.
-</div>`;
+  // Add the "show" class to DIV
+  x.className = 'show';
+
+  // After 3 seconds, remove the show class from DIV
+  setTimeout(function () {
+    x.className = x.className.replace('show', '');
+  }, 5000);
+}
+
+const templateToast = ``;
 //Ajout events
 btnTry.addEventListener('click', tryValue);
 textEditValue.addEventListener('keypress', pressEnterToTryValue);
 btnNextTrack.addEventListener('click', () => {
   textEditValue.value = '';
   textEditValue.focus();
-  toast.show();
+
+  launch_toast();
   lecturePlaylist();
 });
 btnChangerPlaylist.addEventListener('click', changerPlaylist);
 lecteurAudio.addEventListener('ended', () => {
-  toast.show();
+  launch_toast();
   lecturePlaylist();
 });
 lecteurAudio.addEventListener('timeupdate', progressMove);

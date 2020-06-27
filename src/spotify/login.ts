@@ -25,9 +25,9 @@ let testToken: any;
 // tslint:disable: variable-name
 const client_id = 'f6cd9756638b411bb4f994de4e33bd16'; // Your client id
 const client_secret = '01ac2e104d5a45dcae46448da7cb2e97'; // Your secret
-// const redirect_uri =
-// 'https://myblindtest-dev.herokuapp.com/api/spotify/callback'; // Your redirect uri
-const redirect_uri = 'http://localhost:3000/api/spotify/callback'; // Your redirect uri
+const redirect_uri =
+  'https://myblindtest-dev.herokuapp.com/api/spotify/callback'; // Your redirect uri
+// const redirect_uri = 'http://localhost:3000/api/spotify/callback'; // Your redirect uri
 
 /**
  * Generates a random string containing numbers and letters
