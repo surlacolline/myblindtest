@@ -112,7 +112,7 @@ function showSpotifyCategories(e, blAfficherPlus) {
 
 function showCategoryPlaylists(id, categoryName, blAfficherPlus) {
   if (blAfficherPlus) {
-    paginationCategoryPlaylist++;
+    paginationCategoryPlaylists++;
   }
 
   let html = '';
@@ -120,7 +120,7 @@ function showCategoryPlaylists(id, categoryName, blAfficherPlus) {
     url: '/api/spotify/CategoryPlaylists',
     data: {
       idCategory: id,
-      startIndex: paginationCategoryPlaylist * 20,
+      startIndex: paginationCategoryPlaylists * 20,
     },
   }).done(function (data) {
     if (data.data?.error?.status === 401) {
