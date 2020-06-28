@@ -6,6 +6,7 @@ const listUserPlaylists = document.getElementById('collapseOne');
 const listCategories = document.getElementById('collapseTwo');
 const listCategoryPlaylists = document.getElementById('collapseThree');
 const divHero = document.getElementById('titre');
+const btnSpotify = document.getElementById('loginSpotify');
 
 let paginationUsersPlaylist = 0;
 let paginationCategories = 0;
@@ -39,6 +40,10 @@ function getAllPlaylists() {
     });
 
   document.getElementById('cardCategoryPlaylists').style.display = 'none';
+  const name = getCookie('display_name');
+  if (name !== null) {
+    document.getElementById('loginSpotify').innerHTML = `${name}`;
+  }
 }
 
 function deleteOnePlaylist(id) {
@@ -48,6 +53,12 @@ function deleteOnePlaylist(id) {
 }
 
 function showUserPlaylists(e, blAfficherPlus) {
+  const id = getCookie('id');
+  if (id === null) {
+    listUserPlaylists.classList.remove('show');
+    alert("Veuillez d'abord vous connecter à votre compte spotify");
+    return;
+  }
   if (blAfficherPlus) {
     paginationUsersPlaylist++;
   }
@@ -195,10 +206,20 @@ function jouerOnePlaylist(id) {
   window.location = '/playlist/' + id;
 }
 const btnLogin = document.getElementById('loginSpotify');
-function loginSpotify() {
-  document.getElementById('loginSpotify').innerHTML = `Bienvenue`;
+function loginOrDisconnectSpotify() {
+  const id = getCookie('id');
+  if (id !== null) {
+    //deconexion
+    deleteCookie('id');
+    deleteCookie('display_name');
+    deleteCookie('Token');
+    document.getElementById('loginSpotify').innerHTML = `Connexion à Spotify`;
+    btnSpotify.href = '';
+  } else {
+    btnGetCategories.href = '/api/spotify/login';
+  }
 }
-btnLogin.addEventListener('click', loginSpotify);
+btnLogin.addEventListener('click', loginOrDisconnectSpotify);
 btnPlaylist.addEventListener('click', showUserPlaylists);
 btnGetCategories.addEventListener('click', showSpotifyCategories);
 //Lancement immédiat

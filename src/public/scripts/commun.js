@@ -51,6 +51,10 @@ function getCookie(name) {
   }
   return null;
 }
+
+function deleteCookie(name) {
+  document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
 loadPopupDiv().catch((error) => {
   console.log('error!');
   console.error(error);
