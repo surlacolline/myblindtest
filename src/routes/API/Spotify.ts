@@ -8,6 +8,8 @@ import log, {
   getUserPlaylist,
   getCategories,
   getCategoryPlaylists,
+  APILogin,
+  getAPIPlaylist,
 } from '../../spotify/login';
 
 import { paramMissingError } from '../../shared/constants';
@@ -29,6 +31,10 @@ router.get('/callback', async (req: Request, res: Response) => {
   const result = callback(req, res);
 });
 
+router.get('/APILogin', async (req: Request, res: Response) => {
+  const result = APILogin(req, res);
+});
+
 router.get('/playlists', async (req: Request, res: Response) => {
   const { startIndex } = req.query;
   const result = getPlaylists(req, res, startIndex.toString());
@@ -45,6 +51,10 @@ router.get('/categoryPlaylists', async (req: Request, res: Response) => {
 
 router.get('/playlist', async (req: Request, res: Response) => {
   const result = getOnePlaylist(req, res);
+});
+
+router.get('/playlistAPI', async (req: Request, res: Response) => {
+  const result = getAPIPlaylist(req, res);
 });
 
 router.get('/user/playlist', async (req: Request, res: Response) => {

@@ -23,6 +23,7 @@ const playlistDao = new PlaylistDao();
 const client_id = 'f6cd9756638b411bb4f994de4e33bd16'; // Your client id
 const client_secret = '01ac2e104d5a45dcae46448da7cb2e97'; // Your secret
 const stateKey = 'spotify_auth_state';
+const stateKeyAPI = 'spotify_auth_state';
 let redirect_uri = '';
 if (process.env.NODE_ENV === 'development') {
   redirect_uri = 'http://localhost:3000/api/spotify/callback'; // Your redirect uri
@@ -112,13 +113,14 @@ export function callback(
     request
       .post('https://accounts.spotify.com/api/token', authOptions)
       .sendForm(authOptions.form)
-      .then(([bodyString, response]) => {
+      .then(async ([bodyString, response]) => {
         // BodyType, http.IncomingMessageo
         if (response.statusCode === 200) {
           const body = JSON.parse(bodyString as string);
           const access_token = body.access_token;
           const refresh_token = body.refresh_token;
-
+          let id: string;
+          let display_name: string;
           const options = {
             url: 'https://api.spotify.com/v1/me',
             headers: { Authorization: 'Bearer ' + access_token },
@@ -126,17 +128,22 @@ export function callback(
           };
 
           // use the access token to access the Spotify Web API
-          request
-            .get('https://api.spotify.com/v1/me', options)
-            .then((body: any) => {
-              // tslint:disable-next-line: no-console
-              console.log(body);
-            });
+
+          const bodyUserJson: string[] = (await request.get(
+            'https://api.spotify.com/v1/me',
+            options
+          )) as string[];
+
+          const bodyUser = JSON.parse(bodyUserJson[0]);
+          id = bodyUser.id;
+          display_name = bodyUser.display_name;
+          res.cookie('id', id);
+          res.cookie('display_name', display_name);
 
           // response.cookie('token', access_token);
           // we can also pass the token to the browser to make requests from there
           res.cookie('token', access_token);
-          res.cookie('refreshToken', refresh_token);
+
           res.redirect('/playlist');
 
           //  +
@@ -157,19 +164,84 @@ export function callback(
   }
 }
 
+export function APILogin(
+  req: any,
+  // res2: {
+  //   redirect: (arg0: string) => void;
+  //   clearCookie: (arg0: string) => void;
+  // },
+  res: Response
+) {
+  // your application requests refresh and access tokens
+  // after checking the state parameter
+
+  const code = req.query.code || null;
+  const stateAPI = req.query.stateAPI || null;
+  const storedStateAPI = req.cookies ? req.cookies[stateKeyAPI] : null;
+
+  res.clearCookie(stateKeyAPI);
+  const authOptions = {
+    headers: {
+      Authorization:
+        'Basic ' +
+        new Buffer(client_id + ':' + client_secret).toString('base64'),
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  };
+
+  request
+    .post(
+      'https://accounts.spotify.com/api/token?grant_type=client_credentials',
+      authOptions
+    )
+    .then(([bodyString, response]) => {
+      // BodyType, http.IncomingMessageo
+      if (response.statusCode === 200) {
+        const body = JSON.parse(bodyString as string);
+        const access_token = body.access_token;
+        const refresh_token = body.refresh_token;
+
+        const options = {
+          url: 'https://api.spotify.com/v1/me',
+          headers: { Authorization: 'Bearer ' + access_token },
+          json: true,
+        };
+
+        // response.cookie('token', access_token);
+        // we can also pass the token to the browser to make requests from there
+        res.cookie('tokenAPI', access_token);
+        res.redirect('/playlist');
+
+        //  +
+        //     querystring.stringify({
+        //       access_token,
+        //       refresh_token,
+        //     })
+        // );
+      } else {
+        res.redirect(
+          '/#' +
+            querystring.stringify({
+              error: 'invalid_token',
+            })
+        );
+      }
+    });
+}
+
 export function getPlaylists(req: any, res: any, indexStart: string) {
   // requesting access token from refresh token
-  const refresh_token = req.query.refresh_token;
-  const testToken2 = req.cookies.token;
+
+  const Token = req.cookies.token;
   const authOptions = {
-    url: `https://api.spotify.com/v1/users/11120922355/playlists`,
-    headers: { Authorization: 'Bearer ' + testToken2 },
+    url: `https://api.spotify.com/v1/users/${req.cookies.id}/playlists`,
+    headers: { Authorization: 'Bearer ' + Token },
     json: true,
   };
 
   request
     .get(
-      `https://api.spotify.com/v1/users/11120922355/playlists?offset=${indexStart}`,
+      `https://api.spotify.com/v1/users/${req.cookies.id}/playlists?offset=${indexStart}`,
       authOptions
     )
     .then((body: any) => {
@@ -184,7 +256,7 @@ export function getPlaylists(req: any, res: any, indexStart: string) {
 export function getCategories(req: any, res: any, indexStart: string) {
   // requesting access token from refresh token
   const refresh_token = req.query.refresh_token;
-  const Token = req.cookies.token;
+  const Token = req.cookies.tokenAPI;
   const authOptions = {
     url: `https://api.spotify.com/v1/browse/categories`,
     headers: { Authorization: 'Bearer ' + Token },
@@ -232,7 +304,7 @@ export function getCategoryPlaylists(req: any, res: any) {
   // requesting access token from refresh token
   const idCategory = req.query.idCategory;
   const startIndex = req.query.startIndex;
-  const Token = req.cookies.token;
+  const Token = req.cookies.tokenAPI;
   const authOptions = {
     url: `https://api.spotify.com/v1/browse/categories/${idCategory}/playlists?offset=${startIndex}`,
     headers: { Authorization: 'Bearer ' + Token },
@@ -274,6 +346,28 @@ export function getUserPlaylist(req: any, res: any) {
   // requesting access token from refresh token
   const idPlaylist = req.query.idPlaylist;
   const Token = req.cookies.token;
+  const authOptions = {
+    url: 'https://api.spotify.com/v1/playlists/' + idPlaylist,
+    headers: { Authorization: 'Bearer ' + Token },
+    json: true,
+  };
+
+  request.get(authOptions.url, authOptions).then((body: any) => {
+    let playlist: Playlist = new Playlist();
+    playlist = getPlaylist(body[0]);
+
+    res
+      .send({
+        data: JSON.stringify(playlist),
+      })
+      .catch((error: any) => console.log(error));
+  });
+}
+
+export function getAPIPlaylist(req: any, res: any) {
+  // requesting access token from refresh token
+  const idPlaylist = req.query.idPlaylist;
+  const Token = req.cookies.tokenAPI;
   const authOptions = {
     url: 'https://api.spotify.com/v1/playlists/' + idPlaylist,
     headers: { Authorization: 'Bearer ' + Token },

@@ -13,6 +13,9 @@ let paginationCategoryPlaylists = 0;
 
 function getAllPlaylists() {
   //
+  httpGet('/api/spotify/APILogin').then((response) => {
+    console.log('APILogin');
+  });
   httpGet('/api/playlists/all')
     .then((response) => response.json())
     .then((response) => {
@@ -131,7 +134,7 @@ function showCategoryPlaylists(id, categoryName, blAfficherPlus) {
     items = data.data.playlists.items;
 
     for (item of items) {
-      html += `<li onclick="chargementOnePlaylist('${item.id}')">
+      html += `<li onclick="chargementOneAPIPlaylist('${item.id}')">
           ${item.name}
         </li>`;
     }
@@ -159,6 +162,22 @@ function getMoreCategories() {
 function chargementOnePlaylist(id) {
   $.ajax({
     url: '/api/spotify/user/playlist',
+    data: {
+      idPlaylist: id,
+    },
+  }).done(function (data) {
+    playlistJson = JSON.parse(data.data);
+    sessionStorage.setItem(
+      playlistJson.id.toString(),
+      JSON.stringify(playlistJson)
+    );
+    jouerOnePlaylist(playlistJson.id);
+  });
+}
+
+function chargementOneAPIPlaylist(id) {
+  $.ajax({
+    url: '/api/spotify/playlistAPI',
     data: {
       idPlaylist: id,
     },
