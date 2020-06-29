@@ -145,7 +145,7 @@ export function callback(
           // we can also pass the token to the browser to make requests from there
           res.cookie('token', access_token);
           res.cookie('RefreshToken', refresh_token);
-          res.redirect('/playlist');
+          res.redirect('/');
 
           //  +
           //     querystring.stringify({

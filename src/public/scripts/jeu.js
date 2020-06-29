@@ -51,7 +51,7 @@ function playMusique() {
 }
 
 function changerPlaylist() {
-  window.location = '/playlist';
+  window.location = '/';
 }
 function nextPlaylist() {
   compteurPlaylist++;
@@ -133,14 +133,13 @@ function tryValue() {
       currentPlaylist.tracks[compteurTrack].artist
     )
   ) {
-    result.innerText = 'Bravo !!';
     textEditValue.focus();
     textEditValue.value = '';
     score++;
     divscore.innerHTML = templateScore(score);
     lecturePlaylist();
   } else {
-    result.innerText = 'Nope...';
+    launch_toast(`Nope...`);
     textEditValue.focus();
   }
 }
@@ -189,14 +188,16 @@ function jouerOnePlaylist() {
     currentPlaylist = getPlaylistFromId(idCurrentPlaylist);
   }
 }
-const snackBarProcess = [];
-function launch_toast() {
+function snackResponse() {
   const nom = currentPlaylist.tracks[compteurTrack].name;
   const titre = currentPlaylist.tracks[compteurTrack].artist;
-  document.getElementById('snackbar').innerHTML = `C'était ${nom} de ${titre}`;
+  launch_toast(`C'était ${nom} de ${titre}`);
+}
+const snackBarProcess = [];
+function launch_toast(message) {
   // Get the snackbar DIV
   var x = document.getElementById('snackbar');
-
+  x.innerHTML = message;
   // Add the "show" class to DIV
   x.className = 'show';
   snackBarProcess.forEach((p) => clearTimeout(p));
@@ -216,12 +217,12 @@ btnNextTrack.addEventListener('click', () => {
   textEditValue.value = '';
   textEditValue.focus();
 
-  launch_toast();
+  snackResponse();
   lecturePlaylist();
 });
 btnChangerPlaylist.addEventListener('click', changerPlaylist);
 lecteurAudio.addEventListener('ended', () => {
-  launch_toast();
+  snackResponse();
   lecturePlaylist();
 });
 lecteurAudio.addEventListener('timeupdate', progressMove);

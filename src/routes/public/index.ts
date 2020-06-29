@@ -11,9 +11,5 @@ const viewsDir = path.join(__dirname, '../../views');
 
 router.use('/playlist', PlaylistRouter);
 
-router.get('/playlists', async (req: Request, res: Response) => {
-  res.sendFile('playlists.html', { root: viewsDir });
-});
-
 // Export the base-router
 export default router;

@@ -49,6 +49,9 @@
     display: flex;
     max-width: 200px;
   }
+  .fixed-div {
+    visibility: hidden;
+  }
 }
 
 /* The snackbar - position it at the bottom and in the middle of the screen */

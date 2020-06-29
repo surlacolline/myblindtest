@@ -112,7 +112,6 @@ li a {
 }
 
 li a:hover {
-  font-size: 22px;
   color: var(--hoover);
 }
 .collapse {
