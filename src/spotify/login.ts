@@ -30,7 +30,8 @@ if (process.env.NODE_ENV === 'development') {
 } else if (process.env.NODE_ENV === 'production') {
   redirect_uri = 'https://myblindtest-dev.herokuapp.com/api/spotify/callback'; // Your redirect uri
 }
-
+const TokenAPI: string = '';
+const RefreshTokenAPI: string = '';
 /**
  * Generates a random string containing numbers and letters
  * @param  {number} length The length of the string
@@ -143,7 +144,7 @@ export function callback(
           // response.cookie('token', access_token);
           // we can also pass the token to the browser to make requests from there
           res.cookie('token', access_token);
-
+          res.cookie('RefreshToken', refresh_token);
           res.redirect('/playlist');
 
           //  +
@@ -162,6 +163,54 @@ export function callback(
         }
       });
   }
+}
+
+function getRefreshToken() {
+  let req: Request;
+  let res: Response;
+  // requesting access token from refresh token
+  const refresh_token = req..refresh_token;
+  const authOptions = {
+    url: 'https://accounts.spotify.com/api/token',
+    headers: {
+      Authorization:
+        'Basic ' +
+        new Buffer(client_id + ':' + client_secret).toString('base64'),
+    },
+    form: {
+      grant_type: 'refresh_token',
+      refresh_token,
+    },
+    json: true,
+  };
+
+  request
+    .post('https://accounts.spotify.com/api/token', authOptions)
+    .then(([bodyString, response]) => {
+      // BodyType, http.IncomingMessageo
+      if (response.statusCode === 200) {
+        const body = JSON.parse(bodyString as string);
+        const access_token = body.access_token;
+        const refresh_token = body.refresh_token;
+
+        const options = {
+          url: 'https://api.spotify.com/v1/me',
+          headers: { Authorization: 'Bearer ' + access_token },
+          json: true,
+        };
+
+        // response.cookie('token', access_token);
+        // we can also pass the token to the browser to make requests from there
+        res.cookie('token', access_token);
+      } else {
+        res.redirect(
+          '/#' +
+            querystring.stringify({
+              error: 'invalid_token',
+            })
+        );
+      }
+    });
 }
 
 export function APILogin(
@@ -211,13 +260,6 @@ export function APILogin(
         // we can also pass the token to the browser to make requests from there
         res.cookie('tokenAPI', access_token);
         res.redirect('/playlist');
-
-        //  +
-        //     querystring.stringify({
-        //       access_token,
-        //       refresh_token,
-        //     })
-        // );
       } else {
         res.redirect(
           '/#' +
@@ -254,7 +296,6 @@ export function getPlaylists(req: any, res: any, indexStart: string) {
 }
 
 export function getCategories(req: any, res: any, indexStart: string) {
-  // requesting access token from refresh token
   const refresh_token = req.query.refresh_token;
   const Token = req.cookies.tokenAPI;
   const authOptions = {
@@ -265,7 +306,7 @@ export function getCategories(req: any, res: any, indexStart: string) {
 
   request
     .get(
-      `https://api.spotify.com/v1/browse/categories?offset=${indexStart}`,
+      `https://api.spotify.com/v1/browse/categories?country=FR&offset=${indexStart}`,
       authOptions
     )
     .then((body: any) => {
@@ -277,7 +318,6 @@ export function getCategories(req: any, res: any, indexStart: string) {
 }
 
 export function getOnePlaylist(req: any, res: any) {
-  // requesting access token from refresh token
   const idPlaylist = req.query.idPlaylist;
   const Token = req.cookies.token;
   const authOptions = {
@@ -301,12 +341,11 @@ export function getOnePlaylist(req: any, res: any) {
 }
 
 export function getCategoryPlaylists(req: any, res: any) {
-  // requesting access token from refresh token
   const idCategory = req.query.idCategory;
   const startIndex = req.query.startIndex;
   const Token = req.cookies.tokenAPI;
   const authOptions = {
-    url: `https://api.spotify.com/v1/browse/categories/${idCategory}/playlists?offset=${startIndex}`,
+    url: `https://api.spotify.com/v1/browse/categories/${idCategory}/playlists?country=FR&offset=${startIndex}`,
     headers: { Authorization: 'Bearer ' + Token },
     json: true,
   };
@@ -343,7 +382,6 @@ function getPlaylist(playlistSpotify: string): Playlist {
 }
 
 export function getUserPlaylist(req: any, res: any) {
-  // requesting access token from refresh token
   const idPlaylist = req.query.idPlaylist;
   const Token = req.cookies.token;
   const authOptions = {
@@ -365,7 +403,6 @@ export function getUserPlaylist(req: any, res: any) {
 }
 
 export function getAPIPlaylist(req: any, res: any) {
-  // requesting access token from refresh token
   const idPlaylist = req.query.idPlaylist;
   const Token = req.cookies.tokenAPI;
   const authOptions = {

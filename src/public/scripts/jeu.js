@@ -189,7 +189,7 @@ function jouerOnePlaylist() {
     currentPlaylist = getPlaylistFromId(idCurrentPlaylist);
   }
 }
-
+const snackBarProcess = [];
 function launch_toast() {
   const nom = currentPlaylist.tracks[compteurTrack].name;
   const titre = currentPlaylist.tracks[compteurTrack].artist;
@@ -199,11 +199,13 @@ function launch_toast() {
 
   // Add the "show" class to DIV
   x.className = 'show';
-
+  snackBarProcess.forEach((p) => clearTimeout(p));
   // After 3 seconds, remove the show class from DIV
-  setTimeout(function () {
-    x.className = x.className.replace('show', '');
-  }, 5000);
+  snackBarProcess.push(
+    setTimeout(function () {
+      x.className = x.className.replace('show', '');
+    }, 5000)
+  );
 }
 
 const templateToast = ``;
