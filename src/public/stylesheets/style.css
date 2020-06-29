@@ -1,3 +1,6 @@
+@import './glyphicon.css';
+@import './snackBar.css';
+
 :root {
   --pink: rgb(255, 192, 203);
   --pink-transparent: rgb(255, 192, 203, 0.7);
@@ -7,7 +10,10 @@
 
 body {
   padding: 20px;
+
+  background: linear-gradient(to left, var(--pink), var(--purple));
   font: 14px 'Lucida Grande', Helvetica, Arial, sans-serif;
+  color: var(--pink);
 }
 .cursor-pointer {
   cursor: pointer;
@@ -38,4 +44,10 @@ body {
   width: 30px;
   height: 30px;
   font-size: x-large;
+}
+
+i {
+  padding: 5px;
+}
+@media screen and (max-width: 700px) {
 }

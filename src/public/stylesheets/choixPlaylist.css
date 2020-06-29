@@ -1,12 +1,5 @@
-@import './btnPlayPause.css';
-@import './progressBar.css';
-@import './button1.css';
+@import './style.css';
 
-body {
-  background: linear-gradient(to left, var(--pink), var(--purple));
-  font: 14px 'Lucida Grande', Helvetica, Arial, sans-serif;
-  color: var(--pink);
-}
 #jeu {
   padding: 20px;
 }
@@ -132,6 +125,17 @@ li a:hover {
 }
 ::-webkit-scrollbar {
   width: 2px;
+}
+
+#loginSpotify {
+  border-radius: 0%;
+  border: transparent;
+  color: white;
+  background-color: black;
+  margin-bottom: 10px;
+}
+#loginSpotify i {
+  color: #1ed760;
 }
 
 ::-webkit-scrollbar-track {

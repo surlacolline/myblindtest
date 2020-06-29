@@ -1,12 +1,9 @@
+@import './style.css';
+
 @import './btnPlayPause.css';
 @import './progressBar.css';
 @import './button1.css';
 
-body {
-  background: linear-gradient(to left, var(--pink), var(--purple));
-  font: 14px 'Lucida Grande', Helvetica, Arial, sans-serif;
-  color: var(--pink);
-}
 #jeu {
   padding: 20px;
   height: 60vh;
@@ -19,12 +16,6 @@ body {
   grid-gap: 30px;
 }
 
-@media screen and (max-width: 700px) {
-  #jeu {
-    display: block;
-    grid-template-rows: none;
-  }
-}
 #resultat {
   height: 50px;
 }
@@ -32,6 +23,9 @@ body {
 #score {
   font-weight: 600;
   font-size: medium;
+}
+.wrapbtn {
+  display: flex;
 }
 
 .textTry {
@@ -48,6 +42,13 @@ body {
 ::placeholder {
   color: var(--pink);
   font-size: 20px;
+}
+
+@media screen and (max-width: 700px) {
+  .textTry {
+    display: flex;
+    max-width: 200px;
+  }
 }
 
 /* The snackbar - position it at the bottom and in the middle of the screen */

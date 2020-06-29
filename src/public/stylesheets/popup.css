@@ -29,7 +29,6 @@
   margin: 70px auto;
   padding: 20px;
   background: var(--pink);
-  border-radius: 20px/50px;
   width: 30%;
   position: relative;
   transition: all 1s ease-in-out;
@@ -63,9 +62,9 @@
 
 @media screen and (max-width: 700px) {
   .box {
-    width: 70%;
+    width: 80%;
   }
   .popup {
-    width: 70%;
+    width: 80%;
   }
 }
