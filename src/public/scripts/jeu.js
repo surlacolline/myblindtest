@@ -135,6 +135,7 @@ function tryValue() {
   ) {
     textEditValue.focus();
     textEditValue.value = '';
+    snackResponse('Bravo!');
     score++;
     divscore.innerHTML = templateScore(score);
     lecturePlaylist();
@@ -188,10 +189,11 @@ function jouerOnePlaylist() {
     currentPlaylist = getPlaylistFromId(idCurrentPlaylist);
   }
 }
-function snackResponse() {
+function snackResponse(message) {
   const nom = currentPlaylist.tracks[compteurTrack].name;
   const titre = currentPlaylist.tracks[compteurTrack].artist;
-  launch_toast(`C'était ${nom} de ${titre}`);
+  message === undefined ? (message = '') : (message = message);
+  launch_toast(`${message} C'était ${nom} de ${titre}`);
 }
 const snackBarProcess = [];
 function launch_toast(message) {
