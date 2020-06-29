@@ -36,7 +36,25 @@ async function loadPopupDiv() {
   const html = await response.text();
   popupDiv.innerHTML = html;
 }
+function getCookie(name) {
+  if (document.cookie.length == 0) return null;
 
+  var regSepCookie = new RegExp('(; )', 'g');
+  var cookies = document.cookie.split(regSepCookie);
+
+  for (var i = 0; i < cookies.length; i++) {
+    var regInfo = new RegExp('=', 'g');
+    var infos = cookies[i].split(regInfo);
+    if (infos[0] == name) {
+      return unescape(infos[1]);
+    }
+  }
+  return null;
+}
+
+function deleteCookie(name) {
+  document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
 loadPopupDiv().catch((error) => {
   console.log('error!');
   console.error(error);

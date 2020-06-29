@@ -1,3 +1,6 @@
+@import './glyphicon.css';
+@import './snackBar.css';
+
 :root {
   --pink: rgb(255, 192, 203);
   --pink-transparent: rgb(255, 192, 203, 0.7);
@@ -7,38 +10,14 @@
 
 body {
   padding: 20px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
 
-body .users-column {
-  display: inline-block;
-  margin-right: 2em;
-  vertical-align: top;
+  background: linear-gradient(to left, var(--pink), var(--purple));
+  font: 14px 'Lucida Grande', Helvetica, Arial, sans-serif;
+  color: var(--pink);
 }
-
-body .users-column .column-header {
-  padding-bottom: 5px;
-  font-weight: 700;
-  font-size: 1.2em;
+.cursor-pointer {
+  cursor: pointer;
 }
-
-body .add-user-col input {
-  margin-bottom: 10px;
-}
-
-body .users-column .user-display-ele {
-  padding-bottom: 10px;
-}
-
-body .users-column .user-display-ele button {
-  margin-top: 2px;
-  margin-bottom: 10px;
-}
-
-body .users-column .user-display-ele .edit-view {
-  display: none;
-}
-
 .fixed-div {
   position: fixed;
   bottom: 0;
@@ -56,6 +35,7 @@ body .users-column .user-display-ele .edit-view {
   font-weight: 800;
   color: var(--purple);
   transition: font-size 0.3s ease, color 0.3s ease;
+  box-sizing: initial;
 }
 
 .fixed-div:hover {
@@ -64,4 +44,10 @@ body .users-column .user-display-ele .edit-view {
   width: 30px;
   height: 30px;
   font-size: x-large;
+}
+
+i {
+  padding: 5px;
+}
+@media screen and (max-width: 700px) {
 }
