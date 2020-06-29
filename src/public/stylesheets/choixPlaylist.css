@@ -125,11 +125,13 @@ li a:hover {
 .collapse {
   max-height: 400px;
   overflow-y: auto;
-  scrollbar-color: var(--purple) var(--pink);
+  scrollbar-color: var(--pink) rgba(0, 0, 0, 0.2);
   scrollbar-width: thin;
+  margin-left: 50px;
+  margin-top: -6px;
 }
 ::-webkit-scrollbar {
-  width: 1em;
+  width: 2px;
 }
 
 ::-webkit-scrollbar-track {
@@ -140,4 +142,12 @@ li a:hover {
 ::-webkit-scrollbar-thumb {
   background-color: var(--pink);
   outline: 1px solid var(--pink);
+}
+
+.reverseScroll {
+  direction: rtl;
+}
+
+.reverseScroll :nth-child(n) {
+  direction: ltr;
 }

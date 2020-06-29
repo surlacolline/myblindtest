@@ -165,53 +165,53 @@ export function callback(
   }
 }
 
-function getRefreshToken() {
-  let req: Request;
-  let res: Response;
-  // requesting access token from refresh token
-  const refresh_token = req..refresh_token;
-  const authOptions = {
-    url: 'https://accounts.spotify.com/api/token',
-    headers: {
-      Authorization:
-        'Basic ' +
-        new Buffer(client_id + ':' + client_secret).toString('base64'),
-    },
-    form: {
-      grant_type: 'refresh_token',
-      refresh_token,
-    },
-    json: true,
-  };
+// function getRefreshToken() {
+//   let req: Request;
+//   let res: Response;
+//   // requesting access token from refresh token
+//   // const refresh_token = req.cookies.refresh_token;
+//   const authOptions = {
+//     url: 'https://accounts.spotify.com/api/token',
+//     headers: {
+//       Authorization:
+//         'Basic ' +
+//         new Buffer(client_id + ':' + client_secret).toString('base64'),
+//     },
+//     form: {
+//       grant_type: 'refresh_token',
+//       refresh_token,
+//     },
+//     json: true,
+//   };
 
-  request
-    .post('https://accounts.spotify.com/api/token', authOptions)
-    .then(([bodyString, response]) => {
-      // BodyType, http.IncomingMessageo
-      if (response.statusCode === 200) {
-        const body = JSON.parse(bodyString as string);
-        const access_token = body.access_token;
-        const refresh_token = body.refresh_token;
+//   request
+//     .post('https://accounts.spotify.com/api/token', authOptions)
+//     .then(([bodyString, response]) => {
+//       // BodyType, http.IncomingMessageo
+//       if (response.statusCode === 200) {
+//         const body = JSON.parse(bodyString as string);
+//         const access_token = body.access_token;
+//         const refresh_token = body.refresh_token;
 
-        const options = {
-          url: 'https://api.spotify.com/v1/me',
-          headers: { Authorization: 'Bearer ' + access_token },
-          json: true,
-        };
+//         const options = {
+//           url: 'https://api.spotify.com/v1/me',
+//           headers: { Authorization: 'Bearer ' + access_token },
+//           json: true,
+//         };
 
-        // response.cookie('token', access_token);
-        // we can also pass the token to the browser to make requests from there
-        res.cookie('token', access_token);
-      } else {
-        res.redirect(
-          '/#' +
-            querystring.stringify({
-              error: 'invalid_token',
-            })
-        );
-      }
-    });
-}
+//         // response.cookie('token', access_token);
+//         // we can also pass the token to the browser to make requests from there
+//         res.cookie('token', access_token);
+//       } else {
+//         res.redirect(
+//           '/#' +
+//             querystring.stringify({
+//               error: 'invalid_token',
+//             })
+//         );
+//       }
+//     });
+// }
 
 export function APILogin(
   req: any,
