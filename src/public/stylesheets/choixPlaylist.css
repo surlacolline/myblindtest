@@ -154,3 +154,20 @@ li a:hover {
 .reverseScroll :nth-child(n) {
   direction: ltr;
 }
+@media screen and (max-width: 700px) {
+  .bordureCadre {
+    transform: none;
+  }
+  .duo.hero {
+    max-width: 80%;
+    margin-bottom: 50px;
+  }
+
+  .duo {
+    max-width: 300px;
+    min-width: 200px;
+  }
+  .liste div {
+    max-width: 100%;
+  }
+}
