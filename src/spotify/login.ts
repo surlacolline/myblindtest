@@ -28,7 +28,7 @@ let redirect_uri = '';
 if (process.env.NODE_ENV === 'development') {
   redirect_uri = 'http://localhost:3000/api/spotify/callback'; // Your redirect uri
 } else if (process.env.NODE_ENV === 'production') {
-  redirect_uri = 'https://myblindtest-dev.herokuapp.com/api/spotify/callback'; // Your redirect uri
+  redirect_uri = 'https://myblindtest.herokuapp.com/api/spotify/callback'; // Your redirect uri
 }
 const TokenAPI: string = '';
 const RefreshTokenAPI: string = '';
