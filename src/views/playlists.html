@@ -19,27 +19,23 @@
   <body>
 
 <div id = "playlists"> Charger Playlists</div>
-<div id = "playlistOne"> Charger la 1ère playlist</div>
+
 <div id="clear">Vider la fenêtre</div>
 <div id="listPlaylists"> </div> 
 <div id="resultat"></div>
 </div>
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
-<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
   </body>
 <script>
     const btnPlaylist = document.getElementById("playlists");
-    const btnPlaylistOne = document.getElementById("playlistOne");
     const btnClear = document.getElementById("clear");
-    var listPlaylists = document.getElementById("listPlaylists");
+    const  listPlaylists = document.getElementById("listPlaylists");
+
     btnPlaylist.addEventListener("click", chargement);
-    btnPlaylistOne.addEventListener("click", chargementFirstPlaylist);
     btnClear.addEventListener("click", () => listPlaylists.innerHTML = "" );
 
-
-  //  var audio = new Audio('https://p.scdn.co/mp3-preview/bc2c6f0b4cac457f47516cc13a13128b19615e0c?cid=f6cd9756638b411bb4f994de4e33bd16');
-// audio.play();
 
     function chargement() {
     $.ajax({
@@ -58,18 +54,6 @@ listPlaylists.innerHTML+=  '</ul>'
       });
     };
   
-    function chargementFirstPlaylist() {
-    $.ajax({
-      url: "/api/spotify/playlist",
-      data: {
-                'idPlaylist': '2abve9rYdQualeWIFD9jJC'
-              }
-      }).done(function (data) {
-      items = data;
-      listPlaylists.innerHTML = JSON.stringify(data) ;
-      });
-    };
-
     function chargementOnePlaylist(id) {
     $.ajax({
       url: "/api/spotify/playlist",

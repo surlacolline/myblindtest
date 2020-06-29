@@ -1,12 +1,5 @@
-@import "./btnPlayPause.css";
-@import "./progressBar.css";
-@import "./button1.css";
+@import './style.css';
 
-body {
-  background: linear-gradient(to left, var(--pink), var(--purple));
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  color: var(--pink);
-}
 #jeu {
   padding: 20px;
 }
@@ -55,11 +48,10 @@ body {
   padding: 20px;
 }
 
-@import "compass/css3";
+@import 'compass/css3';
 
 .liste div {
-  width: 200px;
-  margin: 30px;
+  width: 500px;
 }
 
 h2 {
@@ -73,11 +65,35 @@ ul {
   margin: 0;
   padding: 0;
 }
-
-li {
+.btn-link {
   font: 200 20px/1.5 Helvetica, Verdana, sans-serif;
-  border-bottom: 1px solid var(--pink);
+
   padding: 10px;
+  color: var(--pink);
+  text-decoration: none;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid var(--pink);
+}
+.card {
+  background-color: transparent;
+  border: none;
+}
+.btn-link:focus {
+  outline: none;
+  box-shadow: none;
+}
+.btn-link:hover {
+  color: var(--purple);
+}
+li {
+  font: 100 17px/1.5 Helvetica, Verdana, sans-serif;
+  /* border-bottom: 1px solid var(--pink); */
+  padding: 10px;
+}
+.card-header {
+  background-color: transparent;
+  border-bottom: none;
 }
 
 li:last-child {
@@ -96,6 +112,45 @@ li a {
 }
 
 li a:hover {
-  font-size: 22px;
   color: var(--hoover);
+}
+.collapse {
+  max-height: 400px;
+  overflow-y: auto;
+  scrollbar-color: var(--pink) rgba(0, 0, 0, 0.2);
+  scrollbar-width: thin;
+  margin-left: 50px;
+  margin-top: -6px;
+}
+::-webkit-scrollbar {
+  width: 2px;
+}
+
+#loginSpotify {
+  border-radius: 0%;
+  border: transparent;
+  color: white;
+  background-color: black;
+  margin-bottom: 10px;
+}
+#loginSpotify i {
+  color: #1ed760;
+}
+
+::-webkit-scrollbar-track {
+  /* box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3); */
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--pink);
+  outline: 1px solid var(--pink);
+}
+
+.reverseScroll {
+  direction: rtl;
+}
+
+.reverseScroll :nth-child(n) {
+  direction: ltr;
 }
