@@ -1,5 +1,7 @@
 @import './glyphicon.css';
 @import './snackBar.css';
+@import './toggle.css';
+@import './tooltip.css';
 
 :root {
   --pink: rgb(255, 192, 203);

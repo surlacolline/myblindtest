@@ -3,7 +3,7 @@ let compteurTrack = -1;
 let compteurPlaylist = 0;
 let score = 0;
 function templateScore(score) {
-  return `Score : ${score}/20`;
+  return `Score : ${score}/${currentPlaylist.tracks.length}`;
 }
 
 let currentPlaylist;
@@ -26,6 +26,31 @@ const progressBar = document.querySelector('.progress-bar');
 const progress = document.querySelector('.progress');
 const btnPlayPause = document.getElementById('PlayPause');
 const toast = document.querySelector('.toast');
+const toggleBtn = document.querySelector('.switch');
+function blModeSoiree() {
+  const checked = document.querySelector('.switch input:checked');
+  if (checked == null) {
+    return false;
+  } else {
+    return true;
+  }
+}
+function toggleDisplay() {
+  if (blModeSoiree()) {
+    textEditValue.placeholder = `Clique ici pour voir la réponse`;
+    btnTry.innerHTML = `J'ai la bonne réponse!`;
+    textEditValue.readOnly = true;
+    btnNextTrack.innerHTML = 'Raté!';
+    document.querySelector('.tooltiptext').innerText =
+      'Désactiver le mode soirée';
+  } else {
+    textEditValue.placeholder = `Une idée du nom de la chanson ou de l'artiste?`;
+    btnTry.innerHTML = `Je me lance!`;
+    textEditValue.readOnly = false;
+    btnNextTrack.innerHTML = 'Aucune idée, Chanson suivante!';
+    document.querySelector('.tooltiptext').innerText = 'Activer le mode soirée';
+  }
+}
 
 //Function
 function clearText() {
@@ -123,6 +148,14 @@ function pressEnterToTryValue(e) {
 }
 
 function tryValue() {
+  if (blModeSoiree()) {
+    textEditValue.value = '';
+    snackResponse('Bravo!');
+    score++;
+    divscore.innerHTML = templateScore(score);
+    lecturePlaylist();
+    return;
+  }
   if (
     comparaisonSouple(
       textEditValue.value,
@@ -217,10 +250,25 @@ btnTry.addEventListener('click', tryValue);
 textEditValue.addEventListener('keypress', pressEnterToTryValue);
 btnNextTrack.addEventListener('click', () => {
   textEditValue.value = '';
-  textEditValue.focus();
+
+  blModeSoiree ? textEditValue.blur() : textEditValue.focus();
 
   snackResponse();
   lecturePlaylist();
+});
+textEditValue.addEventListener('click', () => {
+  if (!blModeSoiree()) {
+    return;
+  }
+  if (textEditValue.value.indexOf("C'est ") != -1) {
+    textEditValue.value = '';
+  } else {
+    const nom = currentPlaylist.tracks[compteurTrack].name;
+    const titre = currentPlaylist.tracks[compteurTrack].artist;
+
+    const result = `C'est ${nom} de ${titre}`;
+    textEditValue.value = result;
+  }
 });
 btnChangerPlaylist.addEventListener('click', changerPlaylist);
 lecteurAudio.addEventListener('ended', () => {
@@ -230,5 +278,6 @@ lecteurAudio.addEventListener('ended', () => {
 lecteurAudio.addEventListener('timeupdate', progressMove);
 btnPlayPause.addEventListener('click', playMusique);
 progressBar.addEventListener('click', clearText);
+toggleBtn.addEventListener('click', toggleDisplay);
 
 jouerOnePlaylist();
