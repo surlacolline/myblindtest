@@ -1,1 +1,28 @@
-<p>choix-playlist works!</p>
+<app-connexion-button></app-connexion-button>
+
+<div class="container">
+  <div class="duo liste">
+    <div class="accordion" id="accordionExample">
+      <app-liste-deroulante
+        title="Choisis une playlist My.Blind.Test."
+        [playlists]="playlists"
+        (toggled)="displayPlaylist()"
+        (itemSelectedEvent)="playlistSelected($event)"
+      ></app-liste-deroulante>
+      <app-liste-deroulante
+        title="  Choisis une des tes playlists Spotify"
+      ></app-liste-deroulante>
+      <app-liste-deroulante
+        title=" Choisis une catégorie Spotify "
+      ></app-liste-deroulante>
+      <app-liste-deroulante
+        title="Collapsible Group Item #3"
+      ></app-liste-deroulante>
+    </div>
+  </div>
+</div>
+
+<div id="popup1" class="overlay"></div>
+
+<a href="#popup1"> <div class="fixed-div">i</div> </a>
+<app-hero-frame></app-hero-frame>

@@ -1,0 +1,37 @@
+<div class="card">
+  <div class="card-header" id="headingOne">
+    <h2 class="mb-0">
+      <button
+        (click)="toggle()"
+        class="btn btn-link btn-block text-left"
+        id="getBDDPlaylist"
+        type="button"
+        data-toggle="collapse"
+        data-target="#listePlaylist"
+        aria-expanded="true"
+        aria-controls="listePlaylist"
+      >
+        {{ title }} <i class="icon-circle-down"></i>
+      </button>
+    </h2>
+  </div>
+
+  <div
+    id="listePlaylist"
+    class="collapse reverseScroll"
+    aria-labelledby="headingOne"
+    data-parent="#accordionExample"
+  >
+    <ul>
+      <li
+        class="cursor-pointer"
+        *ngFor="let playlist of playlists"
+        (click)="itemSelected(playlist)"
+      >
+        <a>{{ playlist.name }}</a>
+      </li>
+    </ul>
+
+    <div class="card-body"></div>
+  </div>
+</div>
