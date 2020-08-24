@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { LoadExamplePlaylistsService } from '../services/load-example-playlists.service';
+import { LoginSpotifyService } from '../services/spotify/login-spotify.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { IPlaylist } from '../shared-model/Playlist.model';
 
 @Component({
   selector: 'app-choix-playlist',
@@ -10,15 +12,28 @@ import { Router } from '@angular/router';
 })
 export class ChoixPlaylistComponent implements OnInit {
   private subscription: Subscription = new Subscription();
-  playlists: any[];
+  playlists: IPlaylist[];
+  userPlaylists: IPlaylist[];
   constructor(
     private examplePlaylistsService: LoadExamplePlaylistsService,
-    private router: Router
+    private router: Router,
+    private loginSpotifyService: LoginSpotifyService
   ) {}
 
   ngOnInit(): void {}
 
-  displayPlaylist(): void {
+  displayPlaylists(): void {
+    this.subscription.add(
+      this.examplePlaylistsService.getAllPlaylists().subscribe(
+        (data: any) => {
+          this.playlists = data.playlists;
+        },
+        (err) => console.log(err)
+      )
+    );
+  }
+
+  displayUserPlaylists(): void {
     this.subscription.add(
       this.examplePlaylistsService.getAllPlaylists().subscribe(
         (data: any) => {
@@ -37,5 +52,12 @@ export class ChoixPlaylistComponent implements OnInit {
       JSON.stringify(playlistJson)
     );
     this.router.navigate(['/jeu-single', { id: playlist.id }]);
+  }
+
+  onConnexion(): void {
+    console.log('Connexion...');
+    this.subscription.add(
+      this.loginSpotifyService.logToSpotifyUSer().subscribe()
+    );
   }
 }

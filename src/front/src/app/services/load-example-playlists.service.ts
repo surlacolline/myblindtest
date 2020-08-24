@@ -6,11 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class LoadExamplePlaylistsService {
-  private allPlaylists: any;
   constructor(private http: HttpClient) {}
-  httpGet(path): Promise<Response> {
-    return fetch(path);
-  }
 
   getAllPlaylists(): Observable<string> {
     //

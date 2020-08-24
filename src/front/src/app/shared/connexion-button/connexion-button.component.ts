@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-connexion-button',
   templateUrl: './connexion-button.component.html',
-  styleUrls: ['./connexion-button.component.scss']
+  styleUrls: ['./connexion-button.component.scss'],
 })
 export class ConnexionButtonComponent implements OnInit {
+  @Output() connexionEvent = new EventEmitter();
+  constructor() {}
 
-  constructor() { }
+  ngOnInit(): void {}
 
-  ngOnInit(): void {
+  onConnexion(): void {
+    this.connexionEvent.emit();
   }
-
 }

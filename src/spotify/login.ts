@@ -26,7 +26,7 @@ const stateKey = 'spotify_auth_state';
 const stateKeyAPI = 'spotify_auth_state';
 let redirect_uri = '';
 if (process.env.NODE_ENV === 'development') {
-  redirect_uri = 'http://localhost:3000/api/spotify/callback'; // Your redirect uri
+  redirect_uri = 'http://localhost:4200/api/spotify/callback'; // Your redirect uri
 } else if (process.env.NODE_ENV === 'production') {
   redirect_uri = 'https://myblindtest.herokuapp.com/api/spotify/callback'; // Your redirect uri
 }
@@ -259,7 +259,7 @@ export function APILogin(
         // response.cookie('token', access_token);
         // we can also pass the token to the browser to make requests from there
         res.cookie('tokenAPI', access_token);
-        res.redirect('/playlist');
+        // res.redirect('');
       } else {
         res.redirect(
           '/#' +

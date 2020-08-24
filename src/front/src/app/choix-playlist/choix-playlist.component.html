@@ -1,4 +1,4 @@
-<app-connexion-button></app-connexion-button>
+<app-connexion-button (connexionEvent)="onConnexion()"></app-connexion-button>
 
 <div class="container">
   <div class="duo liste">
@@ -7,11 +7,14 @@
         <app-liste-deroulante
           title="Choisis une playlist My.Blind.Test."
           [playlists]="playlists"
-          (toggled)="displayPlaylist()"
+          (toggled)="displayPlaylists()"
           (itemSelectedEvent)="playlistSelected($event)"
         ></app-liste-deroulante>
         <app-liste-deroulante
           title="  Choisis une des tes playlists Spotify"
+          [playlists]="userPlaylists"
+          (toggled)="displayUserPlaylists()"
+          (itemSelectedEvent)="playlistSelected($event)"
         ></app-liste-deroulante>
         <app-liste-deroulante
           title=" Choisis une catégorie Spotify "
