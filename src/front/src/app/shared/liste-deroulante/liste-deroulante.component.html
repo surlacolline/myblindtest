@@ -1,21 +1,34 @@
-<div class="card">
-  <div class="card-header" id="headingOne">
-    <h2 class="mb-0">
-      <button
-        (click)="toggle()"
-        class="btn btn-link btn-block text-left"
-        id="getBDDPlaylist"
-        type="button"
-        data-toggle="collapse"
-        data-target="#listePlaylist"
-        aria-expanded="true"
-        aria-controls="listePlaylist"
-      >
-        {{ title }} <i class="icon-circle-down"></i>
-      </button>
-    </h2>
-  </div>
-
+<mat-expansion-panel
+  (opened)="panelOpenState = true"
+  (closed)="panelOpenState = false"
+>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      Self aware panel
+      <div class="card">
+        <div class="card-header" id="headingOne">
+          <h2 class="mb-0">
+            <button
+              (click)="toggle()"
+              class="btn btn-link btn-block text-left"
+              id="getBDDPlaylist"
+              type="button"
+              data-toggle="collapse"
+              data-target="#listePlaylist"
+              aria-expanded="true"
+              aria-controls="listePlaylist"
+            >
+              {{ title }} <i class="icon-circle-down"></i>
+            </button>
+          </h2>
+        </div>
+      </div>
+    </mat-panel-title>
+    <mat-panel-description>
+      Currently I am {{ panelOpenState ? 'open' : 'closed' }}
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+  <p>I'm visible because I am open</p>
   <div
     id="listePlaylist"
     class="collapse reverseScroll"
@@ -34,4 +47,4 @@
 
     <div class="card-body"></div>
   </div>
-</div>
+</mat-expansion-panel>

@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { MatExpansionPanel } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-liste-deroulante',
@@ -13,6 +14,7 @@ export class ListeDeroulanteComponent implements OnInit {
   @Output() toggled = new EventEmitter();
   @Output() itemSelectedEvent = new EventEmitter();
   Counter = 0;
+  panelOpenState = false;
 
   ngOnInit(): void {}
   toggle() {

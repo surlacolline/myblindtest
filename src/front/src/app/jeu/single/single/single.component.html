@@ -1,1 +1,34 @@
-<p>single works!</p>
+<section id="jeu">
+  <div id="avancement"></div>
+  <app-audio-player
+    [src]="src"
+    [autoplay]="autoplay"
+    (playPausePressedEvent)="playPausePressed()"
+    (audioEndedEvent)="onAudioEnded()"
+  ></app-audio-player>
+  <div id="lecteur"></div>
+  <input
+    #tryValue
+    type="search"
+    class="textTry"
+    id="valueToTry"
+    placeholder="Une idée du nom de la chanson ou de l'artiste?"
+    size="50"
+  />
+
+  <div class="wrapbtn">
+    <app-simple-button></app-simple-button>
+    <app-simple-button></app-simple-button>
+    <a class="button1" id="try" (click)="methodtryValue($event, tryValue.value)"
+      >Je me lance!</a
+    >
+
+    <a class="button1" id="nextTrack" (click)="chansonSuivante()">
+      Aucune idée , Chanson suivante!
+    </a>
+  </div>
+  <div id="resultat">{{ this.resultat }}</div>
+  <div id="score">{{ score }}</div>
+  <a class="button1" id="changerPlaylist"> Changer de playlist</a>
+  <br />
+</section>

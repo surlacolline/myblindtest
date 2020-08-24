@@ -1,0 +1,7 @@
+<button
+  (click)="playpause()"
+  [ngClass]="playPause ? 'play' : 'paused'"
+  class="playpausebutton"
+  id="PlayPause"
+  (NextSongEvent)="onNextSong()"
+></button>

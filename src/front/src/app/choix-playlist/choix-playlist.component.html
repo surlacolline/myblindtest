@@ -3,21 +3,23 @@
 <div class="container">
   <div class="duo liste">
     <div class="accordion" id="accordionExample">
-      <app-liste-deroulante
-        title="Choisis une playlist My.Blind.Test."
-        [playlists]="playlists"
-        (toggled)="displayPlaylist()"
-        (itemSelectedEvent)="playlistSelected($event)"
-      ></app-liste-deroulante>
-      <app-liste-deroulante
-        title="  Choisis une des tes playlists Spotify"
-      ></app-liste-deroulante>
-      <app-liste-deroulante
-        title=" Choisis une catégorie Spotify "
-      ></app-liste-deroulante>
-      <app-liste-deroulante
-        title="Collapsible Group Item #3"
-      ></app-liste-deroulante>
+      <mat-accordion>
+        <app-liste-deroulante
+          title="Choisis une playlist My.Blind.Test."
+          [playlists]="playlists"
+          (toggled)="displayPlaylist()"
+          (itemSelectedEvent)="playlistSelected($event)"
+        ></app-liste-deroulante>
+        <app-liste-deroulante
+          title="  Choisis une des tes playlists Spotify"
+        ></app-liste-deroulante>
+        <app-liste-deroulante
+          title=" Choisis une catégorie Spotify "
+        ></app-liste-deroulante>
+        <app-liste-deroulante
+          title="Collapsible Group Item #3"
+        ></app-liste-deroulante>
+      </mat-accordion>
     </div>
   </div>
 </div>
