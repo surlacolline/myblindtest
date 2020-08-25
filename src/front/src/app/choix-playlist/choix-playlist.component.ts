@@ -15,6 +15,7 @@ export class ChoixPlaylistComponent implements OnInit {
   playlists: IPlaylist[];
   userPlaylists: IPlaylist[];
   categories: any[];
+  categoryPlaylists: IPlaylist[];
   constructor(
     private examplePlaylistsService: LoadExamplePlaylistsService,
     private router: Router,
@@ -34,21 +35,21 @@ export class ChoixPlaylistComponent implements OnInit {
   }
 
   displayPlaylists(): void {
-    // this.subscription.add(
-    //   this.examplePlaylistsService.getAllPlaylists().subscribe(
-    //     (data: any) => {
-    //       this.playlists = data.playlists;
-    //     },
-    //     (err) => console.log(err)
-    //   )
-    // );
-  }
-
-  displayUserPlaylists(): void {
     this.subscription.add(
       this.examplePlaylistsService.getAllPlaylists().subscribe(
         (data: any) => {
           this.playlists = data.playlists;
+        },
+        (err) => console.log(err)
+      )
+    );
+  }
+
+  displayUserPlaylists(): void {
+    this.subscription.add(
+      this.examplePlaylistsService.getAllUserPlaylists().subscribe(
+        (data: any) => {
+          this.userPlaylists = data.playlists;
         },
         (err) => console.log(err)
       )
@@ -80,6 +81,17 @@ export class ChoixPlaylistComponent implements OnInit {
 
   categoriesSelected(categorie: any): void {
     console.log(categorie.name);
+    this.subscription.add(
+      this.loginSpotifyService.showCategoryPlaylists(categorie.id).subscribe(
+        (data: any) => {
+          if (data === undefined) {
+          } else {
+            this.categoryPlaylists = data.data.playlists.items;
+          }
+        },
+        (err) => console.log(err)
+      )
+    );
   }
   onConnexion(): void {
     console.log('Connexion...');

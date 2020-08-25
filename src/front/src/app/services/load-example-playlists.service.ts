@@ -13,6 +13,11 @@ export class LoadExamplePlaylistsService {
 
     return this.http.get<string>('/api/playlists/all');
   }
+  getAllUserPlaylists(): Observable<string> {
+    //
+
+    return this.http.get<string>('/api/spotify/user/playlist');
+  }
 
   // .then((response) => {
   //   this.allPlaylists = response.playlists;

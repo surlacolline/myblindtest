@@ -25,6 +25,8 @@
         ></app-liste-deroulante>
         <app-liste-deroulante
           title="Collapsible Group Item #3"
+          [playlists]="categoryPlaylists"
+          (itemSelectedEvent)="playlistSelected($event)"
         ></app-liste-deroulante>
       </mat-accordion>
     </div>

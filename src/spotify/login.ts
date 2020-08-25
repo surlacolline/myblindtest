@@ -342,7 +342,10 @@ export function getOnePlaylist(req: any, res: any) {
 
 export function getCategoryPlaylists(req: any, res: any) {
   const idCategory = req.query.idCategory;
-  const startIndex = req.query.startIndex;
+  let startIndex = req.query.startIndex;
+  if (startIndex === undefined) {
+    startIndex = 0;
+  }
   const Token = req.cookies.tokenAPI;
   const authOptions = {
     url: `https://api.spotify.com/v1/browse/categories/${idCategory}/playlists?country=FR&offset=${startIndex}`,

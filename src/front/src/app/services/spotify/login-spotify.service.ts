@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -35,5 +35,12 @@ export class LoginSpotifyService {
 
   showSpotifyCategories(e, blAfficherPlus): Observable<any> {
     return this.http.get<string>('/api/spotify/categories');
+  }
+
+  showCategoryPlaylists(id): Observable<any> {
+    const myparams = new HttpParams().set('idCategory', id);
+    return this.http.get<string>('/api/spotify/categoryPlaylists', {
+      params: myparams,
+    });
   }
 }
