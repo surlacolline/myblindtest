@@ -14,23 +14,34 @@ export class ChoixPlaylistComponent implements OnInit {
   private subscription: Subscription = new Subscription();
   playlists: IPlaylist[];
   userPlaylists: IPlaylist[];
+  categories: any[];
   constructor(
     private examplePlaylistsService: LoadExamplePlaylistsService,
     private router: Router,
     private loginSpotifyService: LoginSpotifyService
   ) {}
 
-  ngOnInit(): void {}
-
-  displayPlaylists(): void {
+  ngOnInit(): void {
+    console.log('Connexion API...');
     this.subscription.add(
-      this.examplePlaylistsService.getAllPlaylists().subscribe(
+      this.loginSpotifyService.logToSpotifyAPI().subscribe(
         (data: any) => {
-          this.playlists = data.playlists;
+          console.log(data);
         },
         (err) => console.log(err)
       )
     );
+  }
+
+  displayPlaylists(): void {
+    // this.subscription.add(
+    //   this.examplePlaylistsService.getAllPlaylists().subscribe(
+    //     (data: any) => {
+    //       this.playlists = data.playlists;
+    //     },
+    //     (err) => console.log(err)
+    //   )
+    // );
   }
 
   displayUserPlaylists(): void {
@@ -44,6 +55,19 @@ export class ChoixPlaylistComponent implements OnInit {
     );
   }
 
+  displayCategories(): void {
+    this.subscription.add(
+      this.loginSpotifyService.showSpotifyCategories(null, false).subscribe(
+        (data: any) => {
+          if (data === undefined) {
+          } else {
+            this.categories = data.data.categories.items;
+          }
+        },
+        (err) => console.log(err)
+      )
+    );
+  }
   playlistSelected(playlist: any): void {
     console.log(playlist.name);
     const playlistJson = playlist;
@@ -54,6 +78,9 @@ export class ChoixPlaylistComponent implements OnInit {
     this.router.navigate(['/jeu-single', { id: playlist.id }]);
   }
 
+  categoriesSelected(categorie: any): void {
+    console.log(categorie.name);
+  }
   onConnexion(): void {
     console.log('Connexion...');
     this.subscription.add(

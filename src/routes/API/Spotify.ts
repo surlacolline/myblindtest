@@ -42,7 +42,11 @@ router.get('/playlists', async (req: Request, res: Response) => {
 
 router.get('/categories', async (req: Request, res: Response) => {
   const { startIndex } = req.query;
-  const result = getCategories(req, res, startIndex.toString());
+  if (startIndex) {
+    const result = getCategories(req, res, startIndex.toString());
+  } else {
+    const result = getCategories(req, res, '0');
+  }
 });
 
 router.get('/categoryPlaylists', async (req: Request, res: Response) => {

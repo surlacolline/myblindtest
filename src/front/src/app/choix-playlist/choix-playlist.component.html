@@ -1,5 +1,6 @@
 <app-connexion-button (connexionEvent)="onConnexion()"></app-connexion-button>
-
+<a href="/api/spotify/APILogin">test</a><br />
+<a href="/api/spotify/login">test2</a>
 <div class="container">
   <div class="duo liste">
     <div class="accordion" id="accordionExample">
@@ -18,6 +19,9 @@
         ></app-liste-deroulante>
         <app-liste-deroulante
           title=" Choisis une catégorie Spotify "
+          [playlists]="categories"
+          (toggled)="displayCategories()"
+          (itemSelectedEvent)="categoriesSelected($event)"
         ></app-liste-deroulante>
         <app-liste-deroulante
           title="Collapsible Group Item #3"
