@@ -4,6 +4,7 @@ import { LoginSpotifyService } from '../services/spotify/login-spotify.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { IPlaylist } from '../shared-model/Playlist.model';
+import { IcuPlaceholder } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Component({
   selector: 'app-choix-playlist',
@@ -76,9 +77,26 @@ export class ChoixPlaylistComponent implements OnInit {
       playlistJson.id.toString(),
       JSON.stringify(playlistJson)
     );
+
     this.router.navigate(['/jeu-single', { id: playlist.id }]);
   }
 
+  playlistSelectedAPI(playlist: any): void {
+    console.log(playlist.name);
+    const playlistJson = playlist;
+
+    this.subscription.add(
+      this.loginSpotifyService
+        .getPlaylist(playlist.id)
+        .subscribe((data: any) => {
+          if (data === undefined) {
+          } else {
+            const playlistAPI = data.data;
+            this.playlistSelected(JSON.parse(playlistAPI));
+          }
+        })
+    );
+  }
   categoriesSelected(categorie: any): void {
     console.log(categorie.name);
     this.subscription.add(

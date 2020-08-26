@@ -43,4 +43,11 @@ export class LoginSpotifyService {
       params: myparams,
     });
   }
+
+  getPlaylist(id): Observable<any> {
+    const myparams = new HttpParams().set('idPlaylist', id);
+    return this.http.get<string>('/api/spotify//playlistAPI', {
+      params: myparams,
+    });
+  }
 }
