@@ -1,5 +1,6 @@
 <section id="jeu">
   <div id="avancement"></div>
+
   <app-audio-player
     [src]="src"
     [autoplay]="autoplay"
@@ -17,19 +18,21 @@
   />
 
   <div class="wrapbtn">
-    <app-simple-button></app-simple-button>
-    <app-simple-button></app-simple-button>
-    <a class="button1" id="try" (click)="methodtryValue($event, tryValue.value)"
-      >Je me lance!</a
-    >
-
-    <a class="button1" id="nextTrack" (click)="chansonSuivante()">
-      Aucune idée , Chanson suivante!
-    </a>
+    <app-simple-button
+      title="Je me lance!"
+      (click)="methodtryValue($event, tryValue.value)"
+    ></app-simple-button>
+    <app-simple-button
+      title="Aucune idée , Chanson suivante!"
+      (click)="chansonSuivante()"
+    ></app-simple-button>
   </div>
   <div id="resultat">{{ this.resultat }}</div>
   <div id="score">{{ score }}</div>
-  <a class="button1" id="changerPlaylist"> Changer de playlist</a>
-  <app-simple-button (click)="RetourChoixPlaylist()"></app-simple-button>
+
+  <app-simple-button
+    title=" Changer de playlist"
+    (click)="RetourChoixPlaylist()"
+  ></app-simple-button>
   <br />
 </section>

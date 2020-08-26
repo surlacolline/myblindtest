@@ -1,7 +1,9 @@
 <app-play-pause-button
   (playPausePressed)="playPausePressed()"
 ></app-play-pause-button>
-<app-progress-bar></app-progress-bar>
+<app-progress-bar
+  [audioProgressPercent]="audioProgressPercent"
+></app-progress-bar>
 <audio
   #audioPlayer
   autoplay="false"
@@ -10,6 +12,7 @@
   [autoplay]="autoplay"
   (ended)="audioEnded()"
   (playNextSong)="onNextSong()"
+  (timeupdate)="progressMove($event)"
 >
   Your browser does not support the
   <code>audio</code> element.

@@ -30,6 +30,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     ListeDeroulanteComponent,
     AudioPlayerComponent,
     SimpleButtonComponent,
+    ProgressBarComponent,
   ],
 })
 export class SharedModule {}

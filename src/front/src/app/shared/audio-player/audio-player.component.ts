@@ -7,6 +7,7 @@ import {
   ViewChild,
   ElementRef,
 } from '@angular/core';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-audio-player',
@@ -19,7 +20,10 @@ export class AudioPlayerComponent implements OnInit {
   @Output() playPausePressedEvent = new EventEmitter();
   @Output() audioEndedEvent = new EventEmitter();
   @Output() NextSongEvent = new EventEmitter();
+  @Output() ProgressChanged = new EventEmitter();
   @ViewChild('audioPlayer') myAudioPlayer: ElementRef;
+  audioProgressPercent: number;
+  AudioDuration: number;
 
   constructor() {}
 
@@ -41,5 +45,9 @@ export class AudioPlayerComponent implements OnInit {
 
   onNextSong(): void {
     this.NextSongEvent.emit();
+  }
+  progressMove(event: any): void {
+    this.audioProgressPercent =
+      (event.srcElement.currentTime * 100) / event.srcElement.duration;
   }
 }
