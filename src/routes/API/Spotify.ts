@@ -36,7 +36,10 @@ router.get('/APILogin', async (req: Request, res: Response) => {
 });
 
 router.get('/playlists', async (req: Request, res: Response) => {
-  const { startIndex } = req.query;
+  let { startIndex } = req.query;
+  if (startIndex === undefined) {
+    startIndex = '0';
+  }
   const result = getPlaylists(req, res, startIndex.toString());
 });
 

@@ -16,7 +16,7 @@ export class LoadExamplePlaylistsService {
   getAllUserPlaylists(): Observable<string> {
     //
 
-    return this.http.get<string>('/api/spotify/user/playlist');
+    return this.http.get<string>('/api/spotify/playlists');
   }
 
   // .then((response) => {

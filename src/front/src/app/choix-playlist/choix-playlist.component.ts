@@ -4,7 +4,6 @@ import { LoginSpotifyService } from '../services/spotify/login-spotify.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { IPlaylist } from '../shared-model/Playlist.model';
-import { IcuPlaceholder } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Component({
   selector: 'app-choix-playlist',
@@ -23,17 +22,7 @@ export class ChoixPlaylistComponent implements OnInit {
     private loginSpotifyService: LoginSpotifyService
   ) {}
 
-  ngOnInit(): void {
-    console.log('Connexion API...');
-    this.subscription.add(
-      this.loginSpotifyService.logToSpotifyAPI().subscribe(
-        (data: any) => {
-          console.log(data);
-        },
-        (err) => console.log(err)
-      )
-    );
-  }
+  ngOnInit(): void {}
 
   displayPlaylists(): void {
     this.subscription.add(
@@ -50,7 +39,7 @@ export class ChoixPlaylistComponent implements OnInit {
     this.subscription.add(
       this.examplePlaylistsService.getAllUserPlaylists().subscribe(
         (data: any) => {
-          this.userPlaylists = data.playlists;
+          this.userPlaylists = data.data.items;
         },
         (err) => console.log(err)
       )

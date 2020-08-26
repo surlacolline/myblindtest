@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ChoixPlaylistComponent } from 'src/app/choix-playlist/choix-playlist.component';
 import { IPlaylist } from './../../../shared-model/Playlist.model';
 import { TryValueService } from './../../../services/try-value.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-single',
@@ -20,7 +21,10 @@ export class SingleComponent implements OnInit {
   src: string;
   autoplay: boolean;
 
-  constructor(private tryValueService: TryValueService) {}
+  constructor(
+    private tryValueService: TryValueService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.compteurTrack = 0;
@@ -99,5 +103,9 @@ export class SingleComponent implements OnInit {
     } else {
       console.log('faux');
     }
+  }
+
+  RetourChoixPlaylist(): void {
+    this.router.navigate(['/choix-playlist']);
   }
 }
