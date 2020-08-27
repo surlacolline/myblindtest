@@ -16,6 +16,8 @@ export class ChoixPlaylistComponent implements OnInit {
   userPlaylists: IPlaylist[];
   categories: any[];
   categoryPlaylists: IPlaylist[];
+  showCategoryPlaylists = false;
+  titleCategorie: string;
   constructor(
     private examplePlaylistsService: LoadExamplePlaylistsService,
     private router: Router,
@@ -88,12 +90,14 @@ export class ChoixPlaylistComponent implements OnInit {
   }
   categoriesSelected(categorie: any): void {
     console.log(categorie.name);
+    this.titleCategorie = `Chosis une playlist de la catégorie ${categorie.name}`;
     this.subscription.add(
       this.loginSpotifyService.showCategoryPlaylists(categorie.id).subscribe(
         (data: any) => {
           if (data === undefined) {
           } else {
             this.categoryPlaylists = data.data.playlists.items;
+            this.showCategoryPlaylists = true;
           }
         },
         (err) => console.log(err)

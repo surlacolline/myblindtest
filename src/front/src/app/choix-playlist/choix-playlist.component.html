@@ -23,8 +23,11 @@
           (toggled)="displayCategories()"
           (itemSelectedEvent)="categoriesSelected($event)"
         ></app-liste-deroulante>
+
         <app-liste-deroulante
-          title="Collapsible Group Item #3"
+          *ngIf="showCategoryPlaylists"
+          [title]="titleCategorie"
+          [panelOpenState]="showCategoryPlaylists"
           [playlists]="categoryPlaylists"
           (itemSelectedEvent)="playlistSelectedAPI($event)"
         ></app-liste-deroulante>

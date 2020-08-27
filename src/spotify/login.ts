@@ -259,7 +259,7 @@ export function APILogin(
         // response.cookie('token', access_token);
         // we can also pass the token to the browser to make requests from there
         res.cookie('tokenAPI', access_token);
-        res.redirect('');
+        res.redirect('/');
       } else {
         res.redirect(
           '/#' +

@@ -14,7 +14,7 @@ export class ListeDeroulanteComponent implements OnInit {
   @Output() toggled = new EventEmitter();
   @Output() itemSelectedEvent = new EventEmitter();
   Counter = 0;
-  panelOpenState = false;
+  @Input() panelOpenState = false;
 
   ngOnInit(): void {}
   toggle() {
