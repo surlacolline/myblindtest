@@ -41,13 +41,15 @@
   grid-row: 1 / -1;
   transform: translate(10%, 10%);
 }
-
+#APIConnexion {
+  color: transparent;
+}
 .cadreBlanc * {
   padding: 20px;
 }
 
 .liste div {
-  width: 500px;
+  width: 550px;
 }
 
 h2 {

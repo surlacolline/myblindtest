@@ -71,10 +71,7 @@ export class SingleComponent implements OnInit {
       // lecteurAudio.pause();
       this.playNextSong.emit();
       this.avancement =
-        ' ' +
-        (this.compteurTrack + 1) +
-        ' / ' +
-        this.currentPlaylist.tracks.length;
+        ' ' + this.compteurTrack + ' / ' + this.currentPlaylist.tracks.length;
     } else {
       this.src = null;
       this.autoplay = false;

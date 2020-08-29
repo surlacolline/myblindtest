@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { LoadExamplePlaylistsService } from '../services/load-example-playlists.service';
 import { LoginSpotifyService } from '../services/spotify/login-spotify.service';
 import { Subscription } from 'rxjs';
@@ -18,13 +18,37 @@ export class ChoixPlaylistComponent implements OnInit {
   categoryPlaylists: IPlaylist[];
   showCategoryPlaylists = false;
   titleCategorie: string;
+  userName: string;
+  @ViewChild('connexionButton') connexionButton: ElementRef;
   constructor(
     private examplePlaylistsService: LoadExamplePlaylistsService,
     private router: Router,
     private loginSpotifyService: LoginSpotifyService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.userName = this.getCookie('display_name') || 'connexion';
+
+    this.connexionButton.nativeElement.click();
+  }
+
+  getCookie(name): string {
+    if (document.cookie.length === 0) {
+      return null;
+    }
+
+    const regSepCookie = new RegExp('(; )', 'g');
+    const cookies = document.cookie.split(regSepCookie);
+
+    for (let i = 0; i < cookies.length; i++) {
+      const regInfo = new RegExp('=', 'g');
+      const infos = cookies[i].split(regInfo);
+      if (infos[0] == name) {
+        return unescape(infos[1]);
+      }
+    }
+    return null;
+  }
 
   displayPlaylists(): void {
     this.subscription.add(
@@ -106,8 +130,5 @@ export class ChoixPlaylistComponent implements OnInit {
   }
   onConnexion(): void {
     console.log('Connexion...');
-    this.subscription.add(
-      this.loginSpotifyService.logToSpotifyUSer().subscribe()
-    );
   }
 }
