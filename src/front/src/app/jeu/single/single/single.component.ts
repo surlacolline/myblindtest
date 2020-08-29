@@ -3,6 +3,7 @@ import { ChoixPlaylistComponent } from 'src/app/choix-playlist/choix-playlist.co
 import { IPlaylist } from './../../../shared-model/Playlist.model';
 import { TryValueService } from './../../../services/try-value.service';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-single',
@@ -13,7 +14,9 @@ export class SingleComponent implements OnInit {
   @Output() playNextSong = new EventEmitter();
 
   resultat: string;
-  score: string;
+  score = 0;
+
+  avancement: string;
   currentPlaylist: IPlaylist;
   compteurTrack: number;
   lecteurAudio: any;
@@ -23,7 +26,8 @@ export class SingleComponent implements OnInit {
 
   constructor(
     private tryValueService: TryValueService,
-    private router: Router
+    private router: Router,
+    private _snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -66,7 +70,7 @@ export class SingleComponent implements OnInit {
       this.autoplay = true;
       // lecteurAudio.pause();
       this.playNextSong.emit();
-      const avancement =
+      this.avancement =
         ' ' +
         (this.compteurTrack + 1) +
         ' / ' +
@@ -83,6 +87,15 @@ export class SingleComponent implements OnInit {
     console.log('Play Pause Pressed');
   }
   onAudioEnded(): void {
+    this._snackBar.open(
+      `C'était ${this.currentPlaylist.tracks[this.compteurTrack].name} de ${
+        this.currentPlaylist.tracks[this.compteurTrack].artist
+      }  `,
+      'X',
+      {
+        duration: 2000,
+      }
+    );
     this.lecturePlaylist();
   }
 
@@ -98,9 +111,22 @@ export class SingleComponent implements OnInit {
       false
     );
     if (blResult) {
-      this.lecturePlaylist();
       console.log('YES');
+      this.score++;
+      this._snackBar.open(
+        `Bravo, c'était ${
+          this.currentPlaylist.tracks[this.compteurTrack].name
+        } de ${this.currentPlaylist.tracks[this.compteurTrack].artist}  `,
+        'X',
+        {
+          duration: 2000,
+        }
+      );
+      this.lecturePlaylist();
     } else {
+      this._snackBar.open('Nope, try again.., ', 'X', {
+        duration: 2000,
+      });
       console.log('faux');
     }
   }

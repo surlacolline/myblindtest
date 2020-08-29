@@ -1,5 +1,5 @@
 <section id="jeu">
-  <div id="avancement"></div>
+  <div id="avancement">{{ avancement }}</div>
 
   <app-audio-player
     [src]="src"
@@ -27,8 +27,8 @@
       (click)="chansonSuivante()"
     ></app-simple-button>
   </div>
-  <div id="resultat">{{ this.resultat }}</div>
-  <div id="score">{{ score }}</div>
+  <div id="resultat">{{ resultat }}</div>
+  <div id="score">score : {{ score }}/20</div>
 
   <app-simple-button
     title=" Changer de playlist"

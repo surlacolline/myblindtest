@@ -8,6 +8,8 @@
   border-color: transparent transparent transparent var(--pink);
   transition: 100ms all ease;
   cursor: pointer;
+  display: flex;
+  margin: auto;
 
   /* // play state */
   border-style: solid;

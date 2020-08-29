@@ -1,4 +1,10 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 
 @Component({
@@ -6,13 +12,10 @@ import { Subscription, Observable } from 'rxjs';
   templateUrl: './progress-bar.component.html',
   styleUrls: ['./progress-bar.component.scss'],
 })
-export class ProgressBarComponent implements OnInit, OnChanges {
+export class ProgressBarComponent implements OnInit {
   @Input() audioProgressPercent;
 
   constructor() {}
 
   ngOnInit(): void {}
-  ngOnChanges(changes: any): void {
-    console.log(this.audioProgressPercent);
-  }
 }

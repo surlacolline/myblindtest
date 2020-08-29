@@ -1,19 +1,23 @@
 <app-play-pause-button
+  id="PlayPauseButton"
   (playPausePressed)="playPausePressed()"
-></app-play-pause-button>
-<app-progress-bar
-  [audioProgressPercent]="audioProgressPercent"
-></app-progress-bar>
-<audio
-  #audioPlayer
-  autoplay="false"
-  id="lecteurAudio"
-  [src]="src"
-  [autoplay]="autoplay"
-  (ended)="audioEnded()"
-  (playNextSong)="onNextSong()"
-  (timeupdate)="progressMove($event)"
->
-  Your browser does not support the
-  <code>audio</code> element.
-</audio>
+></app-play-pause-button
+><br />
+<div id="lecteur">
+  <app-progress-bar
+    [audioProgressPercent]="audioProgressPercent"
+  ></app-progress-bar>
+  <audio
+    #audioPlayer
+    autoplay="false"
+    id="lecteurAudio"
+    [src]="src"
+    [autoplay]="autoplay"
+    (ended)="audioEnded()"
+    (playNextSong)="onNextSong()"
+    (timeupdate)="progressMove($event)"
+  >
+    Your browser does not support the
+    <code>audio</code> element.
+  </audio>
+</div>

@@ -10,6 +10,7 @@ import { SnackbarComponent } from './snackbar/snackbar.component';
 import { AudioPlayerComponent } from './audio-player/audio-player.component';
 import { SimpleButtonComponent } from './simple-button/simple-button.component';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { InfoPopupComponent } from './info-popup/info-popup.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     SnackbarComponent,
     AudioPlayerComponent,
     SimpleButtonComponent,
+    InfoPopupComponent,
   ],
   imports: [CommonModule, MatExpansionModule],
   exports: [
