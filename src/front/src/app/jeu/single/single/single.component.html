@@ -13,13 +13,15 @@
     type="search"
     class="textTry"
     id="valueToTry"
-    placeholder="Une idée du nom de la chanson ou de l'artiste?"
+    placeholder="{{ placeholder }}"
     size="50"
+    [readOnly]="modeSoiree"
+    (click)="showResult()"
   />
 
   <div class="wrapbtn">
     <app-simple-button
-      title="Je me lance!"
+      [title]="tryButtonTitle"
       (click)="methodtryValue($event, tryValue.value)"
     ></app-simple-button>
     <app-simple-button
@@ -36,4 +38,5 @@
   ></app-simple-button>
   <br />
   <app-info-button></app-info-button>
+  <app-toggle-button (click)="modeSoireeOnOff($event)"></app-toggle-button>
 </section>

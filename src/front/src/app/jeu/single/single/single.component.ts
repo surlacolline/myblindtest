@@ -1,4 +1,11 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Output,
+  EventEmitter,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { ChoixPlaylistComponent } from 'src/app/choix-playlist/choix-playlist.component';
 import { IPlaylist } from './../../../shared-model/Playlist.model';
 import { TryValueService } from './../../../services/try-value.service';
@@ -11,6 +18,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./single.component.scss'],
 })
 export class SingleComponent implements OnInit {
+  constructor(
+    private tryValueService: TryValueService,
+    private router: Router,
+    private _snackBar: MatSnackBar
+  ) {}
   @Output() playNextSong = new EventEmitter();
 
   resultat: string;
@@ -23,12 +35,11 @@ export class SingleComponent implements OnInit {
   idCurrentPlaylist: any;
   src: string;
   autoplay: boolean;
+  placeholder = "Une idée du nom de la chanson ou de l'artiste?";
+  tryButtonTitle = 'Je me lance!';
+  modeSoiree = false;
 
-  constructor(
-    private tryValueService: TryValueService,
-    private router: Router,
-    private _snackBar: MatSnackBar
-  ) {}
+  @ViewChild('tryValue') tryValue: ElementRef;
 
   ngOnInit(): void {
     this.compteurTrack = 0;
@@ -130,5 +141,30 @@ export class SingleComponent implements OnInit {
 
   RetourChoixPlaylist(): void {
     this.router.navigate(['/choix-playlist']);
+  }
+
+  modeSoireeOnOff(event): void {
+    this.modeSoiree = !this.modeSoiree;
+    console.log(this.modeSoiree);
+    if (this.modeSoiree) {
+      this.placeholder = `Clique ici pour voir la réponse`;
+      this.tryButtonTitle = `J'ai la bonne réponse!`;
+    } else {
+      this.placeholder = "Une idée du nom de la chanson ou de l'artiste?";
+      this.tryButtonTitle = 'Je me lance!';
+    }
+  }
+  showResult(): void {
+    if (!this.modeSoiree) {
+      return;
+    } else if (this.tryValue.nativeElement.value.indexOf("C'est ") != -1) {
+      this.tryValue.nativeElement.value = '';
+    } else {
+      const nom = this.currentPlaylist.tracks[this.compteurTrack].name;
+      const titre = this.currentPlaylist.tracks[this.compteurTrack].artist;
+
+      const result = `C'est ${nom} de ${titre}`;
+      this.tryValue.nativeElement.value = result;
+    }
   }
 }

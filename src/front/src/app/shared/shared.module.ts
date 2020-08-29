@@ -37,6 +37,7 @@ import { InfoButtonComponent } from './info-button/info-button.component';
     ProgressBarComponent,
     InfoPopupComponent,
     InfoButtonComponent,
+    ToggleButtonComponent,
   ],
 })
 export class SharedModule {}
