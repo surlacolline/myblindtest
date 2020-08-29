@@ -1,6 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { LoadExamplePlaylistsService } from '../services/load-example-playlists.service';
 import { LoginSpotifyService } from '../services/spotify/login-spotify.service';
+
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { IPlaylist } from '../shared-model/Playlist.model';

@@ -11,6 +11,7 @@ import { AudioPlayerComponent } from './audio-player/audio-player.component';
 import { SimpleButtonComponent } from './simple-button/simple-button.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { InfoPopupComponent } from './info-popup/info-popup.component';
+import { InfoButtonComponent } from './info-button/info-button.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { InfoPopupComponent } from './info-popup/info-popup.component';
     AudioPlayerComponent,
     SimpleButtonComponent,
     InfoPopupComponent,
+    InfoButtonComponent,
   ],
   imports: [CommonModule, MatExpansionModule],
   exports: [
@@ -33,6 +35,8 @@ import { InfoPopupComponent } from './info-popup/info-popup.component';
     AudioPlayerComponent,
     SimpleButtonComponent,
     ProgressBarComponent,
+    InfoPopupComponent,
+    InfoButtonComponent,
   ],
 })
 export class SharedModule {}
