@@ -1,6 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { LoadExamplePlaylistsService } from '../services/load-example-playlists.service';
 import { LoginSpotifyService } from '../services/spotify/login-spotify.service';
+import { CookieService } from '../services/cookie.service';
 
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
@@ -25,32 +26,18 @@ export class ChoixPlaylistComponent implements OnInit {
   constructor(
     private examplePlaylistsService: LoadExamplePlaylistsService,
     private router: Router,
-    private loginSpotifyService: LoginSpotifyService
+    private loginSpotifyService: LoginSpotifyService,
+    private cookieService: CookieService
   ) {}
 
   ngOnInit(): void {
-    this.userName = this.getCookie('display_name') || 'connexion';
-  }
-
-  getCookie(name): string {
-    if (document.cookie.length === 0) {
-      return null;
-    }
-
-    const regSepCookie = new RegExp('(; )', 'g');
-    const cookies = document.cookie.split(regSepCookie);
-
-    for (let i = 0; i < cookies.length; i++) {
-      const regInfo = new RegExp('=', 'g');
-      const infos = cookies[i].split(regInfo);
-      if (infos[0] == name) {
-        return unescape(infos[1]);
-      }
-    }
-    return null;
+    this.userName = this.cookieService.getCookie('display_name') || 'connexion';
   }
 
   displayPlaylists(): void {
+    if (this.playlists) {
+      return;
+    }
     this.subscription.add(
       this.examplePlaylistsService.getAllPlaylists().subscribe(
         (data: any) => {
@@ -62,11 +49,15 @@ export class ChoixPlaylistComponent implements OnInit {
   }
 
   displayUserPlaylists(): void {
+    if (this.userPlaylists) {
+      return;
+    }
     this.subscription.add(
       this.examplePlaylistsService.getAllUserPlaylists().subscribe(
         (data: any) => {
           if (data.data.items === undefined) {
             this.userName = 'connexion';
+            alert("Veuillez d'abord vous connecter à votre compte spotify");
           } else {
             this.userPlaylists = data.data.items;
           }
@@ -77,6 +68,9 @@ export class ChoixPlaylistComponent implements OnInit {
   }
 
   displayCategories(): void {
+    if (this.categories) {
+      return;
+    }
     this.subscription.add(
       this.loginSpotifyService.showSpotifyCategories(null, false).subscribe(
         (data: any) => {

@@ -1,49 +1,25 @@
-<mat-expansion-panel
-  hideToggle
-  (opened)="panelOpenState = true"
-  (closed)="panelOpenState = false"
-  [expanded]="blOpenClose"
->
+<mat-expansion-panel hideToggle [expanded]="blOpenClose">
   <mat-expansion-panel-header>
     <mat-panel-title>
-      <div class="card">
-        <div class="card-header" id="headingOne">
-          <h2 class="mb-0">
-            <div
-              (click)="toggle()"
-              class="btn btn-link btn-block text-left"
-              id="getBDDPlaylist"
-              type="button"
-              data-toggle="collapse"
-              data-target="#listePlaylist"
-              aria-expanded="true"
-              aria-controls="listePlaylist"
-            >
-              {{ title }} <i class="icon-circle-down"></i>
-            </div>
-          </h2>
-        </div>
-      </div>
+      <h2 class="mb-0" (click)="toggle()" class="btn-link" type="button">
+        {{ title }} <i class="icon-circle-down"></i>
+      </h2>
     </mat-panel-title>
-    <mat-panel-description> </mat-panel-description>
   </mat-expansion-panel-header>
 
-  <div
-    id="listePlaylist"
-    class="collapse reverseScroll"
-    aria-labelledby="headingOne"
-    data-parent="#accordionExample"
-  >
+  <div *ngIf="items; else spinner" class="collapse reverseScroll">
     <ul>
       <li
         class="cursor-pointer"
-        *ngFor="let playlist of playlists"
-        (click)="itemSelected(playlist)"
+        *ngFor="let item of items"
+        (click)="itemSelected(item)"
       >
-        <a>{{ playlist.name }}</a>
+        <a>{{ item.name }}</a>
       </li>
+      <li (click)="showMore()"><i class="icon-plus"></i></li>
     </ul>
 
     <div class="card-body"></div>
   </div>
+  <ng-template #spinner><app-spinner></app-spinner></ng-template>
 </mat-expansion-panel>

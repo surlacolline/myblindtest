@@ -9,24 +9,28 @@ import { MatExpansionPanel } from '@angular/material/expansion';
 export class ListeDeroulanteComponent implements OnInit {
   constructor() {}
   @Input() title: string;
-  @Input() playlists: any[];
+  @Input() items: any[];
 
   @Output() toggled = new EventEmitter();
   @Output() itemSelectedEvent = new EventEmitter();
+  @Output() showMoreEvent = new EventEmitter();
   Counter = 0;
-  @Input() panelOpenState = false;
+
   @Input() blOpenClose: boolean;
 
   ngOnInit(): void {}
-  toggle() {
+  toggle(): void {
     // You can give any function name
 
     this.toggled.emit();
   }
 
-  itemSelected(playlist: any) {
+  itemSelected(item: any): void {
     // You can give any function name
 
-    this.itemSelectedEvent.emit(playlist);
+    this.itemSelectedEvent.emit(item);
+  }
+  showMore(): void {
+    this.showMoreEvent.emit();
   }
 }

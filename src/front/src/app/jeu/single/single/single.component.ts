@@ -96,6 +96,10 @@ export class SingleComponent implements OnInit {
     console.log('Play Pause Pressed');
   }
   onAudioEnded(): void {
+    this.chansonSuivante();
+  }
+
+  chansonSuivante(): void {
     this._snackBar.open(
       `C'était ${this.currentPlaylist.tracks[this.compteurTrack].name} de ${
         this.currentPlaylist.tracks[this.compteurTrack].artist
@@ -108,11 +112,7 @@ export class SingleComponent implements OnInit {
     this.lecturePlaylist();
   }
 
-  chansonSuivante(): void {
-    this.lecturePlaylist();
-  }
-
-  methodtryValue(event, ValueToTry: string): void {
+  checkAnswer(event, ValueToTry: string): void {
     console.log('test');
     let blResult: boolean;
     if (this.modeSoiree) {
@@ -139,7 +139,7 @@ export class SingleComponent implements OnInit {
       );
       this.lecturePlaylist();
     } else {
-      this._snackBar.open('Nope, try again.., ', 'X', {
+      this._snackBar.open('Nope, try again... ', 'X', {
         duration: 2000,
       });
       console.log('faux');

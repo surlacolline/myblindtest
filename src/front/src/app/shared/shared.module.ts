@@ -12,6 +12,8 @@ import { SimpleButtonComponent } from './simple-button/simple-button.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { InfoPopupComponent } from './info-popup/info-popup.component';
 import { InfoButtonComponent } from './info-button/info-button.component';
+import { SpinnerComponent } from './spinner/spinner.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -26,8 +28,9 @@ import { InfoButtonComponent } from './info-button/info-button.component';
     SimpleButtonComponent,
     InfoPopupComponent,
     InfoButtonComponent,
+    SpinnerComponent,
   ],
-  imports: [CommonModule, MatExpansionModule],
+  imports: [CommonModule, MatExpansionModule, MatProgressSpinnerModule],
   exports: [
     HeroFrameComponent,
     ConnexionButtonComponent,

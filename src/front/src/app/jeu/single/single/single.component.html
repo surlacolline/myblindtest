@@ -13,7 +13,7 @@
     type="search"
     class="textTry"
     id="valueToTry"
-    placeholder="{{ placeholder }}"
+    [placeholder]="placeholder"
     size="50"
     [readOnly]="modeSoiree"
     (click)="showResult()"
@@ -22,7 +22,7 @@
   <div class="wrapbtn">
     <app-simple-button
       [title]="tryButtonTitle"
-      (click)="methodtryValue($event, tryValue.value)"
+      (click)="checkAnswer($event, tryValue.value)"
     ></app-simple-button>
     <app-simple-button
       [title]="chansonSuivanteTitle"
