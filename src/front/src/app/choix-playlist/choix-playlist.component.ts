@@ -20,6 +20,7 @@ export class ChoixPlaylistComponent implements OnInit {
   showCategoryPlaylists = false;
   titleCategorie: string;
   userName: string;
+  @ViewChild('connexionButtonAPI') connexionButtonAPI: ElementRef;
   @ViewChild('connexionButton') connexionButton: ElementRef;
   constructor(
     private examplePlaylistsService: LoadExamplePlaylistsService,
@@ -29,8 +30,6 @@ export class ChoixPlaylistComponent implements OnInit {
 
   ngOnInit(): void {
     this.userName = this.getCookie('display_name') || 'connexion';
-
-    this.connexionButton.nativeElement.click();
   }
 
   getCookie(name): string {
@@ -66,7 +65,11 @@ export class ChoixPlaylistComponent implements OnInit {
     this.subscription.add(
       this.examplePlaylistsService.getAllUserPlaylists().subscribe(
         (data: any) => {
-          this.userPlaylists = data.data.items;
+          if (data.data.items === undefined) {
+            this.userName = 'connexion';
+          } else {
+            this.userPlaylists = data.data.items;
+          }
         },
         (err) => console.log(err)
       )
@@ -79,10 +82,18 @@ export class ChoixPlaylistComponent implements OnInit {
         (data: any) => {
           if (data === undefined) {
           } else {
-            this.categories = data.data.categories.items;
+            if (data.data.categories === undefined) {
+              this.connexionButtonAPI.nativeElement.click();
+            } else {
+              this.categories = data.data.categories.items;
+            }
           }
         },
-        (err) => console.log(err)
+        (err) => {
+          console.log(err);
+          this.connexionButton.nativeElement.click();
+          this.displayCategories();
+        }
       )
     );
   }

@@ -25,7 +25,7 @@
       (click)="methodtryValue($event, tryValue.value)"
     ></app-simple-button>
     <app-simple-button
-      title="Aucune idée , Chanson suivante!"
+      [title]="chansonSuivanteTitle"
       (click)="chansonSuivante()"
     ></app-simple-button>
   </div>

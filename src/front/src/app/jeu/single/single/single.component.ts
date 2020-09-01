@@ -37,6 +37,7 @@ export class SingleComponent implements OnInit {
   autoplay: boolean;
   placeholder = "Une idée du nom de la chanson ou de l'artiste?";
   tryButtonTitle = 'Je me lance!';
+  chansonSuivanteTitle = 'Aucune idée , Chanson suivante!';
   modeSoiree = false;
 
   @ViewChild('tryValue') tryValue: ElementRef;
@@ -113,11 +114,17 @@ export class SingleComponent implements OnInit {
 
   methodtryValue(event, ValueToTry: string): void {
     console.log('test');
-    const blResult: boolean = this.tryValueService.tryValue(
-      ValueToTry,
-      this.currentPlaylist.tracks[this.compteurTrack],
-      false
-    );
+    let blResult: boolean;
+    if (this.modeSoiree) {
+      blResult = true;
+    } else {
+      blResult = this.tryValueService.tryValue(
+        ValueToTry,
+        this.currentPlaylist.tracks[this.compteurTrack],
+        false
+      );
+    }
+
     if (blResult) {
       console.log('YES');
       this.score++;
@@ -149,9 +156,11 @@ export class SingleComponent implements OnInit {
     if (this.modeSoiree) {
       this.placeholder = `Clique ici pour voir la réponse`;
       this.tryButtonTitle = `J'ai la bonne réponse!`;
+      this.chansonSuivanteTitle = 'Raté !';
     } else {
       this.placeholder = "Une idée du nom de la chanson ou de l'artiste?";
       this.tryButtonTitle = 'Je me lance!';
+      this.chansonSuivanteTitle = 'Aucune idée, chanson suivante';
     }
   }
   showResult(): void {
