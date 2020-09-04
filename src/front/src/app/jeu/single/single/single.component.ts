@@ -11,6 +11,13 @@ import { IPlaylist } from './../../../shared-model/Playlist.model';
 import { TryValueService } from './../../../services/try-value.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import {
+  FormControl,
+  FormGroup,
+  Validators,
+  FormBuilder,
+  ReactiveFormsModule,
+} from '@angular/forms';
 
 @Component({
   selector: 'app-single',
@@ -18,16 +25,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./single.component.scss'],
 })
 export class SingleComponent implements OnInit {
-  constructor(
-    private tryValueService: TryValueService,
-    private router: Router,
-    private _snackBar: MatSnackBar
-  ) {}
   @Output() playNextSong = new EventEmitter();
-
   resultat: string;
   score = 0;
-
   avancement: string;
   currentPlaylist: IPlaylist;
   compteurTrack: number;
@@ -39,8 +39,20 @@ export class SingleComponent implements OnInit {
   tryButtonTitle = 'Je me lance!';
   chansonSuivanteTitle = 'Aucune idée , Chanson suivante!';
   modeSoiree = false;
+  tryAnswer: FormControl;
+  singlePlayForm: FormGroup;
 
   @ViewChild('tryValue') tryValue: ElementRef;
+
+  constructor(
+    private tryValueService: TryValueService,
+    private router: Router,
+    private _snackBar: MatSnackBar,
+    private builder: FormBuilder
+  ) {
+    this.tryAnswer = new FormControl('', [Validators.required]);
+    this.singlePlayForm = builder.group({ tryAnwser: this.tryAnswer });
+  }
 
   ngOnInit(): void {
     this.compteurTrack = 0;

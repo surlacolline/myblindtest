@@ -8,16 +8,24 @@
     (audioEndedEvent)="onAudioEnded()"
   ></app-audio-player>
   <div id="lecteur"></div>
-  <input
-    #tryValue
-    type="search"
-    class="textTry"
-    id="valueToTry"
-    [placeholder]="placeholder"
-    size="50"
-    [readOnly]="modeSoiree"
-    (click)="showResult()"
-  />
+  <form
+    [formGroup]="singlePlayForm"
+    (submit)="checkAnswer($event, tryValue.value)"
+  >
+    <div class="group">
+      <input
+        [formControl]="tryAnswer"
+        #tryValue
+        type="search"
+        class="textTry"
+        id="valueToTry"
+        [placeholder]="placeholder"
+        size="50"
+        [readOnly]="modeSoiree"
+        (click)="showResult()"
+      />
+    </div>
+  </form>
 
   <div class="wrapbtn">
     <app-simple-button
@@ -38,5 +46,7 @@
   ></app-simple-button>
   <br />
   <app-info-button></app-info-button>
-  <app-toggle-button (click)="modeSoireeOnOff($event)"></app-toggle-button>
+  <app-toggle-button
+    (toggleEvent)="modeSoireeOnOff($event)"
+  ></app-toggle-button>
 </section>
