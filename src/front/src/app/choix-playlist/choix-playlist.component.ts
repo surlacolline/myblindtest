@@ -49,7 +49,7 @@ export class ChoixPlaylistComponent implements OnInit {
     );
   }
 
-  displayUserPlaylists(): void {
+  displayUserPlaylists(element): void {
     if (this.userPlaylists) {
       return;
     }
@@ -63,6 +63,7 @@ export class ChoixPlaylistComponent implements OnInit {
 
             alert("Veuillez d'abord vous connecter à votre compte spotify");
             this.showUserPlaylists = false;
+            element.close();
           } else {
             this.userPlaylists = data.data.items;
           }

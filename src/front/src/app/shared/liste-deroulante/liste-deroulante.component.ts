@@ -63,7 +63,7 @@ export class ListeDeroulanteComponent implements OnInit, OnChanges {
     this.blOpenClose = pOpenClose;
     if (this.blOpenClose) {
       this.styleIcon = 'icon-circle-up';
-      this.toggled.emit(this.blOpenClose);
+      this.toggled.emit(this.matExpansionPanelElement);
     } else {
       this.styleIcon = 'icon-circle-down';
     }

@@ -19,7 +19,7 @@
         title="  Choisis une des tes playlists Spotify"
         [items]="userPlaylists"
         [(blOpenClose)]="showUserPlaylists"
-        (toggled)="displayUserPlaylists()"
+        (toggled)="displayUserPlaylists($event)"
         (itemSelectedEvent)="playlistSelectedAPI($event)"
       ></app-liste-deroulante>
       <app-liste-deroulante
