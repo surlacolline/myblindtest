@@ -18,6 +18,7 @@
       <app-liste-deroulante
         title="  Choisis une des tes playlists Spotify"
         [items]="userPlaylists"
+        [(blOpenClose)]="showUserPlaylists"
         (toggled)="displayUserPlaylists()"
         (itemSelectedEvent)="playlistSelectedAPI($event)"
       ></app-liste-deroulante>
@@ -31,7 +32,7 @@
       <app-liste-deroulante
         *ngIf="showCategoryPlaylists"
         [title]="titleCategorie"
-        [blOpenClose]="showCategoryPlaylists"
+        [(blOpenClose)]="showCategoryPlaylists"
         [items]="categoryPlaylists"
         (itemSelectedEvent)="playlistSelectedAPI($event)"
       ></app-liste-deroulante>

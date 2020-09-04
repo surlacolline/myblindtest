@@ -19,6 +19,7 @@ export class ChoixPlaylistComponent implements OnInit {
   categories: any[];
   categoryPlaylists: IPlaylist[];
   showCategoryPlaylists = false;
+  showUserPlaylists = false;
   titleCategorie: string;
   userName: string;
   @ViewChild('connexionButtonAPI') connexionButtonAPI: ElementRef;
@@ -52,12 +53,16 @@ export class ChoixPlaylistComponent implements OnInit {
     if (this.userPlaylists) {
       return;
     }
+
     this.subscription.add(
       this.examplePlaylistsService.getAllUserPlaylists().subscribe(
         (data: any) => {
           if (data.data.items === undefined) {
             this.userName = 'connexion';
+            // todo supprimer cookie
+
             alert("Veuillez d'abord vous connecter à votre compte spotify");
+            this.showUserPlaylists = false;
           } else {
             this.userPlaylists = data.data.items;
           }
@@ -66,6 +71,11 @@ export class ChoixPlaylistComponent implements OnInit {
       )
     );
   }
+  // closeUserPlaylists() {
+  //   if (!this.userPlaylists) {
+  //     this.showUserPlaylists = false;
+  //   }
+  // }
 
   displayCategories(): void {
     if (this.categories) {

@@ -1,8 +1,14 @@
-<mat-expansion-panel hideToggle [expanded]="blOpenClose">
+<mat-expansion-panel
+  #matExpansionPanelElement
+  hideToggle
+  [expanded]="blOpenClose"
+  (opened)="setBlOpenClose(true)"
+  (closed)="setBlOpenClose(false)"
+>
   <mat-expansion-panel-header>
     <mat-panel-title>
-      <h2 class="mb-0" (click)="toggle()" class="btn-link" type="button">
-        {{ title }} <i class="icon-circle-down"></i>
+      <h2 class="mb-0" class="btn-link" type="button">
+        {{ title }} <i [class]="styleIcon"></i>
       </h2>
     </mat-panel-title>
   </mat-expansion-panel-header>
