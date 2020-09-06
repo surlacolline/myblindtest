@@ -139,7 +139,9 @@ export function callback(
           id = bodyUser.id;
           display_name = bodyUser.display_name;
           res.cookie('id', id);
-          res.cookie('display_name', display_name);
+          res.cookie('display_name', display_name, {
+            expires: new Date(Date.now() + 900000),
+          });
 
           // response.cookie('token', access_token);
           // we can also pass the token to the browser to make requests from there
