@@ -16,12 +16,10 @@
 
   <div *ngIf="items; else spinner" class="collapse reverseScroll">
     <ul>
-      <li
-        class="cursor-pointer"
-        *ngFor="let item of items"
-        (click)="itemSelected(item)"
-      >
-        <a>{{ item.name }}</a>
+      <li class="cursor-pointer" *ngFor="let item of items">
+        {{ item.name }}
+        <a> <i (click)="itemSelected(item, false)" class="icon-user"></i></a>
+        <a><i (click)="itemSelected(item, true)" class="icon-users"></i></a>
       </li>
       <li (click)="showMore()"><i class="icon-plus"></i></li>
     </ul>

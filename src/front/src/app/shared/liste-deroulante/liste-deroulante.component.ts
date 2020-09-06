@@ -23,7 +23,10 @@ export class ListeDeroulanteComponent implements OnInit, OnChanges {
 
   @Output() toggled = new EventEmitter();
   @Output() opened = new EventEmitter();
-  @Output() itemSelectedEvent = new EventEmitter();
+  @Output() itemSelectedEvent = new EventEmitter<{
+    item: any;
+    isMulti: boolean;
+  }>();
   @Output() showMoreEvent = new EventEmitter();
 
   Counter = 0;
@@ -41,10 +44,9 @@ export class ListeDeroulanteComponent implements OnInit, OnChanges {
   selectItem(): void {
     this.matExpansionPanelElement.close(); // open()
   }
-  itemSelected(item: any): void {
+  itemSelected(item: any, isMulti: boolean): void {
     // You can give any function name
-
-    this.itemSelectedEvent.emit(item);
+    this.itemSelectedEvent.emit({ item, isMulti });
   }
   showMore(): void {
     this.showMoreEvent.emit();

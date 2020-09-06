@@ -103,18 +103,25 @@ export class ChoixPlaylistComponent implements OnInit {
       )
     );
   }
-  playlistSelected(playlist: any): void {
+  playlistSelected(params: any, blisMulti?: boolean): void {
+    const playlist: any = params.item;
+    const isMulti: boolean = params.isMulti || blisMulti;
     console.log(playlist.name);
     const playlistJson = playlist;
     sessionStorage.setItem(
       playlistJson.id.toString(),
       JSON.stringify(playlistJson)
     );
-
-    this.router.navigate(['/jeu-single', { id: playlist.id }]);
+    if (isMulti) {
+      this.router.navigate(['/jeu-multi', { id: playlist.id }]);
+    } else {
+      this.router.navigate(['/jeu-single', { id: playlist.id }]);
+    }
   }
 
-  playlistSelectedAPI(playlist: any): void {
+  playlistSelectedAPI(params): void {
+    const playlist: any = params.item;
+    const isMulti: boolean = params.isMulti;
     console.log(playlist.name);
     const playlistJson = playlist;
 
@@ -125,7 +132,7 @@ export class ChoixPlaylistComponent implements OnInit {
           if (data === undefined) {
           } else {
             const playlistAPI = data.data;
-            this.playlistSelected(JSON.parse(playlistAPI));
+            this.playlistSelected(JSON.parse(playlistAPI), isMulti);
           }
         })
     );
