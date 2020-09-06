@@ -23,7 +23,7 @@ export class ChoixPlaylistComponent implements OnInit {
   titleCategorie: string;
   userName: string;
   @ViewChild('connexionButtonAPI') connexionButtonAPI: ElementRef;
-  @ViewChild('connexionButton') connexionButton: ElementRef;
+
   constructor(
     private examplePlaylistsService: LoadExamplePlaylistsService,
     private router: Router,
@@ -33,6 +33,7 @@ export class ChoixPlaylistComponent implements OnInit {
 
   ngOnInit(): void {
     this.userName = this.cookieService.getCookie('display_name') || 'connexion';
+    this.connexionButtonAPI?.nativeElement?.click();
   }
 
   displayPlaylists(): void {
@@ -96,7 +97,7 @@ export class ChoixPlaylistComponent implements OnInit {
         },
         (err) => {
           console.log(err);
-          this.connexionButton.nativeElement.click();
+          // this.connexionButton.nativeElement.click();
           this.displayCategories();
         }
       )

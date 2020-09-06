@@ -19,14 +19,17 @@ export class ListeDeroulanteComponent implements OnInit, OnChanges {
   constructor() {}
   @Input() title: string;
   @Input() items: any[];
+  @Input() blOpenClose = false;
 
   @Output() toggled = new EventEmitter();
   @Output() opened = new EventEmitter();
   @Output() itemSelectedEvent = new EventEmitter();
   @Output() showMoreEvent = new EventEmitter();
+
   Counter = 0;
+  isIconUp: boolean;
   styleIcon = 'icon-circle-down';
-  @Input() blOpenClose = false;
+
   @ViewChild(MatExpansionPanel, { static: true })
   matExpansionPanelElement: MatExpansionPanel;
   ngOnChanges(changes: SimpleChanges): void {
@@ -35,16 +38,6 @@ export class ListeDeroulanteComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {}
 
-  toggle(blExpanded): void {
-    // You can give any function name
-    if (blExpanded) {
-      this.styleIcon = 'icon-circle-up';
-    } else {
-      this.styleIcon = 'icon-circle-down';
-    }
-
-    this.toggled.emit(blExpanded);
-  }
   selectItem(): void {
     this.matExpansionPanelElement.close(); // open()
   }
@@ -62,10 +55,10 @@ export class ListeDeroulanteComponent implements OnInit, OnChanges {
   setBlOpenClose(pOpenClose): void {
     this.blOpenClose = pOpenClose;
     if (this.blOpenClose) {
-      this.styleIcon = 'icon-circle-up';
+      this.isIconUp = true;
       this.toggled.emit(this.matExpansionPanelElement);
     } else {
-      this.styleIcon = 'icon-circle-down';
+      this.isIconUp = false;
     }
   }
 }

@@ -88,6 +88,7 @@ export class SingleComponent implements OnInit {
   lecturePlaylist(): void {
     this.compteurTrack++;
     this.resultat = '';
+    this.singlePlayForm.reset();
 
     if (this.compteurTrack < this.currentPlaylist.tracks.length) {
       this.src = this.currentPlaylist.tracks[this.compteurTrack].preview_url;
