@@ -1,1 +1,54 @@
-<p>multi works!</p>
+<section id="jeu">
+  <div *ngIf="IsInit" id="Initialisation">
+    <p>Envoi ce lien à tes amis :{{ partageLien }}</p>
+    <p>Quand tout le monde est connecter, lance la partie</p>
+    <a class="button1" id="commencerPartie" (click)="commencerPartie()">
+      Lancer la partie</a
+    >
+  </div>
+  <div id="avancement">{{ avancement }}</div>
+  <button (click)="sendMessage()">Send Message</button>
+  <app-audio-player
+    [src]="src"
+    [autoplay]="autoplay"
+    (playPausePressedEvent)="playPausePressed()"
+    (audioEndedEvent)="onAudioEnded()"
+  ></app-audio-player>
+  <div id="lecteur"></div>
+  <form
+    [formGroup]="singlePlayForm"
+    (submit)="checkAnswer($event, tryValue.value)"
+  >
+    <div class="group">
+      <input
+        [formControl]="tryAnswer"
+        #tryValue
+        type="search"
+        class="textTry"
+        id="valueToTry"
+        [placeholder]="placeholder"
+        size="50"
+      />
+    </div>
+  </form>
+
+  <div class="wrapbtn">
+    <app-simple-button
+      [title]="tryButtonTitle"
+      (click)="checkAnswer($event, tryValue.value)"
+    ></app-simple-button>
+    <app-simple-button
+      [title]="chansonSuivanteTitle"
+      (click)="chansonSuivante()"
+    ></app-simple-button>
+  </div>
+  <div id="resultat">{{ resultat }}</div>
+  <div id="score">score : {{ score }}/20</div>
+
+  <app-simple-button
+    title=" Changer de playlist"
+    (click)="RetourChoixPlaylist()"
+  ></app-simple-button>
+  <br />
+  <app-info-button></app-info-button>
+</section>

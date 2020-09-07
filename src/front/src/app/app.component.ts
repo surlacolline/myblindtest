@@ -10,8 +10,5 @@ export class AppComponent implements OnInit {
   title = 'front';
   constructor(private routeur: Router, private route: ActivatedRoute) {}
 
-  ngOnInit() {
-    this.routeur.navigate(['choix-playlist']);
-    this.route.queryParams.subscribe((params) => {});
-  }
+  ngOnInit() {}
 }

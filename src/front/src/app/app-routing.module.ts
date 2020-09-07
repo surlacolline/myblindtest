@@ -2,12 +2,14 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
+  { path: '', redirectTo: 'choix-playlist', pathMatch: 'full' },
   {
     path: 'choix-playlist',
     loadChildren: () =>
       import('./choix-playlist/choix-playlist.module').then(
         (m) => m.ChoixPlaylistModule
       ),
+    pathMatch: 'full',
   },
   {
     path: 'jeu-single',
