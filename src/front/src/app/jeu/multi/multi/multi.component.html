@@ -7,7 +7,16 @@
     >
   </div>
   <div id="avancement">{{ avancement }}</div>
-  <button (click)="sendMessage()">Send Message</button>
+
+  <div *ngFor="let message of messages">
+    {{ message.pseudo }} : {{ message.message }}
+  </div>
+
+  <input
+    [(ngModel)]="message"
+    (keyup)="$event.keyCode == 13 && sendMessage()"
+  />
+  <button (click)="sendMessage()">Send</button>
   <app-audio-player
     [src]="src"
     [autoplay]="autoplay"

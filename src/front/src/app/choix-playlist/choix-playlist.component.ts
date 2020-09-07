@@ -113,11 +113,24 @@ export class ChoixPlaylistComponent implements OnInit {
       JSON.stringify(playlistJson)
     );
     if (isMulti) {
-      this.router.navigate(['/jeu-multi', { id: playlist.id }]);
+      const code = this.generateRandomString(5);
+      sessionStorage.setItem(code.toString(), 'master');
+      this.router.navigate(['/jeu-multi', { id: playlist.id, code }]);
     } else {
       this.router.navigate(['/jeu-single', { id: playlist.id }]);
     }
   }
+
+  generateRandomString = (length) => {
+    let text = '';
+    const possible =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+    for (let i = 0; i < length; i++) {
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
+  };
 
   playlistSelectedAPI(params): void {
     const playlist: any = params.item;

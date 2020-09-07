@@ -29,8 +29,9 @@ io.sockets.on('connection', function (socket: any, pseudo: any) {
 
     socket.join(idPartie);
     socket.in(socket.idPartie).emit('nouveau_joueur', pseudo);
+
     socket.on('disconnect', () => {
-      console.log('user disconnected');
+      console.log('user disconnected :' + pseudo);
     });
   });
 
@@ -39,9 +40,15 @@ io.sockets.on('connection', function (socket: any, pseudo: any) {
     message = ent.encode(message);
     console.log(message);
 
+    // socket
+    //   .to(socket.idPartie)
+    //   .emit('message', { pseudo: socket.pseudo, message });
+
     socket
-      .to(socket.idPartie)
+      .in(socket.idPartie)
       .emit('message', { pseudo: socket.pseudo, message });
+
+    socket.emit('message', { pseudo: socket.pseudo, message });
   });
 
   // Dès qu'on reçoit un message, on récupère le pseudo de son auteur et on le transmet aux autres personnes
@@ -51,13 +58,15 @@ io.sockets.on('connection', function (socket: any, pseudo: any) {
     io.to(socket.idPartie).emit('reussite', { pseudo: socket.pseudo, message });
   });
   socket.on('start', function (message: any) {
-    socket.in(socket.idPartie).emit('start', message);
+    socket
+      .to(socket.idPartie)
+      .emit('start', { pseudo: message, message: 'lance la partie' });
   });
   socket.on('dataPlaylist', function (dataPlaylist: any) {
     // dataPlaylist = ent.encode(dataPlaylist);
     // socket.broadcast.emit('reussite', { pseudo: socket.pseudo, message });
     io.in(socket.idPartie).emit('dataPlaylist', {
-      pseudo: socket.pseudo,
+      id: socket.idPlaylist,
       dataPlaylist,
     });
   });

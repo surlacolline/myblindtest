@@ -38,17 +38,17 @@ export class MultiComponent implements OnInit {
   placeholder = "Une idée du nom de la chanson ou de l'artiste?";
   tryButtonTitle = 'Je me lance!';
   chansonSuivanteTitle = 'Aucune idée , Chanson suivante!';
-  adresseActuelle = window.location;
-  adresseActuelleSplited = this.adresseActuelle.pathname.split('=');
+  adresseActuelle: Location;
+  adresseActuelleSplited: string[];
   IsInit = false;
-
   idCurrentGame: string;
   blMaitre: boolean;
   partageLien = '';
-
   tryAnswer: FormControl;
   singlePlayForm: FormGroup;
   pseudo: string;
+  message: string;
+  messages: any[] = [];
 
   @ViewChild('tryValue') tryValue: ElementRef;
 
@@ -65,9 +65,8 @@ export class MultiComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.idCurrentGame = this.adresseActuelleSplited[
-      this.adresseActuelleSplited.length - 1
-    ];
+    this.getURLData();
+
     this.blMaitre = sessionStorage.getItem(this.idCurrentGame) ? true : false;
     if (this.blMaitre) {
       this.IsInit = true;
@@ -75,39 +74,104 @@ export class MultiComponent implements OnInit {
     }
     this.compteurTrack = 0;
 
-    // this.multiWS.messages.subscribe((msg) => {
-    //   console.log(msg);
-    // });
-
-    this.pseudo = prompt('Quel est votre pseudo ?');
+    this.pseudo = sessionStorage.getItem('pseudo');
+    if (this.pseudo === null) {
+      this.pseudo = prompt('Quel est votre pseudo ?');
+    }
     if (this.pseudo === null) {
       this.pseudo = 'joueur';
     }
+
     this.socketService.setupSocketConnection(
       this.pseudo + '/' + this.idCurrentPlaylist + '/' + this.idCurrentGame
     );
 
     document.title = this.pseudo + ' - ' + document.title;
     sessionStorage.setItem('pseudo', this.pseudo);
+
+    // Quand un nouveau joueur se connecte, on affiche l'information
+    this.socketService.getMessages().subscribe((message: string) => {
+      this.messages.push(message);
+    });
+
+    this.socketService.getNouveauJoueur().subscribe((message: string) => {
+      this.messages.push(message);
+      if (!this.blMaitre) {
+        return;
+      }
+      const playlist = JSON.parse(
+        sessionStorage.getItem(this.idCurrentPlaylist)
+      );
+      const stringPlaylist = sessionStorage.getItem(this.idCurrentPlaylist);
+
+      this.currentPlaylist = playlist;
+
+      this.socketService.sendDataPlaylist(stringPlaylist);
+    });
+
+    this.socketService.getReussite().subscribe((message: string) => {
+      this.messages.push(message);
+      this.lecturePlaylist();
+    });
+
+    this.socketService.getStart().subscribe((message: string) => {
+      this.messages.push(message);
+
+      this.jouerOnePlaylist();
+    });
+
+    this.socketService.getDataPlaylist().subscribe((dataPlaylist: any) => {
+      console.log(dataPlaylist);
+      if (this.blMaitre) {
+        return;
+      }
+      const playlistJson = dataPlaylist.dataPlaylist.JSON;
+
+      sessionStorage.setItem(
+        dataPlaylist.id.toString(),
+        dataPlaylist.dataPlaylist
+      );
+
+      this.idCurrentPlaylist = dataPlaylist.id.toString();
+      this.currentPlaylist = JSON.parse(dataPlaylist.dataPlaylist);
+    });
   }
 
+  getURLData(): void {
+    this.adresseActuelle = window.location;
+    this.adresseActuelleSplited = this.adresseActuelle.pathname.split(';');
+    const temp = this.adresseActuelleSplited[
+      this.adresseActuelleSplited.length - 2
+    ].split('=');
+    const temp2 = this.adresseActuelleSplited[
+      this.adresseActuelleSplited.length - 1
+    ].split('=');
+
+    this.idCurrentGame = temp2[1];
+    this.idCurrentPlaylist = temp[1];
+  }
   sendMessage() {
-    // this.multiWS.sendMsg('Test Message');
+    this.socketService.sendMessage(this.message);
+    this.message = '';
   }
   commencerPartie() {
     this.IsInit = false;
+    this.socketService.commencerPartie(this.pseudo);
     this.jouerOnePlaylist();
   }
+
   jouerOnePlaylist(): void {
     const adresseActuelle = window.location;
 
     const words = adresseActuelle.pathname.split('=');
 
-    this.idCurrentPlaylist = words[words.length - 1];
+    // this.idCurrentPlaylist = words[words.length - 1];
     this.currentPlaylist = this.getPlaylistFromSessionStorage(
       this.idCurrentPlaylist
     );
     if (this.currentPlaylist === undefined) {
+    }
+    {
       // this.currentPlaylist = getPlaylistFromId(idCurrentPlaylist);
     }
   }
