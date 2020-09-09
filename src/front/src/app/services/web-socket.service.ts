@@ -24,6 +24,10 @@ export class WebSocketService {
   public sendDataPlaylist(dataPlaylist) {
     this.socket.emit('dataPlaylist', dataPlaylist);
   }
+
+  public sendJoueurs(dataJoueurs) {
+    this.socket.emit('dataJoueurs', dataJoueurs);
+  }
   public getMessages = () => {
     return Observable.create((observer) => {
       this.socket.on('message', (message) => {
@@ -64,7 +68,22 @@ export class WebSocketService {
     });
   };
 
+  public getDataJoueurs = () => {
+    return Observable.create((observer) => {
+      this.socket.on('dataJoueurs', (data) => {
+        observer.next(data);
+      });
+    });
+  };
+
   commencerPartie(pseudo: string): void {
     this.socket.emit('start', pseudo);
+  }
+
+  sendChansonSuivant(joueurs): void {
+    this.socket.emit('reussite', joueurs);
+  }
+  sendReussite(joueurs): void {
+    this.socket.emit('reussite', joueurs);
   }
 }

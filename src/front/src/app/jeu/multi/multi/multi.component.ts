@@ -7,6 +7,7 @@ import {
   ElementRef,
 } from '@angular/core';
 import { IPlaylist } from 'src/app/shared-model/Playlist.model';
+import Joueur, { IJoueur } from 'src/app/shared-model/Joueur.model';
 import {
   FormControl,
   FormGroup,
@@ -49,6 +50,7 @@ export class MultiComponent implements OnInit {
   pseudo: string;
   message: string;
   messages: any[] = [];
+  joueurs: IJoueur[] = [];
 
   @ViewChild('tryValue') tryValue: ElementRef;
 
@@ -70,7 +72,7 @@ export class MultiComponent implements OnInit {
     this.blMaitre = sessionStorage.getItem(this.idCurrentGame) ? true : false;
     if (this.blMaitre) {
       this.IsInit = true;
-      this.partageLien = window.location.pathname;
+      this.partageLien = window.location.href;
     }
     this.compteurTrack = 0;
 
@@ -81,7 +83,13 @@ export class MultiComponent implements OnInit {
     if (this.pseudo === null) {
       this.pseudo = 'joueur';
     }
-
+    const joueur = new Joueur({
+      name: this.pseudo,
+      score: 0,
+      statut: 'master',
+      id: 1,
+    });
+    this.joueurs.push(joueur);
     this.socketService.setupSocketConnection(
       this.pseudo + '/' + this.idCurrentPlaylist + '/' + this.idCurrentGame
     );
@@ -90,11 +98,11 @@ export class MultiComponent implements OnInit {
     sessionStorage.setItem('pseudo', this.pseudo);
 
     // Quand un nouveau joueur se connecte, on affiche l'information
-    this.socketService.getMessages().subscribe((message: string) => {
+    this.socketService.getMessages().subscribe((message: any) => {
       this.messages.push(message);
     });
 
-    this.socketService.getNouveauJoueur().subscribe((message: string) => {
+    this.socketService.getNouveauJoueur().subscribe((message: any) => {
       this.messages.push(message);
       if (!this.blMaitre) {
         return;
@@ -107,14 +115,27 @@ export class MultiComponent implements OnInit {
       this.currentPlaylist = playlist;
 
       this.socketService.sendDataPlaylist(stringPlaylist);
+
+      const joueur = new Joueur({
+        name: message.message,
+        score: 0,
+        statut: 'invité',
+        id: 55,
+      });
+
+      this.joueurs.push(joueur);
+      sessionStorage.setItem('joueurs', JSON.stringify(this.joueurs));
+      this.socketService.sendJoueurs(JSON.stringify(this.joueurs));
     });
 
-    this.socketService.getReussite().subscribe((message: string) => {
-      this.messages.push(message);
+    this.socketService.getReussite().subscribe((joueurs: any) => {
+      this.messages.push('bla');
+      this.joueurs = joueurs;
+      // Ajout maj session joueurs
       this.lecturePlaylist();
     });
 
-    this.socketService.getStart().subscribe((message: string) => {
+    this.socketService.getStart().subscribe((message: any) => {
       this.messages.push(message);
 
       this.jouerOnePlaylist();
@@ -134,6 +155,16 @@ export class MultiComponent implements OnInit {
 
       this.idCurrentPlaylist = dataPlaylist.id.toString();
       this.currentPlaylist = JSON.parse(dataPlaylist.dataPlaylist);
+    });
+
+    this.socketService.getDataJoueurs().subscribe((dataJoueurs: any) => {
+      console.log(dataJoueurs);
+      if (this.blMaitre) {
+        return;
+      }
+
+      this.joueurs = JSON.parse(dataJoueurs);
+      sessionStorage.setItem('joueurs', dataJoueurs);
     });
   }
 
@@ -209,6 +240,7 @@ export class MultiComponent implements OnInit {
 
   playPausePressed(): void {
     console.log('Play Pause Pressed');
+    // send playpausepressed, declenche click chez les autres
   }
   onAudioEnded(): void {
     this.chansonSuivante();
@@ -224,7 +256,8 @@ export class MultiComponent implements OnInit {
         duration: 2000,
       }
     );
-    this.lecturePlaylist();
+    this.socketService.sendChansonSuivant(this.joueurs);
+    // this.lecturePlaylist();
   }
 
   checkAnswer(event, ValueToTry: string): void {
@@ -249,7 +282,11 @@ export class MultiComponent implements OnInit {
           duration: 2000,
         }
       );
-      this.lecturePlaylist();
+      // this.lecturePlaylist();
+      this.joueurs.filter(
+        (joueur) => (joueur.name = this.pseudo)
+      )[0].score += 1;
+      this.socketService.sendChansonSuivant(this.joueurs);
     } else {
       this._snackBar.open('Nope, try again... ', 'X', {
         duration: 2000,
@@ -260,5 +297,15 @@ export class MultiComponent implements OnInit {
 
   RetourChoixPlaylist(): void {
     this.router.navigate(['/choix-playlist']);
+  }
+
+  copyLink(): void {
+    const el = document.createElement('textarea');
+    el.value = this.partageLien;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    this._snackBar.open('Le lien a été copié');
   }
 }

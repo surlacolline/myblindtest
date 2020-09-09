@@ -7,6 +7,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { JeuModule } from '../jeu.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { WebSocketService } from 'src/app/services/web-socket.service';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [MultiComponent],
@@ -17,6 +18,7 @@ import { WebSocketService } from 'src/app/services/web-socket.service';
     SharedModule,
     FormsModule,
     ReactiveFormsModule,
+    MatCardModule,
   ],
   providers: [WebSocketService],
 })

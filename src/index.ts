@@ -70,4 +70,10 @@ io.sockets.on('connection', function (socket: any, pseudo: any) {
       dataPlaylist,
     });
   });
+
+  socket.on('dataJoueurs', function (dataJoueurs: any) {
+    // dataPlaylist = ent.encode(dataPlaylist);
+    // socket.broadcast.emit('reussite', { pseudo: socket.pseudo, message });
+    io.in(socket.idPartie).emit('dataJoueurs', dataJoueurs);
+  });
 });

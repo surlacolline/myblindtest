@@ -1,63 +1,91 @@
-<section id="jeu">
-  <div *ngIf="IsInit" id="Initialisation">
-    <p>Envoi ce lien à tes amis :{{ partageLien }}</p>
-    <p>Quand tout le monde est connecter, lance la partie</p>
-    <a class="button1" id="commencerPartie" (click)="commencerPartie()">
-      Lancer la partie</a
-    >
-  </div>
-  <div id="avancement">{{ avancement }}</div>
-
-  <div *ngFor="let message of messages">
-    {{ message.pseudo }} : {{ message.message }}
-  </div>
-
-  <input
-    [(ngModel)]="message"
-    (keyup)="$event.keyCode == 13 && sendMessage()"
-  />
-  <button (click)="sendMessage()">Send</button>
-  <app-audio-player
-    [src]="src"
-    [autoplay]="autoplay"
-    (playPausePressedEvent)="playPausePressed()"
-    (audioEndedEvent)="onAudioEnded()"
-  ></app-audio-player>
-  <div id="lecteur"></div>
-  <form
-    [formGroup]="singlePlayForm"
-    (submit)="checkAnswer($event, tryValue.value)"
-  >
-    <div class="group">
-      <input
-        [formControl]="tryAnswer"
-        #tryValue
-        type="search"
-        class="textTry"
-        id="valueToTry"
-        [placeholder]="placeholder"
-        size="50"
-      />
+<div id="container">
+  <section id="jeu">
+    <div *ngIf="IsInit" id="Initialisation">
+      <mat-card class="example-card">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title>Joue avec tes amis</mat-card-title>
+          <mat-card-subtitle>MyBlindTest multi-joueur</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>
+            Envoi ce lien à tes amis :
+            <a (click)="copyLink()"
+              >{{ partageLien }} <i class="icon-copy"> </i
+            ></a>
+          </p>
+          <p>Quand tous le monde est connecté, lance la partie!</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button (click)="commencerPartie()">
+            Lancer la partie
+          </button>
+          <button mat-button (click)="copyLink()">Copier le lien</button>
+        </mat-card-actions>
+      </mat-card>
     </div>
-  </form>
+    <div id="avancement">{{ avancement }}</div>
 
-  <div class="wrapbtn">
-    <app-simple-button
-      [title]="tryButtonTitle"
-      (click)="checkAnswer($event, tryValue.value)"
-    ></app-simple-button>
-    <app-simple-button
-      [title]="chansonSuivanteTitle"
-      (click)="chansonSuivante()"
-    ></app-simple-button>
-  </div>
-  <div id="resultat">{{ resultat }}</div>
-  <div id="score">score : {{ score }}/20</div>
+    <app-audio-player
+      [src]="src"
+      [autoplay]="autoplay"
+      (playPausePressedEvent)="playPausePressed()"
+      (audioEndedEvent)="onAudioEnded()"
+    ></app-audio-player>
+    <div id="lecteur"></div>
+    <form
+      [formGroup]="singlePlayForm"
+      (submit)="checkAnswer($event, tryValue.value)"
+    >
+      <div class="group">
+        <input
+          [formControl]="tryAnswer"
+          #tryValue
+          type="search"
+          class="textTry"
+          id="valueToTry"
+          [placeholder]="placeholder"
+          size="50"
+        />
+      </div>
+    </form>
 
-  <app-simple-button
-    title=" Changer de playlist"
-    (click)="RetourChoixPlaylist()"
-  ></app-simple-button>
-  <br />
-  <app-info-button></app-info-button>
-</section>
+    <div class="wrapbtn">
+      <app-simple-button
+        [title]="tryButtonTitle"
+        (click)="checkAnswer($event, tryValue.value)"
+      ></app-simple-button>
+      <app-simple-button
+        [title]="chansonSuivanteTitle"
+        (click)="chansonSuivante()"
+      ></app-simple-button>
+    </div>
+    <div id="resultat">{{ resultat }}</div>
+    <div id="score">score : {{ score }}/20</div>
+
+    <app-simple-button
+      title=" Quitter la partie"
+      (click)="RetourChoixPlaylist()"
+    ></app-simple-button>
+    <br />
+  </section>
+  <section id="chat">
+    <div *ngFor="let joueur of joueurs; let i = index" [attr.data-index]="i">
+      Joueur n°{{ joueur.id }}: {{ joueur.name }} - score :
+      {{ joueur.score }}/20
+    </div>
+
+    <div id="textArea">
+      <div *ngFor="let message of messages">
+        {{ message.pseudo }} : {{ message.message }}
+      </div>
+    </div>
+    <br />
+    <input
+      [(ngModel)]="message"
+      (keyup)="$event.keyCode == 13 && sendMessage()"
+    />
+    <button (click)="sendMessage()">Envoyer</button>
+  </section>
+</div>
+<app-info-button></app-info-button>
