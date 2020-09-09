@@ -103,9 +103,9 @@ export class ChoixPlaylistComponent implements OnInit {
       )
     );
   }
-  playlistSelected(params: any, blisMulti?: boolean): void {
+  playlistSelected(params: any): void {
     const playlist: any = params.item;
-    const isMulti: boolean = params.isMulti || blisMulti;
+    const isMulti: boolean = params.isMulti;
     console.log(playlist.name);
     const playlistJson = playlist;
     sessionStorage.setItem(
@@ -145,12 +145,13 @@ export class ChoixPlaylistComponent implements OnInit {
           if (data === undefined) {
           } else {
             const playlistAPI = data.data;
-            this.playlistSelected(JSON.parse(playlistAPI), isMulti);
+            this.playlistSelected({ item: JSON.parse(playlistAPI), isMulti });
           }
         })
     );
   }
-  categoriesSelected(categorie: any): void {
+  categoriesSelected(event: any): void {
+    const categorie = event.item;
     console.log(categorie.name);
     this.titleCategorie = `Chosis une playlist de la catégorie ${categorie.name}`;
     this.subscription.add(
