@@ -27,6 +27,7 @@
     <div id="avancement">{{ avancement }}</div>
 
     <app-audio-player
+      #player
       [src]="src"
       [autoplay]="autoplay"
       (playPausePressedEvent)="playPausePressed()"

@@ -98,7 +98,7 @@ export class ChoixPlaylistComponent implements OnInit {
         (err) => {
           console.log(err);
           // this.connexionButton.nativeElement.click();
-          this.displayCategories();
+          // this.displayCategories();
         }
       )
     );

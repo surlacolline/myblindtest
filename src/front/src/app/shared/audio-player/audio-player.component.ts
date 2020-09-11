@@ -30,13 +30,16 @@ export class AudioPlayerComponent implements OnInit {
   ngOnInit(): void {}
 
   playPausePressed(): void {
+    this.doplayPause();
+    this.playPausePressedEvent.emit();
+  }
+  doplayPause(): void {
     if (this.myAudioPlayer.nativeElement.paused) {
       this.myAudioPlayer.nativeElement.volume = 0.1;
       this.myAudioPlayer.nativeElement.play();
     } else {
       this.myAudioPlayer.nativeElement.pause();
     }
-    this.playPausePressedEvent.emit();
   }
 
   audioEnded(): void {

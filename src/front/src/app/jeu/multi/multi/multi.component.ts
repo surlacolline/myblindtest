@@ -19,6 +19,7 @@ import { MultiJoueurService } from 'src/app/services/multi-joueur.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { WebSocketService } from 'src/app/services/web-socket.service';
+import { AudioPlayerComponent } from 'src/app/shared/audio-player/audio-player.component';
 
 @Component({
   selector: 'app-multi',
@@ -53,7 +54,7 @@ export class MultiComponent implements OnInit {
   joueurs: IJoueur[] = [];
 
   @ViewChild('tryValue') tryValue: ElementRef;
-
+  @ViewChild(AudioPlayerComponent) player: AudioPlayerComponent;
   constructor(
     private tryValueService: TryValueService,
     private router: Router,
@@ -129,7 +130,7 @@ export class MultiComponent implements OnInit {
     });
 
     this.socketService.getReussite().subscribe((joueurs: any) => {
-      this.messages.push('bla');
+      this.messages.push('bla', 'bla');
       this.joueurs = joueurs;
       // Ajout maj session joueurs
       this.lecturePlaylist();
@@ -139,6 +140,13 @@ export class MultiComponent implements OnInit {
       this.messages.push(message);
 
       this.jouerOnePlaylist();
+    });
+
+    this.socketService.getPlay().subscribe((pseudo: any) => {
+      if (pseudo === this.pseudo) {
+        return;
+      }
+      this.player.doplayPause();
     });
 
     this.socketService.getDataPlaylist().subscribe((dataPlaylist: any) => {
@@ -241,6 +249,7 @@ export class MultiComponent implements OnInit {
   playPausePressed(): void {
     console.log('Play Pause Pressed');
     // send playpausepressed, declenche click chez les autres
+    this.socketService.sendPlay(this.pseudo);
   }
   onAudioEnded(): void {
     this.chansonSuivante();
@@ -283,9 +292,8 @@ export class MultiComponent implements OnInit {
         }
       );
       // this.lecturePlaylist();
-      this.joueurs.filter(
-        (joueur) => (joueur.name = this.pseudo)
-      )[0].score += 1;
+      this.joueurs.filter((joueur) => joueur.name === this.pseudo)[0].score++;
+
       this.socketService.sendChansonSuivant(this.joueurs);
     } else {
       this._snackBar.open('Nope, try again... ', 'X', {

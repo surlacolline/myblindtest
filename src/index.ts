@@ -12,6 +12,7 @@ const ent = require('ent');
 
 // Chargement de socket.io
 const io = require('socket.io').listen(server);
+io.origins('*:*');
 
 io.sockets.on('connection', function (socket: any, pseudo: any) {
   console.log("connexion d'un joueur");
@@ -52,10 +53,22 @@ io.sockets.on('connection', function (socket: any, pseudo: any) {
   });
 
   // Dès qu'on reçoit un message, on récupère le pseudo de son auteur et on le transmet aux autres personnes
-  socket.on('reussite', function (message: any) {
-    message = ent.encode(message);
+  socket.on('reussite', function (dataJoueurs: any) {
+    // message = ent.encode(message);
     // socket.broadcast.emit('reussite', { pseudo: socket.pseudo, message });
-    io.to(socket.idPartie).emit('reussite', { pseudo: socket.pseudo, message });
+    io.to(socket.idPartie).emit('reussite', dataJoueurs);
+  });
+
+  socket.on('play', function (pseudo: string) {
+    // message = ent.encode(message);
+    // socket.broadcast.emit('reussite', { pseudo: socket.pseudo, message });
+    io.to(socket.idPartie).emit('play', pseudo);
+  });
+
+  socket.on('pause', function () {
+    // message = ent.encode(message);
+    // socket.broadcast.emit('reussite', { pseudo: socket.pseudo, message });
+    io.to(socket.idPartie).emit('pause');
   });
   socket.on('start', function (message: any) {
     socket
