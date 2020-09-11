@@ -13,7 +13,9 @@ export class WebSocketService {
   constructor() {}
 
   setupSocketConnection(data: string): void {
-    this.socket = io(environment.ws_url);
+    this.socket = io(
+      environment.production ? window.location.origin : environment.ws_url
+    );
     this.socket.emit('nouveau_joueur', data);
   }
 
