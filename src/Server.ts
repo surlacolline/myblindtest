@@ -74,7 +74,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
  *                              Serve front-end content
  ***********************************************************************************/
 
-const viewsDir = path.join(__dirname, 'front/dist/front');
+const viewsDir = path.join(__dirname, 'src/front/dist/front');
 app.set('views', viewsDir);
 const staticDir = path.join(__dirname, 'front');
 app.use(express.static(staticDir));
