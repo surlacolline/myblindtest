@@ -76,7 +76,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 
 const viewsDir = path.join(__dirname, '/front/dist/front');
 app.set('views', viewsDir);
-const staticDir = path.join(__dirname, 'front');
+const staticDir = path.join(__dirname, '/front/dist/front');
 app.use(express.static(staticDir));
 app.get('', (req: Request, res: Response) => {
   // res.sendFile('choixPlaylist.html', { root: viewsDir });
