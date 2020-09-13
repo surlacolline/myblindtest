@@ -114,7 +114,7 @@ export class ChoixPlaylistComponent implements OnInit {
     );
     if (isMulti) {
       const code = this.generateRandomString(5);
-      sessionStorage.setItem(code.toString(), 'master');
+      sessionStorage.setItem('master', code.toString());
       this.router.navigate(['/jeu-multi', { id: playlist.id, code }]);
     } else {
       this.router.navigate(['/jeu-single', { id: playlist.id }]);

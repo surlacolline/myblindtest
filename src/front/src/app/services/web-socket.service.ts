@@ -4,6 +4,7 @@ import * as io from 'socket.io-client';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs';
+import Message, { IMessage } from 'src/app/shared-model/Message.model';
 
 @Injectable()
 export class WebSocketService {
@@ -19,7 +20,7 @@ export class WebSocketService {
     this.socket.emit('nouveau_joueur', data);
   }
 
-  public sendMessage(message) {
+  public sendMessage(message: IMessage) {
     this.socket.emit('message', message);
   }
 
@@ -27,9 +28,30 @@ export class WebSocketService {
     this.socket.emit('dataPlaylist', dataPlaylist);
   }
 
-  public sendJoueurs(dataJoueurs) {
-    this.socket.emit('dataJoueurs', dataJoueurs);
+  public sendJoueurs(dataGame) {
+    this.socket.emit('dataJoueurs', dataGame);
   }
+
+  commencerPartie(pseudo: string): void {
+    this.socket.emit('start', pseudo);
+  }
+
+  sendChansonSuivant(dataGame): void {
+    this.socket.emit('nextSong', dataGame);
+  }
+  sendReussite(dataGame, pseudo): void {
+    this.socket.emit('reussite', dataGame);
+  }
+
+  sendPlay(pseudo: string): void {
+    this.socket.emit('play', pseudo);
+  }
+
+  sendPause(): void {
+    this.socket.emit('pause');
+  }
+
+  // GET
   public getMessages = () => {
     return Observable.create((observer) => {
       this.socket.on('message', (message) => {
@@ -49,6 +71,14 @@ export class WebSocketService {
   public getReussite = () => {
     return Observable.create((observer) => {
       this.socket.on('reussite', (data) => {
+        observer.next(data);
+      });
+    });
+  };
+
+  public getNextSong = () => {
+    return Observable.create((observer) => {
+      this.socket.on('nextSong', (data) => {
         observer.next(data);
       });
     });
@@ -93,23 +123,4 @@ export class WebSocketService {
       });
     });
   };
-
-  commencerPartie(pseudo: string): void {
-    this.socket.emit('start', pseudo);
-  }
-
-  sendChansonSuivant(joueurs): void {
-    this.socket.emit('reussite', joueurs);
-  }
-  sendReussite(joueurs): void {
-    this.socket.emit('reussite', joueurs);
-  }
-
-  sendPlay(pseudo: string): void {
-    this.socket.emit('play', pseudo);
-  }
-
-  sendPause(): void {
-    this.socket.emit('pause');
-  }
 }

@@ -7,7 +7,9 @@ import {
   ElementRef,
 } from '@angular/core';
 import { IPlaylist } from 'src/app/shared-model/Playlist.model';
-import Joueur, { IJoueur } from 'src/app/shared-model/Joueur.model';
+import Player, { IPlayer } from 'src/app/shared-model/Player.model';
+import Game, { IGame } from 'src/app/shared-model/Game.model';
+import Message, { IMessage } from 'src/app/shared-model/Message.model';
 import {
   FormControl,
   FormGroup,
@@ -32,7 +34,7 @@ export class MultiComponent implements OnInit {
   score = 0;
   avancement: string;
   currentPlaylist: IPlaylist;
-  compteurTrack: number;
+  compteurTrack = 0;
   lecteurAudio: any;
   idCurrentPlaylist: any;
   src: string;
@@ -49,9 +51,11 @@ export class MultiComponent implements OnInit {
   tryAnswer: FormControl;
   singlePlayForm: FormGroup;
   pseudo: string;
+  joueur: IPlayer;
   message: string;
-  messages: any[] = [];
-  joueurs: IJoueur[] = [];
+  messages: IMessage[] = [];
+
+  currentGame: IGame;
 
   @ViewChild('tryValue') tryValue: ElementRef;
   @ViewChild(AudioPlayerComponent) player: AudioPlayerComponent;
@@ -70,27 +74,46 @@ export class MultiComponent implements OnInit {
   ngOnInit(): void {
     this.getURLData();
 
-    this.blMaitre = sessionStorage.getItem(this.idCurrentGame) ? true : false;
+    this.blMaitre =
+      sessionStorage.getItem('master') === this.idCurrentGame ? true : false;
     if (this.blMaitre) {
       this.IsInit = true;
       this.partageLien = window.location.href;
+      // todo recup game storage si existe déjà
+      this.currentGame = new Game({
+        idGame: this.idCurrentGame,
+        idPlaylist: this.idCurrentPlaylist,
+        players: [],
+        currentSong: 0,
+      });
+      sessionStorage.setItem(
+        this.idCurrentGame,
+        JSON.stringify(this.currentGame)
+      );
     }
-    this.compteurTrack = 0;
 
     this.pseudo = sessionStorage.getItem('pseudo');
+    // this.joueurs = JSON.parse(sessionStorage.getItem('joueurs'));
+
     if (this.pseudo === null) {
       this.pseudo = prompt('Quel est votre pseudo ?');
     }
     if (this.pseudo === null) {
       this.pseudo = 'joueur';
     }
-    const joueur = new Joueur({
+
+    const joueur = new Player({
       name: this.pseudo,
       score: 0,
-      statut: 'master',
+      statut: this.blMaitre ? 'master' : 'guest',
       id: 1,
+      currentSong: 0,
     });
-    this.joueurs.push(joueur);
+    this.joueur = joueur;
+
+    if (this.getJoueursByPseudo(this.pseudo) === null && this.blMaitre) {
+      this.currentGame.players.push(joueur);
+    }
     this.socketService.setupSocketConnection(
       this.pseudo + '/' + this.idCurrentPlaylist + '/' + this.idCurrentGame
     );
@@ -99,12 +122,14 @@ export class MultiComponent implements OnInit {
     sessionStorage.setItem('pseudo', this.pseudo);
 
     // Quand un nouveau joueur se connecte, on affiche l'information
-    this.socketService.getMessages().subscribe((message: any) => {
-      this.messages.push(message);
+    this.socketService.getMessages().subscribe((message: IMessage) => {
+      this.addMessage(message);
     });
 
-    this.socketService.getNouveauJoueur().subscribe((message: any) => {
-      this.messages.push(message);
+    this.socketService.getNouveauJoueur().subscribe((message: IMessage) => {
+      message.isUserMessage = true;
+
+      this.addMessage(message);
       if (!this.blMaitre) {
         return;
       }
@@ -117,27 +142,51 @@ export class MultiComponent implements OnInit {
 
       this.socketService.sendDataPlaylist(stringPlaylist);
 
-      const joueur = new Joueur({
+      const joueur = new Player({
         name: message.message,
         score: 0,
         statut: 'invité',
         id: 55,
+        currentSong: 0,
       });
+      if (this.getJoueursByPseudo(this.pseudo)) {
+        this.currentGame.players.push(joueur);
+      }
 
-      this.joueurs.push(joueur);
-      sessionStorage.setItem('joueurs', JSON.stringify(this.joueurs));
-      this.socketService.sendJoueurs(JSON.stringify(this.joueurs));
+      sessionStorage.setItem(
+        this.idCurrentGame,
+        JSON.stringify(this.currentGame)
+      );
+      this.socketService.sendJoueurs(JSON.stringify(this.currentGame));
     });
 
-    this.socketService.getReussite().subscribe((joueurs: any) => {
-      this.messages.push('bla', 'bla');
-      this.joueurs = joueurs;
+    this.socketService.getReussite().subscribe((gameData: any) => {
+      const MyMessage: IMessage = new Message();
+      MyMessage.pseudo = '';
+      MyMessage.message = 'La chanson a été trouvé';
+      MyMessage.isUserMessage = false;
+      MyMessage.id = 0;
+      this.addMessage(MyMessage);
+      this.currentGame = gameData;
       // Ajout maj session joueurs
       this.lecturePlaylist();
     });
 
-    this.socketService.getStart().subscribe((message: any) => {
-      this.messages.push(message);
+    this.socketService.getNextSong().subscribe((gameData: any) => {
+      const MyMessage: IMessage = new Message();
+      MyMessage.pseudo = '';
+      MyMessage.message = 'La chanson a été trouvé';
+      MyMessage.isUserMessage = false;
+      MyMessage.id = 0;
+      this.addMessage(MyMessage);
+      this.currentGame = gameData;
+      // Ajout maj session joueurs
+      this.lecturePlaylist();
+    });
+
+    this.socketService.getStart().subscribe((message: IMessage) => {
+      message.isUserMessage = false;
+      this.addMessage(message);
 
       this.jouerOnePlaylist();
     });
@@ -165,14 +214,14 @@ export class MultiComponent implements OnInit {
       this.currentPlaylist = JSON.parse(dataPlaylist.dataPlaylist);
     });
 
-    this.socketService.getDataJoueurs().subscribe((dataJoueurs: any) => {
-      console.log(dataJoueurs);
+    this.socketService.getDataJoueurs().subscribe((dataGame: any) => {
+      console.log(dataGame);
       if (this.blMaitre) {
         return;
       }
+      this.currentGame = JSON.parse(dataGame);
 
-      this.joueurs = JSON.parse(dataJoueurs);
-      sessionStorage.setItem('joueurs', dataJoueurs);
+      sessionStorage.setItem(this.currentGame.idGame, dataGame);
     });
   }
 
@@ -189,9 +238,38 @@ export class MultiComponent implements OnInit {
     this.idCurrentGame = temp2[1];
     this.idCurrentPlaylist = temp[1];
   }
+
+  getJoueursByPseudo(pseudo: string): IPlayer {
+    if (!this.currentGame) {
+      return;
+    }
+    const result = this.currentGame.players.filter(
+      (joueur) => joueur.name === pseudo
+    )[0];
+    if (result) {
+      return result;
+    } else {
+      return null;
+    }
+  }
   sendMessage() {
-    this.socketService.sendMessage(this.message);
+    const myMessage = new Message();
+    myMessage.message = this.message;
+    myMessage.pseudo = this.pseudo;
+    myMessage.isUserMessage = true;
+    this.socketService.sendMessage(myMessage);
+    this.addMessage(myMessage);
     this.message = '';
+  }
+
+  addMessage(message: any): void {
+    const MyMessage: IMessage = new Message();
+    MyMessage.message = message?.message || 'erreur';
+    MyMessage.pseudo = message?.pseudo || 'erreur';
+    MyMessage.id = 0;
+    MyMessage.isUserMessage = message?.isUserMessage || false;
+
+    this.messages.push(MyMessage);
   }
   commencerPartie() {
     this.IsInit = false;
@@ -265,7 +343,7 @@ export class MultiComponent implements OnInit {
         duration: 2000,
       }
     );
-    this.socketService.sendChansonSuivant(this.joueurs);
+    this.socketService.sendChansonSuivant(this.currentGame);
     // this.lecturePlaylist();
   }
 
@@ -292,9 +370,11 @@ export class MultiComponent implements OnInit {
         }
       );
       // this.lecturePlaylist();
-      this.joueurs.filter((joueur) => joueur.name === this.pseudo)[0].score++;
+      this.currentGame.players.filter(
+        (joueur) => joueur.name === this.pseudo
+      )[0].score++;
 
-      this.socketService.sendChansonSuivant(this.joueurs);
+      this.socketService.sendReussite(this.currentGame, this.pseudo);
     } else {
       this._snackBar.open('Nope, try again... ', 'X', {
         duration: 2000,

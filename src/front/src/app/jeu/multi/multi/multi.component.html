@@ -71,14 +71,19 @@
     <br />
   </section>
   <section id="chat">
-    <div *ngFor="let joueur of joueurs; let i = index" [attr.data-index]="i">
+    <div *ngFor="let joueur of currentGame?.players; let i = index">
       Joueur n°{{ joueur.id }}: {{ joueur.name }} - score :
       {{ joueur.score }}/20
     </div>
 
     <div id="textArea">
       <div *ngFor="let message of messages">
-        {{ message.pseudo }} : {{ message.message }}
+        <span *ngIf="message.isUserMessage" class="chatMessage">
+          {{ message.pseudo }} : {{ message.message }}
+        </span>
+        <span *ngIf="message.isUserMessage === false" class="computerMessage">
+          {{ message.message }}
+        </span>
       </div>
     </div>
     <br />
