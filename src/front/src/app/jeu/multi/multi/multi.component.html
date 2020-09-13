@@ -79,7 +79,7 @@
     <div id="textArea">
       <div *ngFor="let message of messages">
         <span *ngIf="message.isUserMessage" class="chatMessage">
-          {{ message.pseudo }} : {{ message.message }}
+          <b> {{ message.pseudo }} </b>: {{ message.message }}
         </span>
         <span *ngIf="message.isUserMessage === false" class="computerMessage">
           {{ message.message }}
@@ -90,6 +90,7 @@
     <input
       [(ngModel)]="message"
       (keyup)="$event.keyCode == 13 && sendMessage()"
+      type="search"
     />
     <button (click)="sendMessage()">Envoyer</button>
   </section>

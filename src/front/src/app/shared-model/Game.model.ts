@@ -5,6 +5,7 @@ export interface IGame {
   idPlaylist: number;
   players: IPlayer[];
   currentSong: number;
+  pseudo: string;
 }
 
 class Game implements IGame {
@@ -12,6 +13,7 @@ class Game implements IGame {
   public idPlaylist!: number;
   public players!: IPlayer[];
   public currentSong;
+  public pseudo!: string;
 
   constructor(game?: IGame) {
     if (game) {
@@ -19,6 +21,7 @@ class Game implements IGame {
       this.idPlaylist = game.idPlaylist;
       this.players = game.players;
       this.currentSong = game.currentSong;
+      this.pseudo = game.pseudo;
     }
   }
 }

@@ -85,6 +85,7 @@ export class MultiComponent implements OnInit {
         idPlaylist: this.idCurrentPlaylist,
         players: [],
         currentSong: 0,
+        pseudo: '',
       });
       sessionStorage.setItem(
         this.idCurrentGame,
@@ -161,25 +162,28 @@ export class MultiComponent implements OnInit {
     });
 
     this.socketService.getReussite().subscribe((gameData: any) => {
+      this.currentGame = gameData;
       const MyMessage: IMessage = new Message();
       MyMessage.pseudo = '';
-      MyMessage.message = 'La chanson a été trouvé';
+      MyMessage.message = this.currentGame.pseudo + ' a trouvé!';
       MyMessage.isUserMessage = false;
       MyMessage.id = 0;
       this.addMessage(MyMessage);
-      this.currentGame = gameData;
+
       // Ajout maj session joueurs
       this.lecturePlaylist();
     });
 
     this.socketService.getNextSong().subscribe((gameData: any) => {
+      this.currentGame = gameData;
       const MyMessage: IMessage = new Message();
       MyMessage.pseudo = '';
-      MyMessage.message = "Quelqu'un à cliqué sur chanson suivante";
+      MyMessage.message =
+        this.currentGame.pseudo + ' a cliqué sur chanson suivante';
       MyMessage.isUserMessage = false;
       MyMessage.id = 0;
       this.addMessage(MyMessage);
-      this.currentGame = gameData;
+
       // Ajout maj session joueurs
       this.lecturePlaylist();
     });
@@ -352,6 +356,7 @@ export class MultiComponent implements OnInit {
   }
 
   chansonSuivante(): void {
+    this.currentGame.pseudo = this.pseudo;
     this.socketService.sendChansonSuivant(this.currentGame);
     // this.lecturePlaylist();
   }
@@ -382,8 +387,8 @@ export class MultiComponent implements OnInit {
       this.currentGame.players.filter(
         (joueur) => joueur.name === this.pseudo
       )[0].score++;
-
-      this.socketService.sendReussite(this.currentGame, this.pseudo);
+      this.currentGame.pseudo = this.pseudo;
+      this.socketService.sendReussite(this.currentGame);
     } else {
       this._snackBar.open('Nope, try again... ', 'X', {
         duration: 2000,

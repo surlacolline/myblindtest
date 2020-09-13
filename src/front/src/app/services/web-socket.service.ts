@@ -39,7 +39,7 @@ export class WebSocketService {
   sendChansonSuivant(dataGame): void {
     this.socket.emit('nextSong', dataGame);
   }
-  sendReussite(dataGame, pseudo): void {
+  sendReussite(dataGame): void {
     this.socket.emit('reussite', dataGame);
   }
 
