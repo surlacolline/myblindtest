@@ -12,12 +12,14 @@
       <app-liste-deroulante
         title="Choisis une playlist My.Blind.Test."
         [items]="playlists"
+        isItemsPlaylists="true"
         (toggled)="displayPlaylists()"
         (itemSelectedEvent)="playlistSelected($event)"
       ></app-liste-deroulante>
       <app-liste-deroulante
         title="  Choisis une des tes playlists Spotify"
         [items]="userPlaylists"
+        isItemsPlaylists="true"
         [(blOpenClose)]="showUserPlaylists"
         (toggled)="displayUserPlaylists($event)"
         (itemSelectedEvent)="playlistSelectedAPI($event)"
@@ -25,6 +27,7 @@
       <app-liste-deroulante
         title=" Choisis une catégorie Spotify "
         [items]="categories"
+        isItemsPlaylists="false"
         (toggled)="displayCategories()"
         (itemSelectedEvent)="categoriesSelected($event)"
       ></app-liste-deroulante>
@@ -32,6 +35,7 @@
       <app-liste-deroulante
         *ngIf="showCategoryPlaylists"
         [title]="titleCategorie"
+        isItemsPlaylists="true"
         [(blOpenClose)]="showCategoryPlaylists"
         [items]="categoryPlaylists"
         (itemSelectedEvent)="playlistSelectedAPI($event)"

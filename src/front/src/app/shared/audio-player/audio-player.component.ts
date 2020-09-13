@@ -35,7 +35,7 @@ export class AudioPlayerComponent implements OnInit {
   }
   doplayPause(): void {
     if (this.myAudioPlayer.nativeElement.paused) {
-      this.myAudioPlayer.nativeElement.volume = 0.1;
+      // this.myAudioPlayer.nativeElement.volume = 0.1;
       this.myAudioPlayer.nativeElement.play();
     } else {
       this.myAudioPlayer.nativeElement.pause();

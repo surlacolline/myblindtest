@@ -175,7 +175,7 @@ export class MultiComponent implements OnInit {
     this.socketService.getNextSong().subscribe((gameData: any) => {
       const MyMessage: IMessage = new Message();
       MyMessage.pseudo = '';
-      MyMessage.message = 'La chanson a été trouvé';
+      MyMessage.message = "Quelqu'un à cliqué sur chanson suivante";
       MyMessage.isUserMessage = false;
       MyMessage.id = 0;
       this.addMessage(MyMessage);
@@ -192,6 +192,12 @@ export class MultiComponent implements OnInit {
     });
 
     this.socketService.getPlay().subscribe((pseudo: any) => {
+      const MyMessage: IMessage = new Message();
+      MyMessage.isUserMessage = false;
+      MyMessage.id = 0;
+      MyMessage.message = pseudo + ' a cliqué sur le bouton play/pause';
+      MyMessage.pseudo = '';
+      this.addMessage(MyMessage);
       if (pseudo === this.pseudo) {
         return;
       }
@@ -222,6 +228,7 @@ export class MultiComponent implements OnInit {
       this.currentGame = JSON.parse(dataGame);
 
       sessionStorage.setItem(this.currentGame.idGame, dataGame);
+      this.compteurTrack = this.currentGame.currentSong;
     });
   }
 
@@ -305,10 +312,21 @@ export class MultiComponent implements OnInit {
   }
 
   lecturePlaylist(): void {
-    this.compteurTrack++;
     this.resultat = '';
     this.singlePlayForm.reset();
-
+    if (this.compteurTrack > 0) {
+      this._snackBar.open(
+        `C'était ${this.currentPlaylist.tracks[this.compteurTrack].name} de ${
+          this.currentPlaylist.tracks[this.compteurTrack].artist
+        }  `,
+        'X',
+        {
+          duration: 2000,
+        }
+      );
+    }
+    this.compteurTrack++;
+    this.currentGame.currentSong = this.compteurTrack;
     if (this.compteurTrack < this.currentPlaylist.tracks.length) {
       this.src = this.currentPlaylist.tracks[this.compteurTrack].preview_url;
       this.autoplay = true;
@@ -334,15 +352,6 @@ export class MultiComponent implements OnInit {
   }
 
   chansonSuivante(): void {
-    this._snackBar.open(
-      `C'était ${this.currentPlaylist.tracks[this.compteurTrack].name} de ${
-        this.currentPlaylist.tracks[this.compteurTrack].artist
-      }  `,
-      'X',
-      {
-        duration: 2000,
-      }
-    );
     this.socketService.sendChansonSuivant(this.currentGame);
     // this.lecturePlaylist();
   }

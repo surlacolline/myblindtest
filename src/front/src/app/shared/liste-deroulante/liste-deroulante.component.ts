@@ -20,6 +20,7 @@ export class ListeDeroulanteComponent implements OnInit, OnChanges {
   @Input() title: string;
   @Input() items: any[];
   @Input() blOpenClose = false;
+  @Input() isItemsPlaylists;
 
   @Output() toggled = new EventEmitter();
   @Output() opened = new EventEmitter();
