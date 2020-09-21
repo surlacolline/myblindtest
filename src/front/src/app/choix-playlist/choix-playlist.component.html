@@ -23,6 +23,7 @@
         [(blOpenClose)]="showUserPlaylists"
         (toggled)="displayUserPlaylists($event)"
         (itemSelectedEvent)="playlistSelectedAPI($event)"
+        (showMoreEvent)="showNextUserPlaylists($event)"
       ></app-liste-deroulante>
       <app-liste-deroulante
         title=" Choisis une catégorie Spotify "
@@ -30,6 +31,7 @@
         isItemsPlaylists="false"
         (toggled)="displayCategories()"
         (itemSelectedEvent)="categoriesSelected($event)"
+        (showMoreEvent)="showNextCategories()"
       ></app-liste-deroulante>
 
       <app-liste-deroulante

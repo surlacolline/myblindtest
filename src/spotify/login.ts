@@ -285,7 +285,7 @@ export function getPlaylists(req: any, res: any, indexStart: string) {
 
   request
     .get(
-      `https://api.spotify.com/v1/users/${req.cookies.id}/playlists?offset=${indexStart}`,
+      `https://api.spotify.com/v1/users/${req.cookies.id}/playlists?limit=50&offset=${indexStart}`,
       authOptions
     )
     .then((body: any) => {
@@ -308,7 +308,7 @@ export function getCategories(req: any, res: any, indexStart: string) {
 
   request
     .get(
-      `https://api.spotify.com/v1/browse/categories?country=FR&offset=${indexStart}`,
+      `https://api.spotify.com/v1/browse/categories?country=FR&limit=50&offset=${indexStart}`,
       authOptions
     )
     .then((body: any) => {
@@ -350,7 +350,7 @@ export function getCategoryPlaylists(req: any, res: any) {
   }
   const Token = req.cookies.tokenAPI;
   const authOptions = {
-    url: `https://api.spotify.com/v1/browse/categories/${idCategory}/playlists?country=FR&offset=${startIndex}`,
+    url: `https://api.spotify.com/v1/browse/categories/${idCategory}/playlists?country=FR&limit=50&offset=${startIndex}`,
     headers: { Authorization: 'Bearer ' + Token },
     json: true,
   };

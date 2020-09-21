@@ -9,8 +9,12 @@ export class LoginSpotifyService {
   paginationCategories = 0;
   constructor(private http: HttpClient) {}
 
-  showSpotifyCategories(e, blAfficherPlus): Observable<any> {
-    return this.http.get<string>('/api/spotify/categories');
+  showSpotifyCategories(startIndex: number): Observable<any> {
+    //
+    const myparams = new HttpParams().set('startIndex', startIndex.toString());
+    return this.http.get<string>('/api/spotify/categories', {
+      params: myparams,
+    });
   }
 
   showCategoryPlaylists(id): Observable<any> {

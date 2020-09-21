@@ -51,9 +51,9 @@ export class ListeDeroulanteComponent implements OnInit, OnChanges {
   }
   showMore(): void {
     this.showMoreEvent.emit();
-    this.blOpenClose = false;
+    // this.blOpenClose = false;
     console.log(this.blOpenClose);
-    setTimeout(() => console.log(this.matExpansionPanelElement.expanded));
+    // setTimeout(() => console.log(this.matExpansionPanelElement.expanded));
   }
   setBlOpenClose(pOpenClose): void {
     this.blOpenClose = pOpenClose;

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -13,7 +13,14 @@ export class LoadExamplePlaylistsService {
 
     return this.http.get<string>('/api/playlists/all');
   }
-  getAllUserPlaylists(): Observable<string> {
+  getAllUserPlaylists(startIndex: number): Observable<any> {
+    //
+    const myparams = new HttpParams().set('startIndex', startIndex.toString());
+
+    return this.http.get('/api/spotify/playlists', { params: myparams });
+  }
+
+  getNextUserPlaylists(): Observable<string> {
     //
 
     return this.http.get<string>('/api/spotify/playlists');

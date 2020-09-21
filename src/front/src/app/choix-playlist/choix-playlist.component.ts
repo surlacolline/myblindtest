@@ -22,6 +22,12 @@ export class ChoixPlaylistComponent implements OnInit {
   showUserPlaylists = false;
   titleCategorie: string;
   userName: string;
+  offsetUserPlaylists: number;
+  totalCountUserPlaylists: number;
+  offsetCategories: number;
+  totalCountCategories: number;
+  offsetCategoryPlaylists: number;
+  totalCountCategoryPlaylists: number;
   @ViewChild('connexionButtonAPI') connexionButtonAPI: ElementRef;
 
   constructor(
@@ -50,13 +56,17 @@ export class ChoixPlaylistComponent implements OnInit {
     );
   }
 
-  displayUserPlaylists(element): void {
-    if (this.userPlaylists) {
+  displayUserPlaylists(element, offset = 0): void {
+    if (this.userPlaylists && offset <= this.offsetUserPlaylists) {
       return;
     }
 
+    if (offset >= this.totalCountUserPlaylists) {
+      offset = 0;
+    }
+
     this.subscription.add(
-      this.examplePlaylistsService.getAllUserPlaylists().subscribe(
+      this.examplePlaylistsService.getAllUserPlaylists(offset).subscribe(
         (data: any) => {
           if (data.data.items === undefined) {
             this.userName = 'connexion';
@@ -67,6 +77,8 @@ export class ChoixPlaylistComponent implements OnInit {
             element.close();
           } else {
             this.userPlaylists = data.data.items;
+            this.offsetUserPlaylists = data.data.offset;
+            this.totalCountUserPlaylists = data.data.total;
           }
         },
         (err) => console.log(err)
@@ -79,12 +91,17 @@ export class ChoixPlaylistComponent implements OnInit {
   //   }
   // }
 
-  displayCategories(): void {
-    if (this.categories) {
+  displayCategories(offset = 0): void {
+    if (this.categories && offset <= this.offsetCategories) {
       return;
     }
+
+    if (offset >= this.totalCountCategories) {
+      offset = 0;
+    }
+
     this.subscription.add(
-      this.loginSpotifyService.showSpotifyCategories(null, false).subscribe(
+      this.loginSpotifyService.showSpotifyCategories(offset).subscribe(
         (data: any) => {
           if (data === undefined) {
           } else {
@@ -92,6 +109,8 @@ export class ChoixPlaylistComponent implements OnInit {
               this.connexionButtonAPI.nativeElement.click();
             } else {
               this.categories = data.data.categories.items;
+              this.offsetCategories = data.data.categories.offset;
+              this.totalCountCategories = data.data.categories.total;
             }
           }
         },
@@ -166,6 +185,16 @@ export class ChoixPlaylistComponent implements OnInit {
         (err) => console.log(err)
       )
     );
+  }
+
+  showNextUserPlaylists(element): void {
+    this.displayUserPlaylists(element, this.offsetUserPlaylists + 50);
+    if (this.offsetUserPlaylists) {
+    }
+  }
+
+  showNextCategories(): void {
+    this.displayCategories(this.offsetCategories + 50);
   }
   onConnexion(): void {
     console.log('Connexion...');
