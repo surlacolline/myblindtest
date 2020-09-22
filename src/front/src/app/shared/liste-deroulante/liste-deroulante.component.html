@@ -26,7 +26,12 @@
           ><i (click)="itemSelected(item, true)" class="icon-users"></i
         ></a>
       </li>
-      <li (click)="showMore()"><i class="icon-plus"></i></li>
+      <li *ngIf="isMoreButtonVisible">
+        <span (click)="showBefore()"> <i class="icon-backward"></i></span>
+        {{ offset }}-{{ offset + 50 <= total ? offset + 50 : total }} sur
+        {{ total }}
+        <span (click)="showMore()"> <i class="icon-forward2"></i></span>
+      </li>
     </ul>
 
     <div class="card-body"></div>

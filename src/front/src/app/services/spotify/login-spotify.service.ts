@@ -17,8 +17,10 @@ export class LoginSpotifyService {
     });
   }
 
-  showCategoryPlaylists(id): Observable<any> {
-    const myparams = new HttpParams().set('idCategory', id);
+  showCategoryPlaylists(id, offset = 0): Observable<any> {
+    const myparams = new HttpParams()
+      .set('idCategory', id)
+      .set('startIndex', offset.toString());
     return this.http.get<string>('/api/spotify/categoryPlaylists', {
       params: myparams,
     });

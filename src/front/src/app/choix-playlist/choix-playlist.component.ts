@@ -28,6 +28,8 @@ export class ChoixPlaylistComponent implements OnInit {
   totalCountCategories: number;
   offsetCategoryPlaylists: number;
   totalCountCategoryPlaylists: number;
+  selectedCategoryID: number;
+  isMoreButtonVisible: boolean;
   @ViewChild('connexionButtonAPI') connexionButtonAPI: ElementRef;
 
   constructor(
@@ -50,6 +52,7 @@ export class ChoixPlaylistComponent implements OnInit {
       this.examplePlaylistsService.getAllPlaylists().subscribe(
         (data: any) => {
           this.playlists = data.playlists;
+          this.isMoreButtonVisible = false;
         },
         (err) => console.log(err)
       )
@@ -57,13 +60,9 @@ export class ChoixPlaylistComponent implements OnInit {
   }
 
   displayUserPlaylists(element, offset = 0): void {
-    if (this.userPlaylists && offset <= this.offsetUserPlaylists) {
-      return;
-    }
-
-    if (offset >= this.totalCountUserPlaylists) {
-      offset = 0;
-    }
+    // if (this.userPlaylists && offset <= this.offsetUserPlaylists) {
+    //   return;
+    // }
 
     this.subscription.add(
       this.examplePlaylistsService.getAllUserPlaylists(offset).subscribe(
@@ -111,6 +110,9 @@ export class ChoixPlaylistComponent implements OnInit {
               this.categories = data.data.categories.items;
               this.offsetCategories = data.data.categories.offset;
               this.totalCountCategories = data.data.categories.total;
+              this.offsetCategories < this.totalCountCategories
+                ? (this.isMoreButtonVisible = true)
+                : (this.isMoreButtonVisible = false);
             }
           }
         },
@@ -172,6 +174,7 @@ export class ChoixPlaylistComponent implements OnInit {
   categoriesSelected(event: any): void {
     const categorie = event.item;
     console.log(categorie.name);
+    this.selectedCategoryID = categorie.id;
     this.titleCategorie = `Chosis une playlist de la catégorie ${categorie.name}`;
     this.subscription.add(
       this.loginSpotifyService.showCategoryPlaylists(categorie.id).subscribe(
@@ -180,19 +183,51 @@ export class ChoixPlaylistComponent implements OnInit {
           } else {
             this.categoryPlaylists = data.data.playlists.items;
             this.showCategoryPlaylists = true;
+            this.offsetCategoryPlaylists = data.data.playlists.offset;
+            this.totalCountCategoryPlaylists = data.data.playlists.total;
           }
         },
         (err) => console.log(err)
       )
     );
   }
-
-  showNextUserPlaylists(element): void {
-    this.displayUserPlaylists(element, this.offsetUserPlaylists + 50);
-    if (this.offsetUserPlaylists) {
+  showNextCategoryPlaylists(event: any): void {
+    this.offsetCategoryPlaylists = this.offsetCategoryPlaylists + 50;
+    if (this.offsetCategoryPlaylists >= this.totalCountCategoryPlaylists) {
+      this.offsetCategoryPlaylists = 0;
     }
+    this.subscription.add(
+      this.loginSpotifyService
+        .showCategoryPlaylists(
+          this.selectedCategoryID,
+          this.offsetCategoryPlaylists
+        )
+        .subscribe(
+          (data: any) => {
+            if (data === undefined) {
+            } else {
+              this.categoryPlaylists = data.data.playlists.items;
+              this.showCategoryPlaylists = true;
+            }
+          },
+          (err) => console.log(err)
+        )
+    );
   }
 
+  showNextUserPlaylists(element): void {
+    const offset = this.offsetUserPlaylists + 50;
+    if (offset < this.totalCountUserPlaylists) {
+      this.displayUserPlaylists(element, offset);
+    }
+  }
+  showBeforeUserPlaylists(element): void {
+    let offset = 0;
+    if (this.offsetUserPlaylists >= 50) {
+      offset = this.offsetUserPlaylists - 50;
+      this.displayUserPlaylists(element, offset);
+    }
+  }
   showNextCategories(): void {
     this.displayCategories(this.offsetCategories + 50);
   }
