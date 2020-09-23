@@ -16,6 +16,7 @@
   height: 400px;
   width: 50%;
   overflow-y: auto;
+  padding: 5px;
 }
 #container {
   display: grid;
@@ -23,6 +24,10 @@
 #chat {
   height: 100%;
   grid-column: 2;
+}
+.recapJoueurs {
+  font-size: medium;
+  font-weight: 500;
 }
 #resultat {
   height: 50px;

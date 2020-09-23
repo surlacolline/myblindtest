@@ -16,3 +16,14 @@
   color: var(--purple);
   background-color: var(--hoover);
 }
+
+.disable {
+  color: #2f2f2fc7;
+  border: 0.1em solid #2f2f2fc7;
+  background-color: #80808069;
+}
+
+.disable.button1:hover {
+  color: #2f2f2fc7;
+  background-color: #80808069;
+}

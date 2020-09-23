@@ -53,10 +53,12 @@
 
     <div class="wrapbtn">
       <app-simple-button
+        [isDisable]="arePlayBtnDisabled"
         [title]="tryButtonTitle"
         (click)="checkAnswer($event, tryValue.value)"
       ></app-simple-button>
       <app-simple-button
+        [isDisable]="arePlayBtnDisabled"
         [title]="chansonSuivanteTitle"
         (click)="chansonSuivante()"
       ></app-simple-button>
@@ -71,7 +73,10 @@
     <br />
   </section>
   <section id="chat">
-    <div *ngFor="let joueur of currentGame?.players; let i = index">
+    <div
+      class="recapJoueurs"
+      *ngFor="let joueur of currentGame?.players; let i = index"
+    >
       Joueur n°{{ joueur.id }}: {{ joueur.name }} - score :
       {{ joueur.score }}/20
     </div>

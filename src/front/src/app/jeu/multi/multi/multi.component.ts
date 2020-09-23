@@ -54,6 +54,7 @@ export class MultiComponent implements OnInit {
   joueur: IPlayer;
   message: string;
   messages: IMessage[] = [];
+  arePlayBtnDisabled: boolean;
 
   currentGame: IGame;
 
@@ -73,7 +74,7 @@ export class MultiComponent implements OnInit {
 
   ngOnInit(): void {
     this.getURLData();
-
+    this.arePlayBtnDisabled = true;
     this.blMaitre =
       sessionStorage.getItem('master') === this.idCurrentGame ? true : false;
     if (this.blMaitre) {
@@ -191,7 +192,7 @@ export class MultiComponent implements OnInit {
     this.socketService.getStart().subscribe((message: IMessage) => {
       message.isUserMessage = false;
       this.addMessage(message);
-
+      this.arePlayBtnDisabled = false;
       this.jouerOnePlaylist();
     });
 
@@ -286,6 +287,7 @@ export class MultiComponent implements OnInit {
     this.IsInit = false;
     this.socketService.commencerPartie(this.pseudo);
     this.jouerOnePlaylist();
+    this.arePlayBtnDisabled = false;
   }
 
   jouerOnePlaylist(): void {
@@ -339,11 +341,27 @@ export class MultiComponent implements OnInit {
       this.avancement =
         ' ' + this.compteurTrack + ' / ' + this.currentPlaylist.tracks.length;
     } else {
+      this.avancement =
+        ' ' + this.compteurTrack + ' / ' + this.currentPlaylist.tracks.length;
       this.src = null;
       this.autoplay = false;
       this.resultat =
         'La partie est finie! Bravo, votre score  est de ' + `${this.score}/20`;
+      this.displayWinner();
     }
+  }
+
+  displayWinner(): void {
+    this.currentGame?.players.filter((value) => value.score);
+    const winner = this.currentGame?.players.sort(function (a, b) {
+      const lastPlayer = a.score;
+      const nextPlayer = b.score;
+      return lastPlayer > nextPlayer ? -1 : 1;
+    })[0];
+
+    this._snackBar.open(
+      `${winner.name} a gagné la partie avec une score de ${winner.score}/20!`
+    );
   }
 
   playPausePressed(): void {
@@ -356,12 +374,18 @@ export class MultiComponent implements OnInit {
   }
 
   chansonSuivante(): void {
+    if (this.arePlayBtnDisabled) {
+      return;
+    }
     this.currentGame.pseudo = this.pseudo;
     this.socketService.sendChansonSuivant(this.currentGame);
     // this.lecturePlaylist();
   }
 
   checkAnswer(event, ValueToTry: string): void {
+    if (this.arePlayBtnDisabled) {
+      return;
+    }
     console.log('test');
     let blResult: boolean;
 
