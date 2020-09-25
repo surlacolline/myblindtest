@@ -8,12 +8,24 @@
 }
 
 body {
-  padding: 20px;
+  padding: 25px;
 
   background: linear-gradient(to left, var(--pink), var(--purple));
-  font: 14px 'Lucida Grande', Helvetica, Arial, sans-serif;
+
   color: var(--pink);
 }
+html,
+body {
+}
+body {
+  margin: 0;
+  font-family: 'Lucida Grande', Helvetica, Arial, sans-serif !important;
+}
+h1 {
+  font-size: xx-large !important;
+  font-weight: 500 !important;
+}
+
 .cursor-pointer {
   cursor: pointer;
 }
@@ -49,12 +61,4 @@ i {
   padding: 5px;
 }
 @media screen and (max-width: 700px) {
-}
-
-html,
-body {
-}
-body {
-  margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
