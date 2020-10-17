@@ -7,10 +7,10 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 })
 export class ConnexionButtonComponent implements OnInit {
   @Output() connexionEvent = new EventEmitter();
-  @Input() title = 'connexion';
-  constructor() {}
+  @Input() title = 'Connexion';
+  constructor() { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   onConnexion(): void {
     this.connexionEvent.emit();

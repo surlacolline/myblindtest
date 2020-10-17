@@ -1,16 +1,11 @@
-<mat-expansion-panel
-  #matExpansionPanelElement
-  hideToggle
-  [expanded]="blOpenClose"
-  (opened)="setBlOpenClose(true)"
-  (closed)="setBlOpenClose(false)"
->
-  <mat-expansion-panel-header>
-    <mat-panel-title>
-      <h2 class="btn-link" type="button">
-        {{ title }}
-        <i [ngClass]="isIconUp ? 'icon-circle-up' : 'icon-circle-down'"></i>
-      </h2>
+<mat-expansion-panel #matExpansionPanelElement hideToggle [expanded]="blOpenClose" (opened)="setBlOpenClose(true)"
+  (closed)="setBlOpenClose(false)">
+  <mat-expansion-panel-header class="border">
+    <mat-panel-title class="btn-link" type="button">
+
+      {{ title }}
+      <i [ngClass]="isIconUp ? 'icon-circle-up' : 'icon-circle-down'"></i>
+
     </mat-panel-title>
   </mat-expansion-panel-header>
 
@@ -20,11 +15,8 @@
         <a (click)="itemSelected(item, false)">
           {{ item.name }}
 
-          <i *ngIf="isItemsPlaylists === 'true'" class="icon-user"></i
-        ></a>
-        <a *ngIf="isItemsPlaylists === 'true'"
-          ><i (click)="itemSelected(item, true)" class="icon-users"></i
-        ></a>
+          <i *ngIf="isItemsPlaylists === 'true'" class="icon-user"></i></a>
+        <a *ngIf="isItemsPlaylists === 'true'"><i (click)="itemSelected(item, true)" class="icon-users"></i></a>
       </li>
       <li *ngIf="isMoreButtonVisible">
         <span (click)="showBefore()"> <i class="icon-backward"></i></span>
@@ -36,5 +28,7 @@
 
     <div class="card-body"></div>
   </div>
-  <ng-template #spinner><app-spinner></app-spinner></ng-template>
+  <ng-template #spinner>
+    <app-spinner></app-spinner>
+  </ng-template>
 </mat-expansion-panel>

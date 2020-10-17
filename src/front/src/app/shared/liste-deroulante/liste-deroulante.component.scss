@@ -22,18 +22,18 @@ ul {
   margin: 0;
   padding: 0;
 }
+.border          {
+  border-bottom: 1px solid pink !important;
+}
 .btn-link {
-  font-weight: 350;
-  font-size: 20px;
-  font-stretch: semi-expanded;
-  letter-spacing: 1px;
 
+  font: 200 20px/1.5 Helvetica, Verdana, sans-serif;
   padding: 10px;
   color: pink;
   text-decoration: none;
   outline: none;
   border: none;
-  border-bottom: 1px solid pink !important;
+ 
 }
 .card {
   background-color: transparent;

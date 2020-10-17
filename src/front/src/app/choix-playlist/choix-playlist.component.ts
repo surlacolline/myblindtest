@@ -37,10 +37,10 @@ export class ChoixPlaylistComponent implements OnInit {
     private router: Router,
     private loginSpotifyService: LoginSpotifyService,
     private cookieService: CookieService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    this.userName = this.cookieService.getCookie('display_name') || 'connexion';
+    this.userName = this.cookieService.getCookie('display_name') || 'Connexion';
     this.connexionButtonAPI?.nativeElement?.click();
   }
 
@@ -71,7 +71,7 @@ export class ChoixPlaylistComponent implements OnInit {
             this.userName = 'connexion';
             // todo supprimer cookie
 
-            alert("Veuillez d'abord vous connecter à votre compte spotify");
+            alert('Veuillez d\'abord vous connecter à votre compte spotify');
             this.showUserPlaylists = false;
             element.close();
           } else {
@@ -151,7 +151,7 @@ export class ChoixPlaylistComponent implements OnInit {
       text += possible.charAt(Math.floor(Math.random() * possible.length));
     }
     return text;
-  };
+  }
 
   playlistSelectedAPI(params): void {
     const playlist: any = params.item;
