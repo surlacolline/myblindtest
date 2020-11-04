@@ -16,7 +16,7 @@ import { MatExpansionPanel } from '@angular/material/expansion';
   styleUrls: ['./liste-deroulante.component.scss'],
 })
 export class ListeDeroulanteComponent implements OnInit, OnChanges {
-  constructor() {}
+  constructor() { }
   @Input() title: string;
   @Input() items: any[];
   @Input() blOpenClose = false;
@@ -45,7 +45,11 @@ export class ListeDeroulanteComponent implements OnInit, OnChanges {
     const a = 5;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
+
+  format(value: string): string {
+    return value.length > 50 ? `${value.substring(0, 50)} ...` : value;
+  }
 
   selectItem(): void {
     this.matExpansionPanelElement.close(); // open()

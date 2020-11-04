@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, AfterContentInit, AfterContentChecked } from '@angular/core';
 import { LoadExamplePlaylistsService } from '../services/load-example-playlists.service';
 import { LoginSpotifyService } from '../services/spotify/login-spotify.service';
 import { CookieService } from '../services/cookie.service';
@@ -12,7 +12,7 @@ import { IPlaylist } from '../shared-model/Playlist.model';
   templateUrl: './choix-playlist.component.html',
   styleUrls: ['./choix-playlist.component.scss'],
 })
-export class ChoixPlaylistComponent implements OnInit {
+export class ChoixPlaylistComponent implements OnInit, AfterContentChecked {
   private subscription: Subscription = new Subscription();
   playlists: IPlaylist[];
   userPlaylists: IPlaylist[];
@@ -30,6 +30,7 @@ export class ChoixPlaylistComponent implements OnInit {
   totalCountCategoryPlaylists: number;
   selectedCategoryID: number;
   isMoreButtonVisible: boolean;
+  isCategoriesInit = false;
   @ViewChild('connexionButtonAPI') connexionButtonAPI: ElementRef;
 
   constructor(
@@ -38,11 +39,19 @@ export class ChoixPlaylistComponent implements OnInit {
     private loginSpotifyService: LoginSpotifyService,
     private cookieService: CookieService
   ) { }
+  ngAfterContentChecked(): void {
+    if (!this.isCategoriesInit) {
+      this.connexionButtonAPI?.nativeElement?.click();
+      this.isCategoriesInit = true;
+    }
+
+  }
 
   ngOnInit(): void {
     this.userName = this.cookieService.getCookie('display_name') || 'Connexion';
-    this.connexionButtonAPI?.nativeElement?.click();
   }
+
+
 
   displayPlaylists(): void {
     if (this.playlists) {
@@ -68,7 +77,7 @@ export class ChoixPlaylistComponent implements OnInit {
       this.examplePlaylistsService.getAllUserPlaylists(offset).subscribe(
         (data: any) => {
           if (data.data.items === undefined) {
-            this.userName = 'connexion';
+            this.userName = 'Connexion';
             // todo supprimer cookie
 
             alert('Veuillez d\'abord vous connecter à votre compte spotify');
@@ -105,7 +114,7 @@ export class ChoixPlaylistComponent implements OnInit {
           if (data === undefined) {
           } else {
             if (data.data.categories === undefined) {
-              this.connexionButtonAPI.nativeElement.click();
+              // this.connexionButtonAPI.nativeElement.click();
             } else {
               this.categories = data.data.categories.items;
               this.offsetCategories = data.data.categories.offset;

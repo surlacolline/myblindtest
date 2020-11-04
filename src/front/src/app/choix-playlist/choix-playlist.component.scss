@@ -12,7 +12,7 @@
   width: 100%;
 }
 .duo {
-  min-width: 400px;
+  min-width: 800px;
 }
 app-liste-deroulante {
   margin: 30px;
@@ -147,6 +147,10 @@ li a:hover {
 @media screen and (max-width: 700px) {
   .bordureCadre {
     transform: none;
+  }
+
+  .container{
+    padding-top: 20px;
   }
   .duo.hero {
     max-width: 80%;
