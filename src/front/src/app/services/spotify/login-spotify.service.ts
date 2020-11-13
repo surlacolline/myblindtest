@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class LoginSpotifyService {
   paginationCategories = 0;
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   showSpotifyCategories(startIndex: number): Observable<any> {
     //
@@ -28,7 +28,7 @@ export class LoginSpotifyService {
 
   getPlaylist(id): Observable<any> {
     const myparams = new HttpParams().set('idPlaylist', id);
-    return this.http.get<string>('/api/spotify//playlistAPI', {
+    return this.http.get<string>('/api/spotify/playlistAPI', {
       params: myparams,
     });
   }

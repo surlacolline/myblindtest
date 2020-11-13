@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, AfterContentInit, AfterContentChecked } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, AfterContentInit, AfterContentChecked, AfterViewInit } from '@angular/core';
 import { LoadExamplePlaylistsService } from '../services/load-example-playlists.service';
 import { LoginSpotifyService } from '../services/spotify/login-spotify.service';
 import { CookieService } from '../services/cookie.service';
@@ -12,7 +12,7 @@ import { IPlaylist } from '../shared-model/Playlist.model';
   templateUrl: './choix-playlist.component.html',
   styleUrls: ['./choix-playlist.component.scss'],
 })
-export class ChoixPlaylistComponent implements OnInit, AfterContentChecked {
+export class ChoixPlaylistComponent implements OnInit, AfterViewInit {
   private subscription: Subscription = new Subscription();
   playlists: IPlaylist[];
   userPlaylists: IPlaylist[];
@@ -39,21 +39,24 @@ export class ChoixPlaylistComponent implements OnInit, AfterContentChecked {
     private loginSpotifyService: LoginSpotifyService,
     private cookieService: CookieService
   ) { }
-  ngAfterContentChecked(): void {
-    if (!this.isCategoriesInit) {
-      this.connexionButtonAPI?.nativeElement?.click();
-      this.isCategoriesInit = true;
-    }
 
+  ngAfterViewInit(): void {
+    if (!this.isCategoriesInit && this.connexionButtonAPI) {
+      this.connexionButtonAPI?.nativeElement?.click();
+    }
   }
 
   ngOnInit(): void {
     this.userName = this.cookieService.getCookie('display_name') || 'Connexion';
+    this.isCategoriesInit = this.cookieService.getCookie('tokenAPI') ? true : false;
   }
 
 
 
   displayPlaylists(): void {
+    if (!this.isCategoriesInit) {
+      this.connexionButtonAPI?.nativeElement?.click();
+    }
     if (this.playlists) {
       return;
     }
@@ -100,6 +103,10 @@ export class ChoixPlaylistComponent implements OnInit, AfterContentChecked {
   // }
 
   displayCategories(offset = 0): void {
+    if (!this.isCategoriesInit) {
+      this.connexionButtonAPI?.nativeElement?.click();
+      this.isCategoriesInit = true;
+    }
     if (this.categories && offset <= this.offsetCategories) {
       return;
     }
