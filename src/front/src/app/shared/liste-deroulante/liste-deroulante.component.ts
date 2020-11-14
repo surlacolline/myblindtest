@@ -38,11 +38,15 @@ export class ListeDeroulanteComponent implements OnInit, OnChanges {
   Counter = 0;
   isIconUp: boolean;
   styleIcon = 'icon-circle-down';
+  scroll: number;
 
   @ViewChild(MatExpansionPanel, { static: true })
   matExpansionPanelElement: MatExpansionPanel;
   ngOnChanges(changes: SimpleChanges): void {
     const a = 5;
+    if (changes.items) {
+      this.scroll = 0;
+    }
   }
 
   ngOnInit(): void { }
@@ -60,14 +64,12 @@ export class ListeDeroulanteComponent implements OnInit, OnChanges {
   }
   showMore(): void {
     this.showMoreEvent.emit();
-    // this.blOpenClose = false;
-    console.log(this.blOpenClose);
-    // setTimeout(() => console.log(this.matExpansionPanelElement.expanded));
   }
 
   showBefore(): void {
     this.showBeforeEvent.emit();
   }
+
   setBlOpenClose(pOpenClose): void {
     this.blOpenClose = pOpenClose;
     if (this.blOpenClose) {
@@ -76,5 +78,9 @@ export class ListeDeroulanteComponent implements OnInit, OnChanges {
     } else {
       this.isIconUp = false;
     }
+  }
+
+  onScroll(event: any): void {
+    this.scroll = event.target.scrollTop;
   }
 }

@@ -62,13 +62,13 @@ function login(
   const scope = 'user-read-private user-read-email playlist-read-private';
   res.redirect(
     'https://accounts.spotify.com/authorize?' +
-      querystring.stringify({
-        response_type: 'code',
-        client_id,
-        scope,
-        redirect_uri,
-        state,
-      })
+    querystring.stringify({
+      response_type: 'code',
+      client_id,
+      scope,
+      redirect_uri,
+      state,
+    })
   );
 }
 
@@ -90,9 +90,9 @@ export function callback(
   if (state === null || state !== storedState) {
     res.redirect(
       '/#' +
-        querystring.stringify({
-          error: 'state_mismatch',
-        })
+      querystring.stringify({
+        error: 'state_mismatch',
+      })
     );
   } else {
     res.clearCookie(stateKey);
@@ -158,9 +158,9 @@ export function callback(
         } else {
           res.redirect(
             '/#' +
-              querystring.stringify({
-                error: 'invalid_token',
-              })
+            querystring.stringify({
+              error: 'invalid_token',
+            })
           );
         }
       });
@@ -260,14 +260,14 @@ export function APILogin(
 
         // response.cookie('token', access_token);
         // we can also pass the token to the browser to make requests from there
-        res.cookie('tokenAPI', access_token);
+        res.cookie('tokenAPI', access_token, { maxAge: 3600000 });
         res.redirect('/');
       } else {
         res.redirect(
           '/#' +
-            querystring.stringify({
-              error: 'invalid_token',
-            })
+          querystring.stringify({
+            error: 'invalid_token',
+          })
         );
       }
     });
@@ -292,7 +292,7 @@ export function getPlaylists(req: any, res: any, indexStart: string) {
       const access_token = body.access_token;
 
       res.send({
-        data: JSON.parse(body[0]),
+        data: JSON.parse(body ? body[0] : undefined),
       });
     });
 }
@@ -363,7 +363,12 @@ export function getCategoryPlaylists(req: any, res: any) {
   });
 }
 function getPlaylist(playlistSpotify: string): Playlist {
+
   const MyData: any = JSON.parse(playlistSpotify);
+  if (MyData.error) {
+    throw (MyData.error);
+
+  }
   // lire le body et ecrire un nouveau json
   const playlist: Playlist = new Playlist();
   playlist.id = MyData.id;

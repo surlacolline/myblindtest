@@ -60,6 +60,7 @@ export class MultiComponent implements OnInit {
 
   @ViewChild('tryValue') tryValue: ElementRef;
   @ViewChild(AudioPlayerComponent) player: AudioPlayerComponent;
+
   constructor(
     private tryValueService: TryValueService,
     private router: Router,

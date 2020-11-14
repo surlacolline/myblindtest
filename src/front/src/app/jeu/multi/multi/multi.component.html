@@ -10,9 +10,7 @@
         <mat-card-content>
           <p>
             Envoi ce lien à tes amis :
-            <a (click)="copyLink()"
-              >{{ partageLien }} <i class="icon-copy"> </i
-            ></a>
+            <a (click)="copyLink()">{{ partageLien }} <i class="icon-copy"> </i></a>
           </p>
           <p>Quand tous le monde est connecté, lance la partie!</p>
         </mat-card-content>
@@ -26,62 +24,35 @@
     </div>
     <div id="avancement">{{ avancement }}</div>
 
-    <app-audio-player
-      #player
-      [src]="src"
-      [autoplay]="autoplay"
-      (playPausePressedEvent)="playPausePressed()"
-      (audioEndedEvent)="onAudioEnded()"
-    ></app-audio-player>
+    <app-audio-player #player [src]="src" [autoplay]="autoplay" (playPausePressedEvent)="playPausePressed()"
+      (audioEndedEvent)="onAudioEnded()"></app-audio-player>
     <div id="lecteur"></div>
-    <form
-      [formGroup]="singlePlayForm"
-      (submit)="checkAnswer($event, tryValue.value)"
-    >
+    <form [formGroup]="singlePlayForm" (submit)="checkAnswer($event, tryValue.value)">
       <div class="group">
-        <input
-          [formControl]="tryAnswer"
-          #tryValue
-          type="search"
-          class="textTry"
-          id="valueToTry"
-          [placeholder]="placeholder"
-          size="50"
-        />
+        <input [formControl]="tryAnswer" #tryValue type="search" class="textTry" id="valueToTry"
+          [placeholder]="placeholder" size="50" />
       </div>
     </form>
 
     <div class="wrapbtn">
-      <app-simple-button
-        [isDisable]="arePlayBtnDisabled"
-        [title]="tryButtonTitle"
-        (click)="checkAnswer($event, tryValue.value)"
-      ></app-simple-button>
-      <app-simple-button
-        [isDisable]="arePlayBtnDisabled"
-        [title]="chansonSuivanteTitle"
-        (click)="chansonSuivante()"
-      ></app-simple-button>
+      <app-simple-button [isDisable]="arePlayBtnDisabled" [title]="tryButtonTitle"
+        (click)="checkAnswer($event, tryValue.value)"></app-simple-button>
+      <app-simple-button [isDisable]="arePlayBtnDisabled" [title]="chansonSuivanteTitle" (click)="chansonSuivante()">
+      </app-simple-button>
     </div>
     <div id="resultat">{{ resultat }}</div>
     <div id="score">score : {{ score }}/20</div>
 
-    <app-simple-button
-      title=" Quitter la partie"
-      (click)="RetourChoixPlaylist()"
-    ></app-simple-button>
+    <app-simple-button title=" Quitter la partie" (click)="RetourChoixPlaylist()"></app-simple-button>
     <br />
   </section>
   <section id="chat">
-    <div
-      class="recapJoueurs"
-      *ngFor="let joueur of currentGame?.players; let i = index"
-    >
+    <div class="recapJoueurs" *ngFor="let joueur of currentGame?.players; let i = index">
       Joueur n°{{ joueur.id }}: {{ joueur.name }} - score :
       {{ joueur.score }}/20
     </div>
-
-    <div id="textArea">
+    <br>
+    <div #textArea [scrollTop]="textArea.scrollHeight" id="textArea" class="collapse">
       <div *ngFor="let message of messages">
         <span *ngIf="message.isUserMessage" class="chatMessage">
           <b> {{ message.pseudo }} </b>: {{ message.message }}
@@ -92,12 +63,9 @@
       </div>
     </div>
     <br />
-    <input
-      [(ngModel)]="message"
-      (keyup)="$event.keyCode == 13 && sendMessage()"
-      type="search"
-    />
-    <button (click)="sendMessage()">Envoyer</button>
+    <input class="textTry" [(ngModel)]="message" (keyup)="$event.keyCode == 13 && sendMessage()"
+      type="search" />&nbsp;&nbsp;
+    <app-simple-button title="Envoyer message" (click)="sendMessage()"></app-simple-button>
   </section>
 </div>
 <app-info-button></app-info-button>

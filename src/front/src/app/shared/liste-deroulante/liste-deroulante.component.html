@@ -9,7 +9,7 @@
     <!-- </mat-panel-title> -->
   </mat-expansion-panel-header>
 
-  <div *ngIf="items; else spinner" class="collapse reverseScroll">
+  <div *ngIf="items; else spinner" [scrollTop]="scroll" (scroll)="onScroll($event)" class=" collapse reverseScroll">
     <ul>
       <li class="cursor-pointer" *ngFor="let item of items">
         <a (click)="itemSelected(item, false)">
