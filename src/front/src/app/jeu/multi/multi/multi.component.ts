@@ -39,7 +39,7 @@ export class MultiComponent implements OnInit {
   idCurrentPlaylist: any;
   src: string;
   autoplay: boolean;
-  placeholder = "Une idée du nom de la chanson ou de l'artiste?";
+  placeholder = 'Une idée du nom de la chanson ou de l\'artiste?';
   tryButtonTitle = 'Je me lance!';
   chansonSuivanteTitle = 'Aucune idée , Chanson suivante!';
   adresseActuelle: Location;
@@ -193,6 +193,8 @@ export class MultiComponent implements OnInit {
       message.isUserMessage = false;
       this.addMessage(message);
       this.arePlayBtnDisabled = false;
+      this.currentGame.currentSong = 1;
+      sessionStorage.setItem(this.currentGame.idGame, JSON.stringify(this.currentGame));
       this.jouerOnePlaylist();
     });
 
@@ -234,6 +236,9 @@ export class MultiComponent implements OnInit {
 
       sessionStorage.setItem(this.currentGame.idGame, dataGame);
       this.compteurTrack = this.currentGame.currentSong;
+      if (this.currentGame.currentSong > 0) {
+        this.arePlayBtnDisabled = false;
+      }
     });
   }
 
@@ -322,8 +327,7 @@ export class MultiComponent implements OnInit {
     this.singlePlayForm.reset();
     if (this.compteurTrack > 0) {
       this._snackBar.open(
-        `C'était ${this.currentPlaylist.tracks[this.compteurTrack].name} de ${
-          this.currentPlaylist.tracks[this.compteurTrack].artist
+        `C'était ${this.currentPlaylist.tracks[this.compteurTrack].name} de ${this.currentPlaylist.tracks[this.compteurTrack].artist
         }  `,
         'X',
         {
@@ -362,6 +366,7 @@ export class MultiComponent implements OnInit {
     this._snackBar.open(
       `${winner.name} a gagné la partie avec une score de ${winner.score}/20!`
     );
+    this.arePlayBtnDisabled = true;
   }
 
   playPausePressed(): void {
@@ -386,7 +391,6 @@ export class MultiComponent implements OnInit {
     if (this.arePlayBtnDisabled) {
       return;
     }
-    console.log('test');
     let blResult: boolean;
 
     blResult = this.tryValueService.tryValue(
@@ -396,11 +400,9 @@ export class MultiComponent implements OnInit {
     );
 
     if (blResult) {
-      console.log('YES');
       this.score++;
       this._snackBar.open(
-        `Bravo, c'était ${
-          this.currentPlaylist.tracks[this.compteurTrack].name
+        `Bravo, c'était ${this.currentPlaylist.tracks[this.compteurTrack].name
         } de ${this.currentPlaylist.tracks[this.compteurTrack].artist}  `,
         'X',
         {
