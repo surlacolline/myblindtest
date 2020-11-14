@@ -198,6 +198,16 @@ export class MultiComponent implements OnInit {
       sessionStorage.setItem(this.currentGame.idGame, JSON.stringify(this.currentGame));
       this.jouerOnePlaylist();
     });
+    // Non utilisé pour l'instant car fait planté node
+    this.socketService.getDisconnect().subscribe((pseudo: string) => {
+      const MyMessage: IMessage = new Message();
+      MyMessage.isUserMessage = false;
+      MyMessage.id = 0;
+      MyMessage.message = pseudo + ' a quitté la partie, bye!';
+      MyMessage.pseudo = '';
+      this.addMessage(MyMessage);
+
+    });
 
     this.socketService.getPlay().subscribe((pseudo: any) => {
       const MyMessage: IMessage = new Message();

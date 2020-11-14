@@ -11,7 +11,7 @@ export class WebSocketService {
   // Our socket connection
   private socket;
 
-  constructor() {}
+  constructor() { }
 
   setupSocketConnection(data: string): void {
     this.socket = io(
@@ -58,7 +58,7 @@ export class WebSocketService {
         observer.next(message);
       });
     });
-  };
+  }
 
   public getNouveauJoueur = () => {
     return Observable.create((observer) => {
@@ -66,7 +66,7 @@ export class WebSocketService {
         observer.next({ pseudo: 'Nouveau joueur ', message: pseudo });
       });
     });
-  };
+  }
 
   public getReussite = () => {
     return Observable.create((observer) => {
@@ -74,7 +74,7 @@ export class WebSocketService {
         observer.next(data);
       });
     });
-  };
+  }
 
   public getNextSong = () => {
     return Observable.create((observer) => {
@@ -82,7 +82,7 @@ export class WebSocketService {
         observer.next(data);
       });
     });
-  };
+  }
 
   public getStart = () => {
     return Observable.create((observer) => {
@@ -90,7 +90,7 @@ export class WebSocketService {
         observer.next(data);
       });
     });
-  };
+  }
 
   public getPlay = () => {
     return Observable.create((observer) => {
@@ -98,7 +98,7 @@ export class WebSocketService {
         observer.next(data);
       });
     });
-  };
+  }
 
   public getPause = () => {
     return Observable.create((observer) => {
@@ -106,7 +106,7 @@ export class WebSocketService {
         observer.next(data);
       });
     });
-  };
+  }
 
   public getDataPlaylist = () => {
     return Observable.create((observer) => {
@@ -114,7 +114,7 @@ export class WebSocketService {
         observer.next(data);
       });
     });
-  };
+  }
 
   public getDataJoueurs = () => {
     return Observable.create((observer) => {
@@ -122,5 +122,13 @@ export class WebSocketService {
         observer.next(data);
       });
     });
-  };
+  }
+  // Non utilisé pour l'instant car fait planté node
+  public getDisconnect = () => {
+    return Observable.create((observer) => {
+      this.socket.on('disconnect', (data) => {
+        observer.next(data);
+      });
+    });
+  }
 }
