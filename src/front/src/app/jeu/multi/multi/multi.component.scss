@@ -14,7 +14,7 @@
   background-color: white;
   color: black;
   height: 400px;
-  width: 50%;
+  width: 100%;
   overflow-y: auto;
   padding: 5px;
 }
@@ -24,7 +24,6 @@
 
 
 ::-webkit-scrollbar-track {
-  /* box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3); */
   background-color: rgba(0, 0, 0, 0.2);
 }
 
@@ -33,11 +32,16 @@
   outline: 10px solid var(--pink);
 }
 #container {
-  display: grid;
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+
+  section{
+    height: fit-content;
+  }
 }
 #chat {
   height: 100%;
-  grid-column: 2;
 }
 .recapJoueurs {
   font-size: medium;
