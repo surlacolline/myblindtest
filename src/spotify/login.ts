@@ -260,7 +260,9 @@ export function APILogin(
 
         // response.cookie('token', access_token);
         // we can also pass the token to the browser to make requests from there
-        res.cookie('tokenAPI', access_token, { maxAge: 3600000 });
+        res.cookie('tokenAPI', access_token, {
+          expires: new Date(Date.now() + 3600000),
+        });
         res.redirect('/');
       } else {
         res.redirect(
