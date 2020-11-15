@@ -22,6 +22,8 @@ import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { WebSocketService } from 'src/app/services/web-socket.service';
 import { AudioPlayerComponent } from 'src/app/shared/audio-player/audio-player.component';
+import { MatDialog } from '@angular/material/dialog';
+import { AddPseudoDialogComponent } from './../add-pseudo-dialog/add-pseudo-dialog.component';
 
 @Component({
   selector: 'app-multi',
@@ -66,6 +68,7 @@ export class MultiComponent implements OnInit {
     private router: Router,
     private _snackBar: MatSnackBar,
     private builder: FormBuilder,
+    public dialog: MatDialog,
     // private multiWS: MultiJoueurService,
     private socketService: WebSocketService
   ) {
@@ -73,7 +76,7 @@ export class MultiComponent implements OnInit {
     this.singlePlayForm = builder.group({ tryAnwser: this.tryAnswer });
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.getURLData();
     this.arePlayBtnDisabled = true;
     this.blMaitre =
@@ -95,16 +98,13 @@ export class MultiComponent implements OnInit {
       );
     }
 
-    this.pseudo = sessionStorage.getItem('pseudo');
-    // this.joueurs = JSON.parse(sessionStorage.getItem('joueurs'));
 
-    if (this.pseudo === null) {
-      this.pseudo = prompt('Quel est votre pseudo ?');
-    }
-    if (this.pseudo === null) {
-      this.pseudo = 'joueur';
-    }
 
+    this.openDialog();
+
+  }
+
+  getSocketGame(): void {
     const joueur = new Player({
       name: this.pseudo,
       score: 0,
@@ -121,7 +121,7 @@ export class MultiComponent implements OnInit {
       this.pseudo + '/' + this.idCurrentPlaylist + '/' + this.idCurrentGame
     );
 
-    document.title = this.pseudo + ' - ' + document.title;
+    document.title = this.pseudo + ' - Blindtest';
     sessionStorage.setItem('pseudo', this.pseudo);
 
     // Quand un nouveau joueur se connecte, on affiche l'information
@@ -190,6 +190,8 @@ export class MultiComponent implements OnInit {
       this.lecturePlaylist();
     });
 
+
+
     this.socketService.getStart().subscribe((message: IMessage) => {
       message.isUserMessage = false;
       this.addMessage(message);
@@ -252,6 +254,35 @@ export class MultiComponent implements OnInit {
       }
     });
   }
+  // FIN NGONINIT
+
+  openDialog() {
+
+    this.pseudo = sessionStorage.getItem('pseudo');
+
+    if (this.pseudo === null) {
+      const dialogRef = this.dialog.open(AddPseudoDialogComponent, {
+        width: '400px',
+        data: 'Choisi ton pseudo :'
+      });
+
+
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('The dialog was closed');
+        this.pseudo = result;
+        this.getSocketGame();
+      });
+    } else {
+      this.getSocketGame();
+    }
+
+  }
+
+
+
+
+
+
 
   getURLData(): void {
     this.adresseActuelle = window.location;

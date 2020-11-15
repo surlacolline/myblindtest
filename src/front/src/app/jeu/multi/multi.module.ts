@@ -8,9 +8,10 @@ import { JeuModule } from '../jeu.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { WebSocketService } from 'src/app/services/web-socket.service';
 import { MatCardModule } from '@angular/material/card';
+import { AddPseudoDialogComponent } from './add-pseudo-dialog/add-pseudo-dialog.component';
 
 @NgModule({
-  declarations: [MultiComponent],
+  declarations: [MultiComponent, AddPseudoDialogComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

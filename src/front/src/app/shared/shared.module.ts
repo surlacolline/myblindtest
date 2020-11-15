@@ -14,6 +14,9 @@ import { InfoPopupComponent } from './info-popup/info-popup.component';
 import { InfoButtonComponent } from './info-button/info-button.component';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -30,7 +33,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     InfoButtonComponent,
     SpinnerComponent,
   ],
-  imports: [CommonModule, MatExpansionModule, MatProgressSpinnerModule],
+  imports: [CommonModule, MatExpansionModule, MatProgressSpinnerModule, MatDialogModule, MatInputModule, MatButtonModule],
   exports: [
     HeroFrameComponent,
     ConnexionButtonComponent,
@@ -41,6 +44,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     InfoPopupComponent,
     InfoButtonComponent,
     ToggleButtonComponent,
+    MatDialogModule, MatInputModule, MatButtonModule
   ],
 })
-export class SharedModule {}
+export class SharedModule { }

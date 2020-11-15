@@ -1,0 +1,13 @@
+<h1 mat-dialog-title>Bienvenue !</h1>
+<div mat-dialog-content>
+
+    <mat-form-field>
+        <mat-label>Choisi ton Pseudo</mat-label>
+        <input matInput [(ngModel)]="pseudo">
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+
+    <button mat-button [mat-dialog-close]="pseudo" cdkFocusInitial>Ok</button>
+
+</div>
