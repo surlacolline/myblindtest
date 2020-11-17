@@ -31,7 +31,6 @@ import { AddPseudoDialogComponent } from './../add-pseudo-dialog/add-pseudo-dial
   styleUrls: ['./multi.component.scss'],
 })
 export class MultiComponent implements OnInit {
-  @Output() playNextSong = new EventEmitter();
   resultat: string;
   score = 0;
   avancement: string;
@@ -97,11 +96,7 @@ export class MultiComponent implements OnInit {
         JSON.stringify(this.currentGame)
       );
     }
-
-
-
     this.openDialog();
-
   }
 
   getSocketGame(): void {
@@ -177,20 +172,21 @@ export class MultiComponent implements OnInit {
     });
 
     this.socketService.getNextSong().subscribe((gameData: any) => {
-      this.currentGame = gameData;
-      const MyMessage: IMessage = new Message();
-      MyMessage.pseudo = '';
-      MyMessage.message =
-        this.currentGame.pseudo + ' a cliqué sur chanson suivante';
-      MyMessage.isUserMessage = false;
-      MyMessage.id = 0;
-      this.addMessage(MyMessage);
+      const isAudioEnded = gameData.isAudioEnded;
+      this.currentGame = gameData.dataGame;
+      if (!isAudioEnded) {
+        const MyMessage: IMessage = new Message();
+        MyMessage.pseudo = '';
+        MyMessage.message =
+          this.currentGame.pseudo + ' a cliqué sur chanson suivante';
+        MyMessage.isUserMessage = false;
+        MyMessage.id = 0;
+        this.addMessage(MyMessage);
+      }
 
       // Ajout maj session joueurs
       this.lecturePlaylist();
     });
-
-
 
     this.socketService.getStart().subscribe((message: IMessage) => {
       message.isUserMessage = false;
@@ -277,12 +273,6 @@ export class MultiComponent implements OnInit {
     }
 
   }
-
-
-
-
-
-
 
   getURLData(): void {
     this.adresseActuelle = window.location;
@@ -383,7 +373,7 @@ export class MultiComponent implements OnInit {
       this.src = this.currentPlaylist.tracks[this.compteurTrack].preview_url;
       this.autoplay = true;
       // lecteurAudio.pause();
-      this.playNextSong.emit();
+
       this.avancement =
         ' ' + this.compteurTrack + ' / ' + this.currentPlaylist.tracks.length;
     } else {
@@ -417,15 +407,15 @@ export class MultiComponent implements OnInit {
     this.socketService.sendPlay(this.pseudo);
   }
   onAudioEnded(): void {
-    this.chansonSuivante();
+    this.chansonSuivante(true);
   }
 
-  chansonSuivante(): void {
+  chansonSuivante(isAudioEnded: boolean): void {
     if (this.arePlayBtnDisabled) {
       return;
     }
     this.currentGame.pseudo = this.pseudo;
-    this.socketService.sendChansonSuivant(this.currentGame);
+    this.socketService.sendChansonSuivant(this.currentGame, isAudioEnded);
     // this.lecturePlaylist();
   }
 

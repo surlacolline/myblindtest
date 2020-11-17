@@ -37,7 +37,8 @@
     <div class="wrapbtn">
       <app-simple-button [isDisable]="arePlayBtnDisabled" [title]="tryButtonTitle"
         (click)="checkAnswer($event, tryValue.value)"></app-simple-button>
-      <app-simple-button [isDisable]="arePlayBtnDisabled" [title]="chansonSuivanteTitle" (click)="chansonSuivante()">
+      <app-simple-button [isDisable]="arePlayBtnDisabled" [title]="chansonSuivanteTitle"
+        (click)="chansonSuivante(false)">
       </app-simple-button>
     </div>
     <div id="resultat">{{ resultat }}</div>

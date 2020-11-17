@@ -16,7 +16,7 @@ const io = require('socket.io').listen(server);
 io.origins('*:*');
 
 io.sockets.on('connection', function (socket: any, pseudo: any) {
-  console.log("connexion d'un joueur");
+  console.log('connexion d\'un joueur');
   // Dès qu'on nous donne un pseudo, on le stocke en variable de session et on informe les autres personnes
   socket.on('nouveau_joueur', function (pseudoAndID: string) {
     const pseudoAndIDArray = pseudoAndID.split('/');
@@ -65,11 +65,11 @@ io.sockets.on('connection', function (socket: any, pseudo: any) {
   socket.on('nextSong', function (dataJoueurs: any) {
     // message = ent.encode(message);
     // socket.broadcast.emit('reussite', { pseudo: socket.pseudo, message });
-    const message = new Message();
-    message.id = 0;
-    message.isUserMessage = false;
-    message.message = pseudo + ' a changé de chanson';
-    message.pseudo = pseudo;
+    // const message = new Message();
+    // message.id = 0;
+    // message.isUserMessage = false;
+    // message.message = pseudo + ' a changé de chanson';
+    // message.pseudo = pseudo;
     io.to(socket.idPartie).emit('nextSong', dataJoueurs);
   });
 

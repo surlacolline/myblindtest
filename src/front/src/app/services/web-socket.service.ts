@@ -36,8 +36,11 @@ export class WebSocketService {
     this.socket.emit('start', pseudo);
   }
 
-  sendChansonSuivant(dataGame): void {
-    this.socket.emit('nextSong', dataGame);
+  sendChansonSuivant(dataGame, isAudioEnded: boolean): void {
+
+    this.socket.emit('nextSong', { dataGame, isAudioEnded });
+
+
   }
   sendReussite(dataGame): void {
     this.socket.emit('reussite', dataGame);
@@ -53,7 +56,7 @@ export class WebSocketService {
 
   // GET
   public getMessages = () => {
-    return Observable.create((observer) => {
+    return new Observable((observer) => {
       this.socket.on('message', (message) => {
         observer.next(message);
       });
@@ -61,7 +64,7 @@ export class WebSocketService {
   }
 
   public getNouveauJoueur = () => {
-    return Observable.create((observer) => {
+    return new Observable((observer) => {
       this.socket.on('nouveau_joueur', (pseudo) => {
         observer.next({ pseudo: 'Nouveau joueur ', message: pseudo });
       });
@@ -69,7 +72,7 @@ export class WebSocketService {
   }
 
   public getReussite = () => {
-    return Observable.create((observer) => {
+    return new Observable((observer) => {
       this.socket.on('reussite', (data) => {
         observer.next(data);
       });
@@ -77,7 +80,7 @@ export class WebSocketService {
   }
 
   public getNextSong = () => {
-    return Observable.create((observer) => {
+    return new Observable((observer) => {
       this.socket.on('nextSong', (data) => {
         observer.next(data);
       });
