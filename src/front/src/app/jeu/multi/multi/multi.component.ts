@@ -56,7 +56,6 @@ export class MultiComponent implements OnInit {
   message: string;
   messages: IMessage[] = [];
   arePlayBtnDisabled: boolean;
-
   currentGame: IGame;
 
   @ViewChild('tryValue') tryValue: ElementRef;
@@ -183,7 +182,6 @@ export class MultiComponent implements OnInit {
         MyMessage.id = 0;
         this.addMessage(MyMessage);
       }
-
       // Ajout maj session joueurs
       this.lecturePlaylist();
     });
@@ -275,6 +273,7 @@ export class MultiComponent implements OnInit {
   }
 
   getURLData(): void {
+    // Utiliser activatedroute (voir timesheet)
     this.adresseActuelle = window.location;
     this.adresseActuelleSplited = this.adresseActuelle.pathname.split(';');
     const temp = this.adresseActuelleSplited[

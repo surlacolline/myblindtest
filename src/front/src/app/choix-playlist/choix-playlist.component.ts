@@ -72,10 +72,6 @@ export class ChoixPlaylistComponent implements OnInit, AfterViewInit {
   }
 
   displayUserPlaylists(element, offset = 0): void {
-    // if (this.userPlaylists && offset <= this.offsetUserPlaylists) {
-    //   return;
-    // }
-
     this.subscription.add(
       this.examplePlaylistsService.getAllUserPlaylists(offset).subscribe(
         (data: any) => {
@@ -96,11 +92,7 @@ export class ChoixPlaylistComponent implements OnInit, AfterViewInit {
       )
     );
   }
-  // closeUserPlaylists() {
-  //   if (!this.userPlaylists) {
-  //     this.showUserPlaylists = false;
-  //   }
-  // }
+
 
   displayCategories(offset = 0): void {
     if (!this.isCategoriesInit) {
@@ -134,8 +126,6 @@ export class ChoixPlaylistComponent implements OnInit, AfterViewInit {
         },
         (err) => {
           console.log(err);
-          // this.connexionButton.nativeElement.click();
-          // this.displayCategories();
         }
       )
     );
@@ -188,6 +178,7 @@ export class ChoixPlaylistComponent implements OnInit, AfterViewInit {
     );
   }
   categoriesSelected(event: any): void {
+    this.showCategoryPlaylists = false;
     const categorie = event.item;
     console.log(categorie.name);
     this.selectedCategoryID = categorie.id;
