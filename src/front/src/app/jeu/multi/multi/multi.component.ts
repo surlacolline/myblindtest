@@ -86,6 +86,7 @@ export class MultiComponent implements OnInit {
       this.currentGame = new Game({
         idGame: this.idCurrentGame,
         idPlaylist: this.idCurrentPlaylist,
+        playlistName: this.currentPlaylist?.name,
         players: [],
         currentSong: 0,
         pseudo: '',
@@ -136,6 +137,7 @@ export class MultiComponent implements OnInit {
       const stringPlaylist = sessionStorage.getItem(this.idCurrentPlaylist);
 
       this.currentPlaylist = playlist;
+      this.currentGame.playlistName = this.currentPlaylist.name;
 
       this.socketService.sendDataPlaylist(stringPlaylist);
 

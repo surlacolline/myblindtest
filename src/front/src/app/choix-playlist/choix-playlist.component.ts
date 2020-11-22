@@ -132,6 +132,7 @@ export class ChoixPlaylistComponent implements OnInit, AfterViewInit {
   }
   playlistSelected(params: any): void {
     const playlist: any = params.item;
+    debugger;
     const isMulti: boolean = params.isMulti;
     console.log(playlist.name);
     const playlistJson = playlist;
