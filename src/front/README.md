@@ -1,3 +1,8 @@
+Start back dev: npm run start:dev
+
+Start front: ...\myblindtest\src\front\src\app> ng serve -o
+
+Build and deploy : npm run build:prod, commit, push puis Heroku
 # Front
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.0.5.
