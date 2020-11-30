@@ -197,11 +197,12 @@ export class MultiComponent implements OnInit {
       this.jouerOnePlaylist();
     });
     // Non utilisé pour l'instant car fait planté node
-    this.socketService.getDisconnect().subscribe((pseudo: string) => {
+    this.socketService.getDisconnect().subscribe((event: any) => {
+
       const MyMessage: IMessage = new Message();
       MyMessage.isUserMessage = false;
       MyMessage.id = 0;
-      MyMessage.message = pseudo + ' a quitté la partie, bye!';
+      MyMessage.message = event.toString() + ' a quitté la partie, bye!';
       MyMessage.pseudo = '';
       this.addMessage(MyMessage);
 
@@ -467,6 +468,6 @@ export class MultiComponent implements OnInit {
     el.select();
     document.execCommand('copy');
     document.body.removeChild(el);
-    this._snackBar.open('Le lien a été copié');
+    this._snackBar.open('Le lien a été copié', 'X', { duration: 2000, });
   }
 }

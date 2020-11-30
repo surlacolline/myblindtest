@@ -14,6 +14,7 @@ const ent = require('ent');
 // Chargement de socket.io
 const io = require('socket.io').listen(server);
 io.origins('*:*');
+const allPlayers: any[] = [];
 
 io.sockets.on('connection', function (socket: any, pseudo: any) {
   console.log('connexion d\'un joueur');
@@ -28,16 +29,22 @@ io.sockets.on('connection', function (socket: any, pseudo: any) {
     socket.pseudo = pseudo;
     socket.idPlaylist = idPlaylist;
     socket.idPartie = idPartie;
+    allPlayers.push(socket);
     console.log('connexion du joueur' + pseudo);
 
     socket.join(idPartie);
     socket.in(socket.idPartie).emit('nouveau_joueur', pseudo);
 
-    socket.on('disconnect', () => {
-      console.log('user disconnected :' + pseudo);
-    });
-  });
 
+  });
+  socket.on('disconnect', (event: any) => {
+    console.log('user disconnected :' + pseudo);
+    console.log(event);
+    const i = allPlayers.indexOf(socket);
+    allPlayers.splice(i, 1);
+    io.in(socket.idPartie).emit('user_leave', socket.pseudo);
+
+  });
   // Dès qu'on reçoit un message, on récupère le pseudo de son auteur et on le transmet aux autres personnes
   socket.on('message', function (message: IMessage) {
     console.log(message.message);
@@ -102,3 +109,10 @@ io.sockets.on('connection', function (socket: any, pseudo: any) {
     io.in(socket.idPartie).emit('dataJoueurs', dataJoueurs);
   });
 });
+// io.sockets.setInterval(() => {
+//   io.sockets.rooms.forEach((room: string) => {
+
+
+//   });
+//   io.sockets.emit('state', '');
+// }, 1000 / 60);

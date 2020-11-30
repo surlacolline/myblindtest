@@ -9,7 +9,7 @@ import Message, { IMessage } from 'src/app/shared-model/Message.model';
 @Injectable()
 export class WebSocketService {
   // Our socket connection
-  private socket;
+  private socket: SocketIOClient.Socket;
 
   constructor() { }
 
@@ -20,15 +20,15 @@ export class WebSocketService {
     this.socket.emit('nouveau_joueur', data);
   }
 
-  public sendMessage(message: IMessage) {
+  public sendMessage(message: IMessage): void {
     this.socket.emit('message', message);
   }
 
-  public sendDataPlaylist(dataPlaylist) {
+  public sendDataPlaylist(dataPlaylist): void {
     this.socket.emit('dataPlaylist', dataPlaylist);
   }
 
-  public sendJoueurs(dataGame) {
+  public sendJoueurs(dataGame): void {
     this.socket.emit('dataJoueurs', dataGame);
   }
 
@@ -87,6 +87,14 @@ export class WebSocketService {
     });
   }
 
+  public getData = (dataType: 'nextSong' | 'reussite') => {
+    return new Observable((observer) => {
+      this.socket.on(dataType, (data) => {
+        observer.next(data);
+      });
+    });
+  }
+
   public getStart = () => {
     return Observable.create((observer) => {
       this.socket.on('start', (data) => {
@@ -128,8 +136,8 @@ export class WebSocketService {
   }
   // Non utilisé pour l'instant car fait planté node
   public getDisconnect = () => {
-    return Observable.create((observer) => {
-      this.socket.on('disconnect', (data) => {
+    return new Observable((observer) => {
+      this.socket.on('user_leave', (data) => {
         observer.next(data);
       });
     });
