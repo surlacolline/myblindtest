@@ -1,29 +1,33 @@
 import {
   Component,
-  OnInit,
-  Output,
-  EventEmitter,
-  ViewChild,
-  ElementRef,
+
+
+
+
+  ElementRef, OnInit,
+
+
+  ViewChild
 } from '@angular/core';
-import { IPlaylist } from 'src/app/shared-model/Playlist.model';
-import Player, { IPlayer } from 'src/app/shared-model/Player.model';
+import {
+  FormBuilder, FormControl,
+  FormGroup,
+
+  Validators
+} from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+import { CookieService2 } from 'src/app/services/cookie.service';
+import { TryValueService } from 'src/app/services/try-value.service';
+import { WebSocketService } from 'src/app/services/web-socket.service';
 import Game, { IGame } from 'src/app/shared-model/Game.model';
 import Message, { IMessage } from 'src/app/shared-model/Message.model';
-import {
-  FormControl,
-  FormGroup,
-  FormBuilder,
-  Validators,
-} from '@angular/forms';
-import { TryValueService } from 'src/app/services/try-value.service';
-import { MultiJoueurService } from 'src/app/services/multi-joueur.service';
-import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { WebSocketService } from 'src/app/services/web-socket.service';
+import Player, { IPlayer } from 'src/app/shared-model/Player.model';
+import { IPlaylist } from 'src/app/shared-model/Playlist.model';
 import { AudioPlayerComponent } from 'src/app/shared/audio-player/audio-player.component';
-import { MatDialog } from '@angular/material/dialog';
 import { AddPseudoDialogComponent } from './../add-pseudo-dialog/add-pseudo-dialog.component';
+
 
 @Component({
   selector: 'app-multi',
@@ -68,7 +72,8 @@ export class MultiComponent implements OnInit {
     private builder: FormBuilder,
     public dialog: MatDialog,
     // private multiWS: MultiJoueurService,
-    private socketService: WebSocketService
+    private socketService: WebSocketService,
+    private cookieService: CookieService2
   ) {
     this.tryAnswer = new FormControl('', [Validators.required]);
     this.singlePlayForm = builder.group({ tryAnwser: this.tryAnswer });
@@ -77,8 +82,10 @@ export class MultiComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.getURLData();
     this.arePlayBtnDisabled = true;
+
     this.blMaitre =
-      sessionStorage.getItem('master') === this.idCurrentGame ? true : false;
+      // sessionStorage.getItem('master') === this.idCurrentGame ? true : false;
+      this.cookieService.get2('master') === this.idCurrentGame ? true : false;
     if (this.blMaitre) {
       this.IsInit = true;
       this.partageLien = window.location.href;
@@ -91,7 +98,12 @@ export class MultiComponent implements OnInit {
         currentSong: 0,
         pseudo: '',
       });
-      sessionStorage.setItem(
+      // sessionStorage.setItem(
+      //   this.idCurrentGame,
+      //   JSON.stringify(this.currentGame)
+      // );
+
+      this.cookieService.setCookie(
         this.idCurrentGame,
         JSON.stringify(this.currentGame)
       );
@@ -106,6 +118,7 @@ export class MultiComponent implements OnInit {
       statut: this.blMaitre ? 'master' : 'guest',
       id: 1,
       currentSong: 0,
+      isConnected: true
     });
     this.joueur = joueur;
 
@@ -117,7 +130,8 @@ export class MultiComponent implements OnInit {
     );
 
     document.title = this.pseudo + ' - Blindtest';
-    sessionStorage.setItem('pseudo', this.pseudo);
+    // sessionStorage.setItem('pseudo', this.pseudo);
+    this.cookieService.set('pseudo', this.pseudo);
 
     // Quand un nouveau joueur se connecte, on affiche l'information
     this.socketService.getMessages().subscribe((message: IMessage) => {
@@ -132,9 +146,11 @@ export class MultiComponent implements OnInit {
         return;
       }
       const playlist = JSON.parse(
-        sessionStorage.getItem(this.idCurrentPlaylist)
+        // sessionStorage.getItem(this.idCurrentPlaylist)
+        this.cookieService.get2(this.idCurrentPlaylist)
       );
-      const stringPlaylist = sessionStorage.getItem(this.idCurrentPlaylist);
+      // const stringPlaylist = sessionStorage.getItem(this.idCurrentPlaylist);
+      const stringPlaylist = this.cookieService.get2(this.idCurrentPlaylist);
 
       this.currentPlaylist = playlist;
       this.currentGame.playlistName = this.currentPlaylist.name;
@@ -147,12 +163,17 @@ export class MultiComponent implements OnInit {
         statut: 'invité',
         id: 55,
         currentSong: 0,
+        isConnected: true
       });
       if (this.getJoueursByPseudo(this.pseudo)) {
         this.currentGame.players.push(joueur);
       }
 
-      sessionStorage.setItem(
+      // sessionStorage.setItem(
+      //   this.idCurrentGame,
+      //   JSON.stringify(this.currentGame)
+      // );
+      this.cookieService.setCookie(
         this.idCurrentGame,
         JSON.stringify(this.currentGame)
       );
@@ -193,17 +214,23 @@ export class MultiComponent implements OnInit {
       this.addMessage(message);
       this.arePlayBtnDisabled = false;
       this.currentGame.currentSong = 1;
-      sessionStorage.setItem(this.currentGame.idGame, JSON.stringify(this.currentGame));
+      // sessionStorage.setItem(this.currentGame.idGame, JSON.stringify(this.currentGame));
+      this.cookieService.setCookie(this.currentGame.idGame, JSON.stringify(this.currentGame));
       this.jouerOnePlaylist();
     });
     // Non utilisé pour l'instant car fait planté node
-    this.socketService.getDisconnect().subscribe((event: any) => {
+    this.socketService.getDisconnect().subscribe((playerName: string) => {
 
       const MyMessage: IMessage = new Message();
       MyMessage.isUserMessage = false;
       MyMessage.id = 0;
-      MyMessage.message = event.toString() + ' a quitté la partie, bye!';
+      MyMessage.message = playerName + ' a quitté la partie, bye!';
       MyMessage.pseudo = '';
+      this.currentGame.players.forEach(player => {
+        if (player.name === playerName) {
+          player.isConnected = false;
+        }
+      });
       this.addMessage(MyMessage);
 
     });
@@ -228,7 +255,11 @@ export class MultiComponent implements OnInit {
       }
       const playlistJson = dataPlaylist.dataPlaylist.JSON;
 
-      sessionStorage.setItem(
+      // sessionStorage.setItem(
+      //   dataPlaylist.id.toString(),
+      //   dataPlaylist.dataPlaylist
+      // );
+      this.cookieService.setCookie(
         dataPlaylist.id.toString(),
         dataPlaylist.dataPlaylist
       );
@@ -244,7 +275,8 @@ export class MultiComponent implements OnInit {
       }
       this.currentGame = JSON.parse(dataGame);
 
-      sessionStorage.setItem(this.currentGame.idGame, dataGame);
+      // sessionStorage.setItem(this.currentGame.idGame, dataGame);
+      this.cookieService.setCookie(this.currentGame.idGame, dataGame);
       this.compteurTrack = this.currentGame.currentSong;
       if (this.currentGame.currentSong > 0) {
         this.arePlayBtnDisabled = false;
@@ -255,14 +287,15 @@ export class MultiComponent implements OnInit {
 
   openDialog() {
 
-    this.pseudo = sessionStorage.getItem('pseudo');
+    // this.pseudo = sessionStorage.getItem('pseudo');
+    this.pseudo = this.cookieService.get2('pseudo');
 
-    if (this.pseudo === null) {
+    if (!this.pseudo) {
       const dialogRef = this.dialog.open(AddPseudoDialogComponent, {
         width: '400px',
         data: 'Choisi ton pseudo :'
       });
-
+      // Todo verifie existence pseudo ou incrémente pseudo existant
 
       dialogRef.afterClosed().subscribe(result => {
         console.log('The dialog was closed');
@@ -346,7 +379,8 @@ export class MultiComponent implements OnInit {
   }
 
   getPlaylistFromSessionStorage(id): IPlaylist {
-    const playlist = JSON.parse(sessionStorage.getItem(id));
+    // const playlist = JSON.parse(sessionStorage.getItem(id));
+    const playlist = JSON.parse(this.cookieService.get2(id));
 
     this.currentPlaylist = playlist;
     if (!playlist) {

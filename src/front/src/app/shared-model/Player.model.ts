@@ -4,6 +4,7 @@ export interface IPlayer {
   statut: string;
   score: number;
   currentSong: number;
+  isConnected: boolean;
 }
 
 class Player implements IPlayer {
@@ -12,7 +13,7 @@ class Player implements IPlayer {
   public statut!: string;
   public score!: number;
   public currentSong;
-  number;
+  public isConnected: boolean;
 
   constructor(joueur?: IPlayer) {
     if (joueur) {
@@ -21,6 +22,7 @@ class Player implements IPlayer {
       this.id = joueur.id;
       this.score = joueur.score;
       this.currentSong = joueur.currentSong;
+      this.isConnected = joueur.isConnected;
     }
   }
 }

@@ -79,6 +79,15 @@
   font-size: 20px;
 }
 
+.recapJoueurs{
+  border: solid;
+  padding: 4px;
+}
+
+.isDisconnected{
+  font-style: italic;
+}
+
 @media screen and (max-width: 700px) {
   .textTry {
     display: flex;

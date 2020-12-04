@@ -11,6 +11,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,9 +24,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatExpansionModule,
     MatSnackBarModule,
     MatDialogModule,
-    MatProgressSpinnerModule,
+    MatProgressSpinnerModule
+
   ],
-  providers: [],
+  providers: [CookieService],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

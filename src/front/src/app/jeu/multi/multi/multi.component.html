@@ -49,10 +49,13 @@
     <br />
   </section>
   <section id="chat">
-    <div class="recapJoueurs" *ngFor="let joueur of currentGame?.players; let i = index">
-      Joueur n°{{ joueur.id }}: {{ joueur.name }} - score :
-      {{ joueur.score }}/20
+    <div class="recapJoueurs">
+      <div *ngFor="let joueur of currentGame?.players; let i = index">
+        <p [ngClass]="{isDisconnected: !joueur.isConnected}">Joueur n°{{ joueur.id }}: {{ joueur.name }} - score :
+          {{ joueur.score }}/20 {{ joueur.isConnected? '' : "est deconnecté" }}</p>
+      </div>
     </div>
+
     <br>
     <div #textArea [scrollTop]="textArea.scrollHeight" id="textArea" class="collapse">
       <div *ngFor="let message of messages">

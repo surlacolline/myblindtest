@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild, AfterContentInit, AfterContentChecked, AfterViewInit } from '@angular/core';
 import { LoadExamplePlaylistsService } from '../services/load-example-playlists.service';
 import { LoginSpotifyService } from '../services/spotify/login-spotify.service';
-import { CookieService } from '../services/cookie.service';
+import { CookieService2 } from '../services/cookie.service';
 
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
@@ -37,7 +37,7 @@ export class ChoixPlaylistComponent implements OnInit, AfterViewInit {
     private examplePlaylistsService: LoadExamplePlaylistsService,
     private router: Router,
     private loginSpotifyService: LoginSpotifyService,
-    private cookieService: CookieService
+    private cookieService: CookieService2
   ) { }
 
   ngAfterViewInit(): void {
@@ -136,13 +136,18 @@ export class ChoixPlaylistComponent implements OnInit, AfterViewInit {
     const isMulti: boolean = params.isMulti;
     console.log(playlist.name);
     const playlistJson = playlist;
-    sessionStorage.setItem(
+    // sessionStorage.setItem(
+    //   playlistJson.id.toString(),
+    //   JSON.stringify(playlistJson)
+    // );
+    this.cookieService.setCookie(
       playlistJson.id.toString(),
       JSON.stringify(playlistJson)
     );
     if (isMulti) {
       const code = this.generateRandomString(5);
-      sessionStorage.setItem('master', code.toString());
+      // sessionStorage.setItem('master', code.toString());
+      this.cookieService.set('master', code.toString());
       this.router.navigate(['/jeu-multi', { id: playlist.id, code }]);
     } else {
       this.router.navigate(['/jeu-single', { id: playlist.id }]);

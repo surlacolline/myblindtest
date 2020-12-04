@@ -1,23 +1,24 @@
 import {
   Component,
-  OnInit,
+
+
+
+
+  ElementRef, EventEmitter, OnInit,
   Output,
-  EventEmitter,
-  ViewChild,
-  ElementRef,
+
+  ViewChild
 } from '@angular/core';
-import { ChoixPlaylistComponent } from 'src/app/choix-playlist/choix-playlist.component';
-import { IPlaylist } from './../../../shared-model/Playlist.model';
-import { TryValueService } from './../../../services/try-value.service';
-import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import {
-  FormControl,
+  FormBuilder, FormControl,
   FormGroup,
-  Validators,
-  FormBuilder,
-  ReactiveFormsModule,
+  Validators
 } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+import { CookieService2 } from 'src/app/services/cookie.service';
+import { TryValueService } from './../../../services/try-value.service';
+import { IPlaylist } from './../../../shared-model/Playlist.model';
 
 @Component({
   selector: 'app-single',
@@ -35,7 +36,7 @@ export class SingleComponent implements OnInit {
   idCurrentPlaylist: any;
   src: string;
   autoplay: boolean;
-  placeholder = "Une idée du nom de la chanson ou de l'artiste?";
+  placeholder = 'Une idée du nom de la chanson ou de l\'artiste?';
   tryButtonTitle = 'Je me lance!';
   chansonSuivanteTitle = 'Aucune idée , Chanson suivante!';
   modeSoiree = false;
@@ -48,7 +49,8 @@ export class SingleComponent implements OnInit {
     private tryValueService: TryValueService,
     private router: Router,
     private _snackBar: MatSnackBar,
-    private builder: FormBuilder
+    private builder: FormBuilder,
+    private cookieService: CookieService2
   ) {
     this.tryAnswer = new FormControl('', [Validators.required]);
     this.singlePlayForm = builder.group({ tryAnwser: this.tryAnswer });
@@ -75,14 +77,16 @@ export class SingleComponent implements OnInit {
   }
 
   getPlaylistFromSessionStorage(id): IPlaylist {
-    const playlist = JSON.parse(sessionStorage.getItem(id));
+    // const playlist = JSON.parse(sessionStorage.getItem(id));
 
-    this.currentPlaylist = playlist;
+    const playlist = this.cookieService.get2(id);
+
+    this.currentPlaylist = JSON.parse(playlist);
     if (!playlist) {
       return;
     }
     this.lecturePlaylist();
-    return playlist;
+    return this.currentPlaylist;
   }
 
   lecturePlaylist(): void {
@@ -114,8 +118,7 @@ export class SingleComponent implements OnInit {
 
   chansonSuivante(): void {
     this._snackBar.open(
-      `C'était ${this.currentPlaylist.tracks[this.compteurTrack].name} de ${
-        this.currentPlaylist.tracks[this.compteurTrack].artist
+      `C'était ${this.currentPlaylist.tracks[this.compteurTrack].name} de ${this.currentPlaylist.tracks[this.compteurTrack].artist
       }  `,
       'X',
       {
@@ -142,8 +145,7 @@ export class SingleComponent implements OnInit {
       console.log('YES');
       this.score++;
       this._snackBar.open(
-        `Bravo, c'était ${
-          this.currentPlaylist.tracks[this.compteurTrack].name
+        `Bravo, c'était ${this.currentPlaylist.tracks[this.compteurTrack].name
         } de ${this.currentPlaylist.tracks[this.compteurTrack].artist}  `,
         'X',
         {
@@ -171,7 +173,7 @@ export class SingleComponent implements OnInit {
       this.tryButtonTitle = `J'ai la bonne réponse!`;
       this.chansonSuivanteTitle = 'Raté !';
     } else {
-      this.placeholder = "Une idée du nom de la chanson ou de l'artiste?";
+      this.placeholder = 'Une idée du nom de la chanson ou de l\'artiste?';
       this.tryButtonTitle = 'Je me lance!';
       this.chansonSuivanteTitle = 'Aucune idée, chanson suivante';
     }
@@ -179,7 +181,7 @@ export class SingleComponent implements OnInit {
   showResult(): void {
     if (!this.modeSoiree) {
       return;
-    } else if (this.tryValue.nativeElement.value.indexOf("C'est ") != -1) {
+    } else if (this.tryValue.nativeElement.value.indexOf('C\'est ') != -1) {
       this.tryValue.nativeElement.value = '';
     } else {
       const nom = this.currentPlaylist.tracks[this.compteurTrack].name;
