@@ -180,7 +180,7 @@ export class MultiComponent implements OnInit {
       this.socketService.sendJoueurs(JSON.stringify(this.currentGame));
     });
 
-    this.socketService.getReussite().subscribe((gameData: any) => {
+    this.socketService.getData('reussite').subscribe((gameData: any) => {
       this.currentGame = gameData;
       const MyMessage: IMessage = new Message();
       MyMessage.pseudo = '';
@@ -193,7 +193,7 @@ export class MultiComponent implements OnInit {
       this.lecturePlaylist();
     });
 
-    this.socketService.getNextSong().subscribe((gameData: any) => {
+    this.socketService.getData('nextSong').subscribe((gameData: any) => {
       const isAudioEnded = gameData.isAudioEnded;
       this.currentGame = gameData.dataGame;
       if (!isAudioEnded) {
@@ -209,7 +209,7 @@ export class MultiComponent implements OnInit {
       this.lecturePlaylist();
     });
 
-    this.socketService.getStart().subscribe((message: IMessage) => {
+    this.socketService.getData('start').subscribe((message: IMessage) => {
       message.isUserMessage = false;
       this.addMessage(message);
       this.arePlayBtnDisabled = false;

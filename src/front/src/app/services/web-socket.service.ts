@@ -70,23 +70,9 @@ export class WebSocketService {
     });
   }
 
-  public getReussite = () => {
-    return new Observable((observer) => {
-      this.socket.on('reussite', (data) => {
-        observer.next(data);
-      });
-    });
-  }
 
-  public getNextSong = () => {
-    return new Observable((observer) => {
-      this.socket.on('nextSong', (data) => {
-        observer.next(data);
-      });
-    });
-  }
-
-  public getData = (dataType: 'nextSong' | 'reussite') => {
+  // refacto en cours
+  public getData = (dataType: 'nextSong' | 'reussite' | 'start') => {
     return new Observable((observer) => {
       this.socket.on(dataType, (data) => {
         observer.next(data);
@@ -94,13 +80,7 @@ export class WebSocketService {
     });
   }
 
-  public getStart = () => {
-    return new Observable((observer) => {
-      this.socket.on('start', (data) => {
-        observer.next(data);
-      });
-    });
-  }
+
 
   public getPlay = () => {
     return new Observable((observer) => {
