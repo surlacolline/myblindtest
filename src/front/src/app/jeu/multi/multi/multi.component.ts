@@ -68,7 +68,7 @@ export class MultiComponent implements OnInit {
   constructor(
     private tryValueService: TryValueService,
     private router: Router,
-    private _snackBar: MatSnackBar,
+    private snackBar: MatSnackBar,
     private builder: FormBuilder,
     public dialog: MatDialog,
     // private multiWS: MultiJoueurService,
@@ -394,7 +394,7 @@ export class MultiComponent implements OnInit {
     this.resultat = '';
     this.singlePlayForm.reset();
     if (this.compteurTrack > 0) {
-      this._snackBar.open(
+      this.snackBar.open(
         `C'était ${this.currentPlaylist.tracks[this.compteurTrack].name} de ${this.currentPlaylist.tracks[this.compteurTrack].artist
         }  `,
         'X',
@@ -431,7 +431,7 @@ export class MultiComponent implements OnInit {
       return lastPlayer > nextPlayer ? -1 : 1;
     })[0];
 
-    this._snackBar.open(
+    this.snackBar.open(
       `${winner.name} a gagné la partie avec une score de ${winner.score}/20!`
     );
     this.arePlayBtnDisabled = true;
@@ -469,7 +469,7 @@ export class MultiComponent implements OnInit {
 
     if (blResult) {
       this.score++;
-      this._snackBar.open(
+      this.snackBar.open(
         `Bravo, c'était ${this.currentPlaylist.tracks[this.compteurTrack].name
         } de ${this.currentPlaylist.tracks[this.compteurTrack].artist}  `,
         'X',
@@ -484,7 +484,7 @@ export class MultiComponent implements OnInit {
       this.currentGame.pseudo = this.pseudo;
       this.socketService.sendReussite(this.currentGame);
     } else {
-      this._snackBar.open('Nope, try again... ', 'X', {
+      this.snackBar.open('Nope, try again... ', 'X', {
         duration: 2000,
       });
       console.log('faux');
@@ -502,6 +502,6 @@ export class MultiComponent implements OnInit {
     el.select();
     document.execCommand('copy');
     document.body.removeChild(el);
-    this._snackBar.open('Le lien a été copié', 'X', { duration: 2000, });
+    this.snackBar.open('Le lien a été copié', 'X', { duration: 2000, });
   }
 }

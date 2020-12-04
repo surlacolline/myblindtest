@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import * as io from 'socket.io-client';
-
-import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
-import { Subject } from 'rxjs';
-import Message, { IMessage } from 'src/app/shared-model/Message.model';
+import * as io from 'socket.io-client';
+import { IMessage } from 'src/app/shared-model/Message.model';
+import { environment } from '../../environments/environment';
+
 
 @Injectable()
 export class WebSocketService {
@@ -96,7 +95,7 @@ export class WebSocketService {
   }
 
   public getStart = () => {
-    return Observable.create((observer) => {
+    return new Observable((observer) => {
       this.socket.on('start', (data) => {
         observer.next(data);
       });
@@ -104,7 +103,7 @@ export class WebSocketService {
   }
 
   public getPlay = () => {
-    return Observable.create((observer) => {
+    return new Observable((observer) => {
       this.socket.on('play', (data) => {
         observer.next(data);
       });
@@ -112,7 +111,7 @@ export class WebSocketService {
   }
 
   public getPause = () => {
-    return Observable.create((observer) => {
+    return new Observable((observer) => {
       this.socket.on('pause', (data) => {
         observer.next(data);
       });
@@ -120,7 +119,7 @@ export class WebSocketService {
   }
 
   public getDataPlaylist = () => {
-    return Observable.create((observer) => {
+    return new Observable((observer) => {
       this.socket.on('dataPlaylist', (data) => {
         observer.next(data);
       });
@@ -128,7 +127,7 @@ export class WebSocketService {
   }
 
   public getDataJoueurs = () => {
-    return Observable.create((observer) => {
+    return new Observable((observer) => {
       this.socket.on('dataJoueurs', (data) => {
         observer.next(data);
       });
