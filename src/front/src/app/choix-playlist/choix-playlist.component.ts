@@ -47,8 +47,8 @@ export class ChoixPlaylistComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.userName = this.cookieService.getCookie('display_name') || 'Connexion';
-    this.isCategoriesInit = this.cookieService.getCookie('tokenAPI') ? true : false;
+    this.userName = this.cookieService.get('display_name') || 'Connexion';
+    this.isCategoriesInit = this.cookieService.get('tokenAPI') ? true : false;
   }
 
 
@@ -147,7 +147,7 @@ export class ChoixPlaylistComponent implements OnInit, AfterViewInit {
     if (isMulti) {
       const code = this.generateRandomString(5);
       // sessionStorage.setItem('master', code.toString());
-      this.cookieService.set('master', code.toString());
+      this.cookieService.setCookie('master', code.toString());
       this.router.navigate(['/jeu-multi', { id: playlist.id, code }]);
     } else {
       this.router.navigate(['/jeu-single', { id: playlist.id }]);

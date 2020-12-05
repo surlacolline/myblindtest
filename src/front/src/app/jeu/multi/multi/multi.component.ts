@@ -84,7 +84,7 @@ export class MultiComponent implements OnInit {
     this.arePlayBtnDisabled = true;
 
     this.blMaitre =
-      this.cookieService.get2('master') === this.idCurrentGame ? true : false;
+      this.cookieService.get('master') === this.idCurrentGame ? true : false;
 
     if (this.blMaitre) {
       this.IsInit = true;
@@ -154,10 +154,10 @@ export class MultiComponent implements OnInit {
       }
       const playlist = JSON.parse(
         // sessionStorage.getItem(this.idCurrentPlaylist)
-        this.cookieService.get2(this.idCurrentPlaylist)
+        this.cookieService.get(this.idCurrentPlaylist)
       );
       // const stringPlaylist = sessionStorage.getItem(this.idCurrentPlaylist);
-      const stringPlaylist = this.cookieService.get2(this.idCurrentPlaylist);
+      const stringPlaylist = this.cookieService.get(this.idCurrentPlaylist);
 
       this.currentPlaylist = playlist;
       this.currentGame.playlistName = this.currentPlaylist.name;
@@ -294,7 +294,7 @@ export class MultiComponent implements OnInit {
   // FIN NGONINIT
 
   getPseudo(): void {
-    const maybePseudo = this.cookieService.get2('pseudo');
+    const maybePseudo = this.cookieService.get('pseudo');
     if (maybePseudo) {
       this.playerIdentity = JSON.parse(maybePseudo);
     }
@@ -326,7 +326,7 @@ export class MultiComponent implements OnInit {
   }
 
   getCurrentGameFromCookie(): void {
-    const game = this.cookieService.get2(this.idCurrentGame);
+    const game = this.cookieService.get(this.idCurrentGame);
     if (game) {
       this.currentGame = JSON.parse(game);
     }
@@ -406,7 +406,7 @@ export class MultiComponent implements OnInit {
 
   getPlaylistFromSessionStorage(id): IPlaylist {
     // const playlist = JSON.parse(sessionStorage.getItem(id));
-    const playlist = JSON.parse(this.cookieService.get2(id));
+    const playlist = JSON.parse(this.cookieService.get(id));
 
     this.currentPlaylist = playlist;
     if (!playlist) {
