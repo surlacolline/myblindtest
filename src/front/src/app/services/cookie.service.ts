@@ -8,6 +8,10 @@ export class CookieService2 {
   browserCookie;
   constructor(private cookieService: CookieService) { }
 
+  delete(name): void {
+    this.cookieService.delete(name);
+  }
+
   getCookie(name): any {
     if (document.cookie.length === 0) {
       return null;
@@ -30,7 +34,6 @@ export class CookieService2 {
     if (!expire) {
       document.cookie = `${name}=${value}`;
     } else {
-      debugger;
       this.cookieService.set(name, value, undefined, undefined, undefined, undefined, 'Lax');
     }
   }
@@ -50,7 +53,6 @@ export class CookieService2 {
     if (expire) {
       this.cookieService.set(name, value, expire, undefined, undefined, undefined, 'Lax');
     } else {
-      debugger;
       this.cookieService.set(name, value, undefined, undefined, undefined, undefined, 'Lax');
     }
 

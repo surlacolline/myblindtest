@@ -1,11 +1,11 @@
-import { Component, OnInit, ElementRef, ViewChild, AfterContentInit, AfterContentChecked, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { CookieService2 } from '../services/cookie.service';
 import { LoadExamplePlaylistsService } from '../services/load-example-playlists.service';
 import { LoginSpotifyService } from '../services/spotify/login-spotify.service';
-import { CookieService2 } from '../services/cookie.service';
-
-import { Subscription } from 'rxjs';
-import { Router } from '@angular/router';
 import { IPlaylist } from '../shared-model/Playlist.model';
+
 
 @Component({
   selector: 'app-choix-playlist',
@@ -132,7 +132,7 @@ export class ChoixPlaylistComponent implements OnInit, AfterViewInit {
   }
   playlistSelected(params: any): void {
     const playlist: any = params.item;
-    debugger;
+
     const isMulti: boolean = params.isMulti;
     console.log(playlist.name);
     const playlistJson = playlist;

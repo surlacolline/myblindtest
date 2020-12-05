@@ -1,23 +1,28 @@
 export interface IPlayer {
   id: number;
-  name: string;
-  statut: string;
+  pseudo: string;
+  statut: 'master' | 'guest';
   score: number;
   currentSong: number;
   isConnected: boolean;
 }
 
+export interface IPlayerIdentity {
+  id: number;
+  pseudo: string;
+}
+
 class Player implements IPlayer {
   public id!: number;
-  public name!: string;
-  public statut!: string;
+  public pseudo!: string;
+  public statut!: 'master' | 'guest';
   public score!: number;
   public currentSong;
   public isConnected: boolean;
 
   constructor(joueur?: IPlayer) {
     if (joueur) {
-      this.name = joueur.name;
+      this.pseudo = joueur.pseudo;
       this.statut = joueur.statut;
       this.id = joueur.id;
       this.score = joueur.score;
