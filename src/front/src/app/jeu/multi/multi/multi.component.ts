@@ -55,7 +55,7 @@ export class MultiComponent implements OnInit {
   partageLien = '';
   tryAnswer: FormControl;
   singlePlayForm: FormGroup;
-  playerIdentity: IPlayerIdentity = { id: 0, pseudo: '' };
+  playerIdentity: IPlayerIdentity = { id: 1, pseudo: '' };
   joueur: IPlayer;
   message: string;
   messages: IMessage[] = [];
@@ -88,6 +88,7 @@ export class MultiComponent implements OnInit {
 
     if (this.blMaitre) {
       this.IsInit = true;
+      // Si reconnexion de Master alors isInit = false
       this.partageLien = window.location.href;
       this.getCurrentGameFromCookie();
 
@@ -109,6 +110,7 @@ export class MultiComponent implements OnInit {
 
   getSocketGame(): void {
     if (this.currentGame) {
+      debugger;
       this.joueur = this.currentGame.players.filter(x => x.id === this.playerIdentity.id && x.pseudo === this.playerIdentity.pseudo)[0];
     }
     if (!this.joueur) {
@@ -121,9 +123,9 @@ export class MultiComponent implements OnInit {
         isConnected: true
       });
       // currentGame nexiste pas
-
+      this.currentGame?.players.push(this.joueur);
     }
-    this.currentGame?.players.push(this.joueur);
+
 
 
     this.socketService.setupSocketConnection(
@@ -147,43 +149,48 @@ export class MultiComponent implements OnInit {
       this.addMessage(message);
     });
 
-    this.socketService.getNouveauJoueur().subscribe((message: IMessage) => {
+    this.socketService.getNouveauJoueur().subscribe((newPlayerIdentity: IPlayerIdentity) => {
+      const message = new Message();
       message.isUserMessage = true;
+      message.pseudo = newPlayerIdentity.pseudo;
+      const existingPlayer = this.getPlayerByPseudoAndId(newPlayerIdentity.pseudo, newPlayerIdentity.id);
+      if (existingPlayer) {
 
-      this.addMessage(message);
-      if (!this.blMaitre) {
-        return;
+        existingPlayer.isConnected = true;
+        message.message = 'Reconnexion ';
+        this.addMessage(message);
+      } else {
+        message.message = 'Nouveau joueur : ';
+
+        this.addMessage(message);
+
+        if (!this.blMaitre) {
+          return;
+        }
+        const maxPlayer = this.currentGame.players.reduce((prev, current) => (prev.id > current.id) ? prev : current);
+        // Master ajoute le nouveau joueur, il incremente l'id
+        // Verifie si existe déjà ( = doit recevoir pseudo + id du back)
+        const nouveauJoueur = new Player({
+          pseudo: newPlayerIdentity.pseudo,
+          score: 0,
+          statut: 'guest',
+          id: maxPlayer.id + 1,
+          currentSong: 0,
+          isConnected: true
+        });
+        this.currentGame.players.push(nouveauJoueur);
       }
-      const playlist = JSON.parse(
-
-        this.cookieService.get(this.idCurrentPlaylist)
-      );
       const stringPlaylist = this.cookieService.get(this.idCurrentPlaylist);
 
-      this.currentPlaylist = playlist;
+      this.currentPlaylist = JSON.parse(stringPlaylist); // todo remplacer string par object et typé back et front
       this.currentGame.playlistName = this.currentPlaylist.name;
 
       this.socketService.sendDataPlaylist(stringPlaylist);
-      const maxPlayer = this.currentGame.players.reduce((prev, current) => (prev.id > current.id) ? prev : current);
-
-      // Master ajoute le nouveau joueur, il incremente l'id
-      // Verifie si existe déjà ( = doit recevoir pseudo + id du back)
-      const nouveauJoueur = new Player({
-        pseudo: message.message,
-        score: 0,
-        statut: 'guest',
-        id: maxPlayer.id + 1,
-        currentSong: 0,
-        isConnected: true
-      });
-      this.currentGame.players.push(nouveauJoueur);
-      if (this.getJoueursByPseudo(this.playerIdentity.pseudo)) {
-
-      }
 
       this.setUpdatedCurrentGameInCookie();
 
-      this.socketService.sendJoueurs(JSON.stringify(this.currentGame));
+      // this.socketService.sendJoueurs(JSON.stringify(this.currentGame));
+      this.socketService.sendJoueurs(this.currentGame);
     });
 
     this.socketService.getData('reussite').subscribe((gameData: any) => {
@@ -224,19 +231,18 @@ export class MultiComponent implements OnInit {
       this.jouerOnePlaylist();
     });
 
-    this.socketService.getDisconnect().subscribe((playerName: string) => {
+    this.socketService.getDisconnect().subscribe((playerIdentity: IPlayerIdentity) => {
 
       const MyMessage: IMessage = new Message();
       MyMessage.isUserMessage = false;
       MyMessage.id = 0;
-      MyMessage.message = playerName + ' a quitté la partie, bye!';
+      MyMessage.message = playerIdentity.pseudo + ' a quitté la partie, bye!';
       MyMessage.pseudo = '';
-      this.currentGame.players.forEach(player => {
-        if (player.pseudo === playerName) {
-          player.isConnected = false;
-        }
-      });
       this.addMessage(MyMessage);
+      debugger;
+      this.getPlayerByPseudoAndId(playerIdentity.pseudo, playerIdentity.id).isConnected = false;
+
+
 
     });
 
@@ -275,10 +281,16 @@ export class MultiComponent implements OnInit {
       if (this.blMaitre) {
         return;
       }
-      this.currentGame = JSON.parse(dataGame);
+
+      this.currentGame = dataGame;
+      const id = this.getPlayerByPseudo(this.playerIdentity.pseudo).id;
+      this.playerIdentity.id = id;
 
 
+      this.socketService.sendPlayerIdentity(this.playerIdentity);
 
+      // maintenant que je connais mon  ID, je peux mettre à joueur mon socket dans le back
+      this.cookieService.setCookie('pseudo', JSON.stringify(this.playerIdentity));
       this.setUpdatedCurrentGameInCookie();
 
       this.compteurTrack = this.currentGame.currentSong;
@@ -343,19 +355,52 @@ export class MultiComponent implements OnInit {
     this.idCurrentPlaylist = temp[1];
   }
 
-  getJoueursByPseudo(pseudo: string): IPlayer {
+  getPlayerByPseudo(pseudo: string): IPlayer {
     // add ID
     if (!this.currentGame) {
       return;
     }
-    const result = this.currentGame.players.filter(
-      (joueur) => joueur.pseudo === pseudo
-    )[0];
+
+    const array1 = this.currentGame.players.sort((a, b) => {
+      // If two elements have different number, then the one who has larger number wins
+      return b.id - a.id;
+    });
+
+    const result = array1.filter((joueur) => joueur.pseudo === pseudo)[0];
+
     if (result) {
       return result;
     } else {
       return null;
     }
+  }
+
+  getPlayerByPseudoAndId(pseudo: string, id: number): IPlayer {
+    // add ID
+    if (!this.currentGame) {
+      return;
+    }
+
+    const array1 = this.currentGame.players.sort((a, b) => {
+      // If two elements have different number, then the one who has larger number wins
+      return b.id - a.id;
+    });
+
+    const result = array1.filter((joueur) => joueur.pseudo === pseudo && joueur.id === id)[0];
+
+    if (result) {
+      return result;
+    } else {
+      return null;
+    }
+  }
+
+
+  compare(a, b) {
+    if (a > b) { return 1; }
+    if (b > a) { return -1; }
+
+    return 0;
   }
 
   sendMessage(): void {

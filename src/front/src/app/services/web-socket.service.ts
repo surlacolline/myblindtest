@@ -3,6 +3,8 @@ import { Observable } from 'rxjs';
 import * as io from 'socket.io-client';
 import { IMessage } from 'src/app/shared-model/Message.model';
 import { environment } from '../../environments/environment';
+import { IGame } from '../shared-model/Game.model';
+import { IPlayerIdentity } from '../shared-model/Player.model';
 
 
 @Injectable()
@@ -12,11 +14,11 @@ export class WebSocketService {
 
   constructor() { }
 
-  setupSocketConnection(data: { pseudo: string, idPlayer: number, idCurrentPlaylist: string, idCurrentGame: string }): void {
+  setupSocketConnection(playerAndGameIdentity: { pseudo: string, idPlayer: number, idCurrentPlaylist: string, idCurrentGame: string }): void {
     this.socket = io(
       environment.production ? window.location.origin : environment.ws_url
     );
-    this.socket.emit('nouveau_joueur', data);
+    this.socket.emit('nouveau_joueur', playerAndGameIdentity);
   }
 
   public sendMessage(message: IMessage): void {
@@ -27,7 +29,7 @@ export class WebSocketService {
     this.socket.emit('dataPlaylist', dataPlaylist);
   }
 
-  public sendJoueurs(dataGame): void {
+  public sendJoueurs(dataGame: IGame): void {
     this.socket.emit('dataJoueurs', dataGame);
   }
 
@@ -38,8 +40,9 @@ export class WebSocketService {
   sendChansonSuivant(dataGame, isAudioEnded: boolean): void {
 
     this.socket.emit('nextSong', { dataGame, isAudioEnded });
-
-
+  }
+  sendPlayerIdentity(playerIdentity: IPlayerIdentity): void {
+    this.socket.emit('playerIdentity', playerIdentity);
   }
   sendReussite(dataGame): void {
     this.socket.emit('reussite', dataGame);
@@ -64,8 +67,8 @@ export class WebSocketService {
 
   public getNouveauJoueur = () => {
     return new Observable((observer) => {
-      this.socket.on('nouveau_joueur', (pseudo) => {
-        observer.next({ pseudo: 'Nouveau joueur ', message: pseudo });
+      this.socket.on('nouveau_joueur', (playerIdentity: IPlayerIdentity) => {
+        observer.next(playerIdentity);
       });
     });
   }
@@ -116,8 +119,8 @@ export class WebSocketService {
   // Non utilisé pour l'instant car fait planté node
   public getDisconnect = () => {
     return new Observable((observer) => {
-      this.socket.on('user_leave', (data) => {
-        observer.next(data);
+      this.socket.on('user_leave', (playerIdentity: IPlayerIdentity) => {
+        observer.next(playerIdentity);
       });
     });
   }

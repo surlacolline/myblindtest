@@ -1,4 +1,6 @@
+import { IGame } from './entities/Game';
 import Message, { IMessage } from './entities/Message';
+import { IPlayerIdentity } from './entities/Player';
 import './LoadEnv'; // Must be the first import
 import app from './Server';
 import logger from './shared/Logger';
@@ -27,13 +29,13 @@ io.sockets.on('connection', function (socket: any) {
     allPlayers.push(socket);
 
     socket.join(socket.idPartie);
-    socket.in(socket.idPartie).emit('nouveau_joueur', socket.pseudo);
+    socket.in(socket.idPartie).emit('nouveau_joueur', { pseudo: socket.pseudo, id: socket.idPlayer });
   });
 
   socket.on('disconnect', (event: any) => {
     const i = allPlayers.indexOf(socket);
     allPlayers.splice(i, 1);
-    io.in(socket.idPartie).emit('user_leave', socket.pseudo);
+    io.in(socket.idPartie).emit('user_leave', { pseudo: socket.pseudo, id: socket.idPlayer });
 
   });
 
@@ -74,7 +76,12 @@ io.sockets.on('connection', function (socket: any) {
     });
   });
 
-  socket.on('dataJoueurs', function (dataJoueurs: any) {
+  socket.on('dataJoueurs', function (dataJoueurs: IGame) {
     io.in(socket.idPartie).emit('dataJoueurs', dataJoueurs);
+  });
+
+  socket.on('playerIdentity', function (playerIdentity: IPlayerIdentity) {
+    socket.idPlayer = playerIdentity.id;
+    socket.pseudo = playerIdentity.pseudo;
   });
 });
