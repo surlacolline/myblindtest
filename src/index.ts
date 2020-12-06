@@ -1,7 +1,7 @@
+import Message, { IMessage } from './entities/Message';
 import './LoadEnv'; // Must be the first import
 import app from './Server';
 import logger from './shared/Logger';
-import Message, { IMessage } from './entities/Message';
 
 // Start the server
 const port = Number(process.env.PORT || 3000);
@@ -16,73 +16,45 @@ const io = require('socket.io').listen(server);
 io.origins('*:*');
 const allPlayers: any[] = [];
 
-io.sockets.on('connection', function (socket: any, pseudo: any) {
-  console.log('connexion d\'un joueur');
+io.sockets.on('connection', function (socket: any) {
+
   // Dès qu'on nous donne un pseudo, on le stocke en variable de session et on informe les autres personnes
-  socket.on('nouveau_joueur', function (pseudoAndID: string) {
-    const pseudoAndIDArray = pseudoAndID.split('/');
-
-    pseudo = ent.encode(pseudoAndIDArray[0] ?? '');
-
-    const idPlaylist = ent.encode(pseudoAndIDArray[1] ?? '');
-    const idPartie = ent.encode(pseudoAndIDArray[2] ?? '');
-    socket.pseudo = pseudo;
-    socket.idPlaylist = idPlaylist;
-    socket.idPartie = idPartie;
+  socket.on('nouveau_joueur', function (data: { pseudo: string, idPlayer: number, idCurrentPlaylist: string, idCurrentGame: string }) {
+    socket.idPlayer = data.idPlayer;
+    socket.pseudo = data.pseudo;
+    socket.idPlaylist = data.idCurrentPlaylist;
+    socket.idPartie = data.idCurrentGame;
     allPlayers.push(socket);
-    console.log('connexion du joueur' + pseudo);
 
-    socket.join(idPartie);
-    socket.in(socket.idPartie).emit('nouveau_joueur', pseudo);
-
-
+    socket.join(socket.idPartie);
+    socket.in(socket.idPartie).emit('nouveau_joueur', socket.pseudo);
   });
+
   socket.on('disconnect', (event: any) => {
-    console.log('user disconnected :' + pseudo);
-    console.log(event);
     const i = allPlayers.indexOf(socket);
     allPlayers.splice(i, 1);
     io.in(socket.idPartie).emit('user_leave', socket.pseudo);
 
   });
+
   // Dès qu'on reçoit un message, on récupère le pseudo de son auteur et on le transmet aux autres personnes
   socket.on('message', function (message: IMessage) {
     console.log(message.message);
     const mymessage = new Message(message);
-
-    // socket
-    //   .to(socket.idPartie)
-    //   .emit('message', { pseudo: socket.pseudo, message });
 
     socket.to(socket.idPartie).emit('message', mymessage);
   });
 
   // Dès qu'on reçoit un message, on récupère le pseudo de son auteur et on le transmet aux autres personnes
   socket.on('reussite', function (dataJoueurs: any) {
-    // message = ent.encode(message);
-    // socket.broadcast.emit('reussite', { pseudo: socket.pseudo, message });
-    const message = new Message();
-    message.id = 0;
-    message.isUserMessage = false;
-    message.message = 'reussite de ' + pseudo;
-    message.pseudo = pseudo;
     io.to(socket.idPartie).emit('reussite', dataJoueurs);
   });
 
   socket.on('nextSong', function (dataJoueurs: any) {
-    // message = ent.encode(message);
-    // socket.broadcast.emit('reussite', { pseudo: socket.pseudo, message });
-    // const message = new Message();
-    // message.id = 0;
-    // message.isUserMessage = false;
-    // message.message = pseudo + ' a changé de chanson';
-    // message.pseudo = pseudo;
     io.to(socket.idPartie).emit('nextSong', dataJoueurs);
   });
 
   socket.on('play', function (pseudo: string) {
-    // message = ent.encode(message);
-    // socket.broadcast.emit('reussite', { pseudo: socket.pseudo, message });
     io.to(socket.idPartie).emit('play', pseudo);
   });
 
@@ -94,9 +66,8 @@ io.sockets.on('connection', function (socket: any, pseudo: any) {
     mymessage.isUserMessage = false;
     socket.to(socket.idPartie).emit('start', mymessage);
   });
+
   socket.on('dataPlaylist', function (dataPlaylist: any) {
-    // dataPlaylist = ent.encode(dataPlaylist);
-    // socket.broadcast.emit('reussite', { pseudo: socket.pseudo, message });
     io.in(socket.idPartie).emit('dataPlaylist', {
       id: socket.idPlaylist,
       dataPlaylist,
@@ -104,15 +75,6 @@ io.sockets.on('connection', function (socket: any, pseudo: any) {
   });
 
   socket.on('dataJoueurs', function (dataJoueurs: any) {
-    // dataPlaylist = ent.encode(dataPlaylist);
-    // socket.broadcast.emit('reussite', { pseudo: socket.pseudo, message });
     io.in(socket.idPartie).emit('dataJoueurs', dataJoueurs);
   });
 });
-// io.sockets.setInterval(() => {
-//   io.sockets.rooms.forEach((room: string) => {
-
-
-//   });
-//   io.sockets.emit('state', '');
-// }, 1000 / 60);

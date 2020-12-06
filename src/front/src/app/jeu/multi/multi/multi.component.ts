@@ -128,7 +128,13 @@ export class MultiComponent implements OnInit {
 
     this.socketService.setupSocketConnection(
       // todo remplacer par objet et transmettre id aussi
-      this.playerIdentity.pseudo + '/' + this.idCurrentPlaylist + '/' + this.idCurrentGame
+      // this.playerIdentity.pseudo + '/' + this.idCurrentPlaylist + '/' + this.idCurrentGame
+      {
+        pseudo: this.playerIdentity.pseudo,
+        idPlayer: this.playerIdentity.id,
+        idCurrentPlaylist: this.idCurrentPlaylist,
+        idCurrentGame: this.idCurrentGame
+      }
     );
 
     document.title = this.playerIdentity.pseudo + ' - Blindtest';

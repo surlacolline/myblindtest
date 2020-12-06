@@ -12,7 +12,7 @@ export class WebSocketService {
 
   constructor() { }
 
-  setupSocketConnection(data: string): void {
+  setupSocketConnection(data: { pseudo: string, idPlayer: number, idCurrentPlaylist: string, idCurrentGame: string }): void {
     this.socket = io(
       environment.production ? window.location.origin : environment.ws_url
     );
