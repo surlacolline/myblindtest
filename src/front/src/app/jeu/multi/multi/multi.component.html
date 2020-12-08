@@ -1,0 +1,76 @@
+<div id="container">
+  <section id="jeu">
+    <h1>{{currentPlaylist?.name}}</h1>
+    <div *ngIf="IsInit" id="Initialisation">
+      <mat-card class="example-card">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title>Joue avec tes amis</mat-card-title>
+          <mat-card-subtitle>MyBlindTest multi-joueur</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>
+            Envoi ce lien à tes amis :
+            <a (click)="copyLink()">{{ partageLien }} <i class="icon-copy"> </i></a>
+          </p>
+          <p>Quand tous le monde est connecté, lance la partie!</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button (click)="commencerPartie()">
+            Lancer la partie
+          </button>
+          <button mat-button (click)="copyLink()">Copier le lien</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+    <div id="avancement">{{ avancement }}</div>
+
+    <app-audio-player #player [src]="src" [autoplay]="autoplay" (playPausePressedEvent)="playPausePressed()"
+      (audioEndedEvent)="onAudioEnded()"></app-audio-player>
+    <div id="lecteur"></div>
+    <form [formGroup]="singlePlayForm" (submit)="checkAnswer($event, tryValue.value)">
+      <div class="group">
+        <input [formControl]="tryAnswer" #tryValue type="search" class="textTry" id="valueToTry"
+          [placeholder]="placeholder" size="50" />
+      </div>
+    </form>
+
+    <div class="wrapbtn">
+      <app-simple-button [isDisable]="arePlayBtnDisabled" [title]="tryButtonTitle"
+        (click)="checkAnswer($event, tryValue.value)"></app-simple-button>
+      <app-simple-button [isDisable]="arePlayBtnDisabled" [title]="chansonSuivanteTitle"
+        (click)="chansonSuivante(false)">
+      </app-simple-button>
+    </div>
+    <div id="resultat">{{ resultat }}</div>
+    <div id="score">score : {{ score }}/20</div>
+
+    <app-simple-button title=" Quitter la partie" (click)="RetourChoixPlaylist()"></app-simple-button>
+    <br />
+  </section>
+  <section id="chat">
+    <div class="recapJoueurs">
+      <div *ngFor="let joueur of currentGame?.players; let i = index">
+        <p [ngClass]="{isDisconnected: !joueur.isConnected}">Joueur n°{{ joueur.id }}: {{ joueur.pseudo }} - score :
+          {{ joueur.score }}/20 {{ joueur.isConnected? '' : "est deconnecté" }}</p>
+      </div>
+    </div>
+
+    <br>
+    <div #textArea [scrollTop]="textArea.scrollHeight" id="textArea" class="collapse">
+      <div *ngFor="let message of messages">
+        <span *ngIf="message.isUserMessage" class="chatMessage">
+          <b> {{ message.pseudo }} </b>: {{ message.message }}
+        </span>
+        <span *ngIf="message.isUserMessage === false" class="computerMessage">
+          {{ message.message }}
+        </span>
+      </div>
+    </div>
+    <br />
+    <input class="textTry" [(ngModel)]="message" (keyup)="$event.keyCode == 13 && sendMessage()"
+      type="search" />&nbsp;&nbsp;
+    <app-simple-button title="Envoyer message" (click)="sendMessage()"></app-simple-button>
+  </section>
+</div>
+<app-info-button></app-info-button>

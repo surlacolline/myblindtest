@@ -1,0 +1,29 @@
+<app-connexion-button #connexionButton [title]="userName" (connexionEvent)="onConnexion()"></app-connexion-button>
+<a #connexionButtonAPI id="APIConnexion" href="/api/spotify/APILogin">test</a><br />
+
+<div class="container">
+  <div class="duo liste">
+    <mat-accordion>
+      <app-liste-deroulante title="Choisis une playlist My.Blind.Test." [items]="playlists"
+        [isMoreButtonVisible]="false" isItemsPlaylists="true" (toggled)="displayPlaylists()"
+        (itemSelectedEvent)="playlistSelected($event)"></app-liste-deroulante>
+
+      <app-liste-deroulante title="  Choisis une des tes playlists Spotify" [items]="userPlaylists"
+        isItemsPlaylists="true" [offset]="this.offsetUserPlaylists" [total]="this.totalCountUserPlaylists"
+        [isMoreButtonVisible]="this.totalCountUserPlaylists > 50" [(blOpenClose)]="showUserPlaylists"
+        (toggled)="displayUserPlaylists($event)" (itemSelectedEvent)="playlistSelectedAPI($event)"
+        (showMoreEvent)="showNextUserPlaylists($event)" (showBeforeEvent)="showBeforeUserPlaylists($event)">
+      </app-liste-deroulante>
+      <app-liste-deroulante title=" Choisis une catégorie Spotify " [items]="categories" [isMoreButtonVisible]="false"
+        isItemsPlaylists="false" (toggled)="displayCategories()" (itemSelectedEvent)="categoriesSelected($event)"
+        (showMoreEvent)="showNextCategories()"></app-liste-deroulante>
+
+      <app-liste-deroulante *ngIf="showCategoryPlaylists" [title]="titleCategorie" [isMoreButtonVisible]="false"
+        isItemsPlaylists="true" [(blOpenClose)]="showCategoryPlaylists" [items]="categoryPlaylists"
+        (itemSelectedEvent)="playlistSelectedAPI($event)" (showMoreEvent)="showNextCategoryPlaylists($event)">
+      </app-liste-deroulante>
+    </mat-accordion>
+  </div>
+  <app-hero-frame></app-hero-frame>
+  <app-info-button></app-info-button>
+</div>

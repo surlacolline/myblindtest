@@ -26,6 +26,7 @@
   "exclude": [
     "src/public/",
     "node_modules/es6-request/index.d.ts",
-    "src/views/"
+    "src/views/",
+    "src/front/"
   ]
 }

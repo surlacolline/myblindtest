@@ -1,0 +1,94 @@
+#jeu {
+  padding: 20px;
+  height: 60vh;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  justify-items: center;
+  align-items: center;
+  grid-gap: 30px;
+}
+
+#resultat {
+  height: 50px;
+}
+
+#score {
+  font-weight: 600;
+  font-size: medium;
+}
+.wrapbtn {
+  display: flex;
+}
+
+.textTry {
+  border: none;
+  border-bottom: solid 2px var(--purple);
+  background-color: rgb(255, 192, 203, 0.2);
+  text-align: center;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 0.12em;
+  outline: none;
+}
+
+::placeholder {
+  color: var(--pink);
+  font-size: 20px;
+}
+
+@media screen and (max-width: 700px) {
+  .textTry {
+    display: flex;
+    max-width: 200px;
+  }
+  .fixed-div {
+    visibility: hidden;
+  }
+}
+
+/* Animations to fade the snackbar in and out */
+@-webkit-keyframes fadein {
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+  to {
+    bottom: 30px;
+    opacity: 1;
+  }
+}
+
+@keyframes fadein {
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+  to {
+    bottom: 30px;
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadeout {
+  from {
+    bottom: 30px;
+    opacity: 1;
+  }
+  to {
+    bottom: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes fadeout {
+  from {
+    bottom: 30px;
+    opacity: 1;
+  }
+  to {
+    bottom: 0;
+    opacity: 0;
+  }
+}

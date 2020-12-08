@@ -26,9 +26,9 @@ const stateKey = 'spotify_auth_state';
 const stateKeyAPI = 'spotify_auth_state';
 let redirect_uri = '';
 if (process.env.NODE_ENV === 'development') {
-  redirect_uri = 'http://localhost:3000/api/spotify/callback'; // Your redirect uri
+  redirect_uri = 'http://localhost:4200/api/spotify/callback'; // Your redirect uri
 } else if (process.env.NODE_ENV === 'production') {
-  redirect_uri = 'https://myblindtest.herokuapp.com/api/spotify/callback'; // Your redirect uri
+  redirect_uri = 'https://myblindtest-dev.herokuapp.com/api/spotify/callback'; // Your redirect uri
 }
 const TokenAPI: string = '';
 const RefreshTokenAPI: string = '';
@@ -62,13 +62,13 @@ function login(
   const scope = 'user-read-private user-read-email playlist-read-private';
   res.redirect(
     'https://accounts.spotify.com/authorize?' +
-      querystring.stringify({
-        response_type: 'code',
-        client_id,
-        scope,
-        redirect_uri,
-        state,
-      })
+    querystring.stringify({
+      response_type: 'code',
+      client_id,
+      scope,
+      redirect_uri,
+      state,
+    })
   );
 }
 
@@ -90,9 +90,9 @@ export function callback(
   if (state === null || state !== storedState) {
     res.redirect(
       '/#' +
-        querystring.stringify({
-          error: 'state_mismatch',
-        })
+      querystring.stringify({
+        error: 'state_mismatch',
+      })
     );
   } else {
     res.clearCookie(stateKey);
@@ -139,7 +139,9 @@ export function callback(
           id = bodyUser.id;
           display_name = bodyUser.display_name;
           res.cookie('id', id);
-          res.cookie('display_name', display_name);
+          res.cookie('display_name', display_name, {
+            expires: new Date(Date.now() + 900000),
+          });
 
           // response.cookie('token', access_token);
           // we can also pass the token to the browser to make requests from there
@@ -156,9 +158,9 @@ export function callback(
         } else {
           res.redirect(
             '/#' +
-              querystring.stringify({
-                error: 'invalid_token',
-              })
+            querystring.stringify({
+              error: 'invalid_token',
+            })
           );
         }
       });
@@ -258,14 +260,16 @@ export function APILogin(
 
         // response.cookie('token', access_token);
         // we can also pass the token to the browser to make requests from there
-        res.cookie('tokenAPI', access_token);
-        res.redirect('/playlist');
+        res.cookie('tokenAPI', access_token, {
+          expires: new Date(Date.now() + 3600000),
+        });
+        res.redirect('/');
       } else {
         res.redirect(
           '/#' +
-            querystring.stringify({
-              error: 'invalid_token',
-            })
+          querystring.stringify({
+            error: 'invalid_token',
+          })
         );
       }
     });
@@ -283,14 +287,14 @@ export function getPlaylists(req: any, res: any, indexStart: string) {
 
   request
     .get(
-      `https://api.spotify.com/v1/users/${req.cookies.id}/playlists?offset=${indexStart}`,
+      `https://api.spotify.com/v1/users/${req.cookies.id}/playlists?limit=50&offset=${indexStart}`,
       authOptions
     )
     .then((body: any) => {
       const access_token = body.access_token;
 
       res.send({
-        data: JSON.parse(body[0]),
+        data: JSON.parse(body ? body[0] : undefined),
       });
     });
 }
@@ -306,7 +310,7 @@ export function getCategories(req: any, res: any, indexStart: string) {
 
   request
     .get(
-      `https://api.spotify.com/v1/browse/categories?country=FR&offset=${indexStart}`,
+      `https://api.spotify.com/v1/browse/categories?country=FR&limit=50&offset=${indexStart}`,
       authOptions
     )
     .then((body: any) => {
@@ -342,10 +346,13 @@ export function getOnePlaylist(req: any, res: any) {
 
 export function getCategoryPlaylists(req: any, res: any) {
   const idCategory = req.query.idCategory;
-  const startIndex = req.query.startIndex;
+  let startIndex = req.query.startIndex;
+  if (startIndex === undefined) {
+    startIndex = 0;
+  }
   const Token = req.cookies.tokenAPI;
   const authOptions = {
-    url: `https://api.spotify.com/v1/browse/categories/${idCategory}/playlists?country=FR&offset=${startIndex}`,
+    url: `https://api.spotify.com/v1/browse/categories/${idCategory}/playlists?country=FR&limit=50&offset=${startIndex}`,
     headers: { Authorization: 'Bearer ' + Token },
     json: true,
   };
@@ -358,7 +365,12 @@ export function getCategoryPlaylists(req: any, res: any) {
   });
 }
 function getPlaylist(playlistSpotify: string): Playlist {
+
   const MyData: any = JSON.parse(playlistSpotify);
+  if (MyData.error) {
+    throw (MyData.error);
+
+  }
   // lire le body et ecrire un nouveau json
   const playlist: Playlist = new Playlist();
   playlist.id = MyData.id;

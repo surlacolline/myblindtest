@@ -3,7 +3,12 @@
   "compilerOptions": {
     "sourceMap": false
   },
-  "exclude": ["spec", "src/public/", "node_modules/es6-request/index.d.ts"]
+  "exclude": [
+    "spec",
+    "src/public/",
+    "node_modules/es6-request/index.d.ts",
+    "src/front/"
+  ]
 }
 
 // "src/**/*.mock.ts"
