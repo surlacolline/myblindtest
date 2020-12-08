@@ -10,6 +10,7 @@ import 'express-async-errors';
 import BaseRouter from './routes';
 import PublicRouter from './routes/public';
 import logger from './shared/Logger';
+import cors from 'cors';
 
 // Init express
 const app = express();
@@ -38,6 +39,29 @@ app.use('/api', BaseRouter);
 // Add public route
 app.use('', PublicRouter);
 
+// Add CORS
+app.use(cors());
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+
+  // authorized headers for preflight requests
+  // https://developer.mozilla.org/en-US/docs/Glossary/preflight_request
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  );
+  next();
+
+  app.options('*', (req, res) => {
+    // allowed XHR methods
+    res.header(
+      'Access-Control-Allow-Methods',
+      'GET, PATCH, PUT, POST, DELETE, OPTIONS'
+    );
+    res.send();
+  });
+});
+
 // Print API errors
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   logger.error(err.message, err);
@@ -50,13 +74,15 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
  *                              Serve front-end content
  ***********************************************************************************/
 
-const viewsDir = path.join(__dirname, 'views');
+const viewsDir = path.join(__dirname, '/front/dist/front');
 app.set('views', viewsDir);
-const staticDir = path.join(__dirname, 'public');
+const staticDir = path.join(__dirname, '/front/dist/front');
 app.use(express.static(staticDir));
-app.get('', (req: Request, res: Response) => {
-  res.sendFile('choixPlaylist.html', { root: viewsDir });
+app.get('*', (req: Request, res: Response) => {
+  // res.sendFile('choixPlaylist.html', { root: viewsDir });
+  res.sendFile('index.html', { root: viewsDir });
 });
+
 // app.get('', (req: Request, res: Response) => {
 //   res.sendFile('index.html', { root: viewsDir });
 // });

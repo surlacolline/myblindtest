@@ -1,0 +1,69 @@
+/* You can add global styles to this file, and also import other style files */
+
+:root {
+  --pink: rgb(255, 192, 203);
+  --pink-transparent: rgb(255, 192, 203, 0.7);
+  --purple: #32263a;
+  --hoover: white;
+}
+
+body {
+  padding: 25px;
+
+  background: linear-gradient(to left, var(--pink), var(--purple));
+  font: 17px Helvetica, Arial, sans-serif;
+  color: var(--pink);
+}
+html,
+body {
+}
+body {
+  margin: 0;
+  font-family: Helvetica, Arial, sans-serif !important;
+}
+h1 {
+  font-size: xx-large !important;
+  font-weight: 500 !important;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+.fixed-div {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding: 15px;
+  margin-bottom: 10px;
+  margin-right: 50px;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  border: 3px solid var(--purple);
+  align-content: center;
+  text-align: center;
+  font-size: larger;
+  font-weight: 800;
+  color: var(--purple);
+  transition: font-size 0.3s ease, color 0.3s ease;
+  box-sizing: initial;
+}
+
+.fixed-div:hover {
+  color: var(--hoover);
+  border-color: var(--hover);
+  width: 30px;
+  height: 30px;
+  font-size: x-large;
+}
+
+i {
+  padding: 5px;
+}
+@media screen and (max-width: 700px) {
+}
+
+.mat-expansion-panel-body a {
+  font: 17px Helvetica, Arial, sans-serif;
+  color: var(--pink);
+}

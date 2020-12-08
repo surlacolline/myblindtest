@@ -1,0 +1,114 @@
+.mat-form-field + .mat-form-field {
+  margin-left: 8px;
+}
+.mat-expansion-panel {
+  background-color: transparent;
+
+  box-shadow: none;
+}
+
+.liste div {
+  width: 500px;
+}
+
+h2 {
+  font: 400 40px/1.5;
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.border {
+  border-bottom: 1px solid pink !important;
+}
+.btn-link {
+  font: 200 20px/1.5 Helvetica, Verdana, sans-serif;
+  padding: 10px;
+  color: pink;
+  text-decoration: none;
+  outline: none;
+  border: none;
+}
+.card {
+  background-color: transparent;
+  border: none;
+}
+.btn-link:focus {
+  outline: none;
+  box-shadow: none;
+}
+.btn-link:hover {
+  color: var(--purple);
+}
+li {
+  font: 100 17px/1.5 !important;
+  /* border-bottom: 1px solid pink; */
+  padding: 10px;
+}
+.card-header {
+  background-color: transparent;
+  border-bottom: none;
+}
+
+li:last-child {
+  border: none;
+}
+
+li a {
+  text-decoration: none;
+
+  -webkit-transition: font-size 0.3s ease, color 0.3s ease;
+  -moz-transition: font-size 0.3s ease, color 0.3s ease;
+  -o-transition: font-size 0.3s ease, color 0.3s ease;
+  -ms-transition: font-size 0.3s ease, color 0.3s ease;
+  transition: font-size 0.3s ease, color 0.3s ease;
+}
+
+li a:hover {
+  color: purple;
+}
+
+.collapse {
+  max-height: 400px;
+  overflow-y: auto;
+  scrollbar-color: pink rgba(0, 0, 0, 0.2);
+  scrollbar-width: thin;
+  margin-left: 50px;
+}
+
+::-webkit-scrollbar {
+  width: 2px;
+}
+
+#loginSpotify {
+  border-radius: 0%;
+  border: transparent;
+  color: white;
+  background-color: black;
+  margin-bottom: 10px;
+}
+#loginSpotify i {
+  color: #1ed760;
+}
+
+::-webkit-scrollbar-track {
+  /* box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3); */
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--pink);
+  outline: 1px solid var(--pink);
+}
+
+.reverseScroll {
+  direction: rtl;
+}
+
+.reverseScroll :nth-child(n) {
+  direction: ltr;
+}

@@ -1,0 +1,34 @@
+<mat-expansion-panel #matExpansionPanelElement hideToggle [expanded]="blOpenClose" (opened)="setBlOpenClose(true)"
+  (closed)="setBlOpenClose(false)">
+  <mat-expansion-panel-header class="btn-link border" type="button">
+    <!-- <mat-panel-title > -->
+
+    {{ title }}
+    <i [ngClass]="isIconUp ? 'icon-circle-up' : 'icon-circle-down'"></i>
+
+    <!-- </mat-panel-title> -->
+  </mat-expansion-panel-header>
+
+  <div *ngIf="items; else spinner" [scrollTop]="scroll" (scroll)="onScroll($event)" class=" collapse reverseScroll">
+    <ul>
+      <li class="cursor-pointer" *ngFor="let item of items">
+        <a (click)="itemSelected(item, false)">
+          {{ format(item.name) }}
+
+          <i *ngIf="isItemsPlaylists === 'true'" class="icon-user"></i></a>
+        <a *ngIf="isItemsPlaylists === 'true'"><i (click)="itemSelected(item, true)" class="icon-users"></i></a>
+      </li>
+      <li *ngIf="isMoreButtonVisible">
+        <span (click)="showBefore()"> <i class="icon-backward"></i></span>
+        {{ offset }}-{{ offset + 50 <= total ? offset + 50 : total }} sur
+        {{ total }}
+        <span (click)="showMore()"> <i class="icon-forward2"></i></span>
+      </li>
+    </ul>
+
+    <div class="card-body"></div>
+  </div>
+  <ng-template #spinner>
+    <app-spinner></app-spinner>
+  </ng-template>
+</mat-expansion-panel>

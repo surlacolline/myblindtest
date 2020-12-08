@@ -1,0 +1,50 @@
+.progress-bar {
+  background: var(--pink);
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  margin: 10px;
+  border-radius: 50px;
+  border-width: 2px;
+  border-color: white;
+  overflow: hidden;
+  min-height: 7px;
+  max-width: 600px;
+  min-width: 400px;
+}
+
+.progress {
+  width: 16.3%;
+  background: linear-gradient(-170deg, blue 0%, var(--pink) 100%);
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  color: white;
+  height: 100%;
+  position: relative;
+  border-width: 2px;
+  border-color: white;
+  min-height: 7px;
+}
+
+.progress-text {
+  /* background: linear-gradient(-170deg, #2376ae 0%, #c16ecf 100%); */
+  font-weight: bold;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  height: 50px;
+  position: absolute;
+  outline: none;
+  padding: 3px;
+}
+
+@media screen and (max-width: 700px) {
+  .progress-bar {
+    min-width: 200px;
+  }
+}
