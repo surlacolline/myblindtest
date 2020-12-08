@@ -1,23 +1,17 @@
 import {
   Component,
-
-
-
-
-  ElementRef, OnInit,
-
-
+  ElementRef, OnDestroy, OnInit,
   ViewChild
 } from '@angular/core';
 import {
   FormBuilder, FormControl,
   FormGroup,
-
   Validators
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { CookieService2 } from 'src/app/services/cookie.service';
 import { TryValueService } from 'src/app/services/try-value.service';
 import { WebSocketService } from 'src/app/services/web-socket.service';
@@ -28,13 +22,12 @@ import { IPlaylist } from 'src/app/shared-model/Playlist.model';
 import { AudioPlayerComponent } from 'src/app/shared/audio-player/audio-player.component';
 import { AddPseudoDialogComponent } from './../add-pseudo-dialog/add-pseudo-dialog.component';
 
-
 @Component({
   selector: 'app-multi',
   templateUrl: './multi.component.html',
   styleUrls: ['./multi.component.scss'],
 })
-export class MultiComponent implements OnInit {
+export class MultiComponent implements OnInit, OnDestroy {
   resultat: string;
   score = 0;
   avancement: string;
@@ -61,6 +54,7 @@ export class MultiComponent implements OnInit {
   messages: IMessage[] = [];
   arePlayBtnDisabled: boolean;
   currentGame: IGame;
+  private subscription = new Subscription();
 
   @ViewChild('tryValue') tryValue: ElementRef;
   @ViewChild(AudioPlayerComponent) player: AudioPlayerComponent;
@@ -77,6 +71,9 @@ export class MultiComponent implements OnInit {
   ) {
     this.tryAnswer = new FormControl('', [Validators.required]);
     this.singlePlayForm = builder.group({ tryAnwser: this.tryAnswer });
+  }
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   async ngOnInit(): Promise<void> {
@@ -110,7 +107,6 @@ export class MultiComponent implements OnInit {
 
   getSocketGame(): void {
     if (this.currentGame) {
-      debugger;
       this.joueur = this.currentGame.players.filter(x => x.id === this.playerIdentity.id && x.pseudo === this.playerIdentity.pseudo)[0];
     }
     if (!this.joueur) {
@@ -125,8 +121,6 @@ export class MultiComponent implements OnInit {
       // currentGame nexiste pas
       this.currentGame?.players.push(this.joueur);
     }
-
-
 
     this.socketService.setupSocketConnection(
       // todo remplacer par objet et transmettre id aussi
@@ -145,11 +139,11 @@ export class MultiComponent implements OnInit {
     this.cookieService.setCookie('pseudo', JSON.stringify(this.playerIdentity));
 
     // Quand un nouveau joueur se connecte, on affiche l'information
-    this.socketService.getMessages().subscribe((message: IMessage) => {
+    this.subscription.add(this.socketService.getMessages().subscribe((message: IMessage) => {
       this.addMessage(message);
-    });
+    }));
 
-    this.socketService.getNouveauJoueur().subscribe((newPlayerIdentity: IPlayerIdentity) => {
+    this.subscription.add(this.socketService.getNouveauJoueur().subscribe((newPlayerIdentity: IPlayerIdentity) => {
       const message = new Message();
       message.isUserMessage = true;
       message.pseudo = newPlayerIdentity.pseudo;
@@ -191,9 +185,9 @@ export class MultiComponent implements OnInit {
 
       // this.socketService.sendJoueurs(JSON.stringify(this.currentGame));
       this.socketService.sendJoueurs(this.currentGame);
-    });
+    }));
 
-    this.socketService.getData('reussite').subscribe((gameData: any) => {
+    this.subscription.add(this.socketService.getData('reussite').subscribe((gameData: any) => {
       this.currentGame = gameData;
       const MyMessage: IMessage = new Message();
       MyMessage.pseudo = '';
@@ -204,9 +198,9 @@ export class MultiComponent implements OnInit {
 
       // Ajout maj session joueurs
       this.lecturePlaylist();
-    });
+    }));
 
-    this.socketService.getData('nextSong').subscribe((gameData: any) => {
+    this.subscription.add(this.socketService.getData('nextSong').subscribe((gameData: any) => {
       const isAudioEnded = gameData.isAudioEnded;
       this.currentGame = gameData.dataGame;
       if (!isAudioEnded) {
@@ -220,33 +214,29 @@ export class MultiComponent implements OnInit {
       }
       // Ajout maj session joueurs
       this.lecturePlaylist();
-    });
+    }));
 
-    this.socketService.getData('start').subscribe((message: IMessage) => {
+    this.subscription.add(this.socketService.getData('start').subscribe((message: IMessage) => {
       message.isUserMessage = false;
       this.addMessage(message);
       this.arePlayBtnDisabled = false;
       this.currentGame.currentSong = 1;
       this.cookieService.setCookie(this.currentGame.idGame, JSON.stringify(this.currentGame));
       this.jouerOnePlaylist();
-    });
+    }));
 
-    this.socketService.getDisconnect().subscribe((playerIdentity: IPlayerIdentity) => {
-
+    this.subscription.add(this.socketService.getDisconnect().subscribe((playerIdentity: IPlayerIdentity) => {
       const MyMessage: IMessage = new Message();
       MyMessage.isUserMessage = false;
       MyMessage.id = 0;
       MyMessage.message = playerIdentity.pseudo + ' a quitté la partie, bye!';
       MyMessage.pseudo = '';
       this.addMessage(MyMessage);
-      debugger;
       this.getPlayerByPseudoAndId(playerIdentity.pseudo, playerIdentity.id).isConnected = false;
 
+    }));
 
-
-    });
-
-    this.socketService.getPlay().subscribe((pseudo: any) => {
+    this.subscription.add(this.socketService.getPlay().subscribe((pseudo: any) => {
       const MyMessage: IMessage = new Message();
       MyMessage.isUserMessage = false;
       MyMessage.id = 0;
@@ -257,9 +247,9 @@ export class MultiComponent implements OnInit {
         return;
       }
       this.player.doplayPause();
-    });
+    }));
 
-    this.socketService.getDataPlaylist().subscribe((dataPlaylist: any) => {
+    this.subscription.add(this.socketService.getDataPlaylist().subscribe((dataPlaylist: any) => {
       console.log(dataPlaylist);
       if (this.blMaitre) {
         return;
@@ -274,9 +264,9 @@ export class MultiComponent implements OnInit {
 
       this.idCurrentPlaylist = dataPlaylist.id.toString();
       this.currentPlaylist = JSON.parse(dataPlaylist.dataPlaylist);
-    });
+    }));
 
-    this.socketService.getDataJoueurs().subscribe((dataGame: any) => {
+    this.subscription.add(this.socketService.getDataJoueurs().subscribe((dataGame: any) => {
       console.log(dataGame);
       if (this.blMaitre) {
         return;
@@ -297,7 +287,7 @@ export class MultiComponent implements OnInit {
       if (this.currentGame.currentSong > 0) {
         this.arePlayBtnDisabled = false;
       }
-    });
+    }));
   }
 
 
