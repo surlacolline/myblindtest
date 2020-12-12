@@ -14,7 +14,7 @@ export class WebSocketService {
 
   constructor() { }
 
-  setupSocketConnection(playerAndGameIdentity: { pseudo: string, idPlayer: number, idCurrentPlaylist: string, idCurrentGame: string }): void {
+  setupSocketConnection(playerAndGameIdentity: { pseudo: string, idPlayer: number, secretIdPlayer: string, idCurrentPlaylist: string, idCurrentGame: string }): void {
     this.socket = io(
       environment.production ? window.location.origin : environment.ws_url
     );

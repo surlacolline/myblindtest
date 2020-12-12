@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { HelperService } from 'src/app/core/helpers/helper.service';
 import { CookieService2 } from 'src/app/services/cookie.service';
 import { TryValueService } from 'src/app/services/try-value.service';
 import { WebSocketService } from 'src/app/services/web-socket.service';
@@ -48,7 +49,7 @@ export class MultiComponent implements OnInit, OnDestroy {
   partageLien = '';
   tryAnswer: FormControl;
   singlePlayForm: FormGroup;
-  playerIdentity: IPlayerIdentity = { id: 1, pseudo: '' };
+  playerIdentity: IPlayerIdentity = { id: 1, pseudo: '', secretId: this.helperService.generateRandomString(5) };
   joueur: IPlayer;
   message: string;
   messages: IMessage[] = [];
@@ -67,7 +68,8 @@ export class MultiComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     // private multiWS: MultiJoueurService,
     private socketService: WebSocketService,
-    private cookieService: CookieService2
+    private cookieService: CookieService2,
+    private helperService: HelperService
   ) {
     this.tryAnswer = new FormControl('', [Validators.required]);
     this.singlePlayForm = builder.group({ tryAnwser: this.tryAnswer });
@@ -106,9 +108,8 @@ export class MultiComponent implements OnInit, OnDestroy {
   }
 
   getSocketGame(): void {
-    if (this.currentGame) {
-      this.joueur = this.currentGame.players.filter(x => x.id === this.playerIdentity.id && x.pseudo === this.playerIdentity.pseudo)[0];
-    }
+    this.joueur = this.getPlayerByIdentity(this.playerIdentity.pseudo, this.playerIdentity.id, this.playerIdentity.secretId)
+
     if (!this.joueur) {
       this.joueur = new Player({
         pseudo: this.playerIdentity.pseudo,
@@ -116,10 +117,13 @@ export class MultiComponent implements OnInit, OnDestroy {
         statut: this.blMaitre ? 'master' : 'guest',
         id: 1,
         currentSong: 0,
-        isConnected: true
+        isConnected: true,
+        secretId: this.playerIdentity.secretId
       });
       // currentGame nexiste pas
+      debugger
       this.currentGame?.players.push(this.joueur);
+      this.setUpdatedCurrentGameInCookie();
     }
 
     this.socketService.setupSocketConnection(
@@ -128,6 +132,7 @@ export class MultiComponent implements OnInit, OnDestroy {
       {
         pseudo: this.playerIdentity.pseudo,
         idPlayer: this.playerIdentity.id,
+        secretIdPlayer: this.playerIdentity.secretId,
         idCurrentPlaylist: this.idCurrentPlaylist,
         idCurrentGame: this.idCurrentGame
       }
@@ -147,7 +152,8 @@ export class MultiComponent implements OnInit, OnDestroy {
       const message = new Message();
       message.isUserMessage = true;
       message.pseudo = newPlayerIdentity.pseudo;
-      const existingPlayer = this.getPlayerByPseudoAndId(newPlayerIdentity.pseudo, newPlayerIdentity.id);
+      debugger
+      const existingPlayer = this.getPlayerByIdentity(newPlayerIdentity.pseudo, newPlayerIdentity.id, newPlayerIdentity.secretId);
       if (existingPlayer) {
 
         existingPlayer.isConnected = true;
@@ -162,6 +168,9 @@ export class MultiComponent implements OnInit, OnDestroy {
           return;
         }
         const maxPlayer = this.currentGame.players.reduce((prev, current) => (prev.id > current.id) ? prev : current);
+
+
+        // Maj identity chez le joueur en question?
         // Master ajoute le nouveau joueur, il incremente l'id
         // Verifie si existe déjà ( = doit recevoir pseudo + id du back)
         const nouveauJoueur = new Player({
@@ -170,9 +179,12 @@ export class MultiComponent implements OnInit, OnDestroy {
           statut: 'guest',
           id: maxPlayer.id + 1,
           currentSong: 0,
-          isConnected: true
+          isConnected: true,
+          secretId: newPlayerIdentity.secretId
         });
+        debugger
         this.currentGame.players.push(nouveauJoueur);
+        this.setUpdatedCurrentGameInCookie();
       }
       const stringPlaylist = this.cookieService.get(this.idCurrentPlaylist);
 
@@ -232,7 +244,11 @@ export class MultiComponent implements OnInit, OnDestroy {
       MyMessage.message = playerIdentity.pseudo + ' a quitté la partie, bye!';
       MyMessage.pseudo = '';
       this.addMessage(MyMessage);
-      this.getPlayerByPseudoAndId(playerIdentity.pseudo, playerIdentity.id).isConnected = false;
+      debugger
+      const player: IPlayer = this.getPlayerByIdentity(playerIdentity.pseudo, playerIdentity.id, playerIdentity.secretId);
+      if (player) {
+        player.isConnected = false;
+      }
 
     }));
 
@@ -271,11 +287,11 @@ export class MultiComponent implements OnInit, OnDestroy {
       if (this.blMaitre) {
         return;
       }
-
+      // New player get back is identity
       this.currentGame = dataGame;
       const id = this.getPlayerByPseudo(this.playerIdentity.pseudo).id;
       this.playerIdentity.id = id;
-
+      this.setUpdatedCurrentGameInCookie();
 
       this.socketService.sendPlayerIdentity(this.playerIdentity);
 
@@ -365,18 +381,17 @@ export class MultiComponent implements OnInit, OnDestroy {
     }
   }
 
-  getPlayerByPseudoAndId(pseudo: string, id: number): IPlayer {
-    // add ID
+
+
+  getPlayerByIdentity(pseudo: string, id: number, secretId: string): IPlayer {
+
     if (!this.currentGame) {
       return;
     }
 
-    const array1 = this.currentGame.players.sort((a, b) => {
-      // If two elements have different number, then the one who has larger number wins
-      return b.id - a.id;
-    });
-
-    const result = array1.filter((joueur) => joueur.pseudo === pseudo && joueur.id === id)[0];
+    const result = this.currentGame.players.filter((joueur) => joueur.secretId === secretId
+      && joueur.pseudo === pseudo
+      && joueur.id === id)[0];
 
     if (result) {
       return result;
@@ -386,12 +401,9 @@ export class MultiComponent implements OnInit, OnDestroy {
   }
 
 
-  compare(a, b) {
-    if (a > b) { return 1; }
-    if (b > a) { return -1; }
 
-    return 0;
-  }
+
+
 
   sendMessage(): void {
     const myMessage = new Message();
