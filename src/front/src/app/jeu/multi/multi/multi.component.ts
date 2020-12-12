@@ -120,8 +120,7 @@ export class MultiComponent implements OnInit, OnDestroy {
         isConnected: true,
         secretId: this.playerIdentity.secretId
       });
-      // currentGame nexiste pas
-      debugger
+      // currentGame nexiste pas  
       this.currentGame?.players.push(this.joueur);
       this.setUpdatedCurrentGameInCookie();
     }
@@ -152,7 +151,6 @@ export class MultiComponent implements OnInit, OnDestroy {
       const message = new Message();
       message.isUserMessage = true;
       message.pseudo = newPlayerIdentity.pseudo;
-      debugger
       const existingPlayer = this.getPlayerByIdentity(newPlayerIdentity.pseudo, newPlayerIdentity.id, newPlayerIdentity.secretId);
       if (existingPlayer) {
 
@@ -182,7 +180,6 @@ export class MultiComponent implements OnInit, OnDestroy {
           isConnected: true,
           secretId: newPlayerIdentity.secretId
         });
-        debugger
         this.currentGame.players.push(nouveauJoueur);
         this.setUpdatedCurrentGameInCookie();
       }
@@ -244,7 +241,6 @@ export class MultiComponent implements OnInit, OnDestroy {
       MyMessage.message = playerIdentity.pseudo + ' a quitté la partie, bye!';
       MyMessage.pseudo = '';
       this.addMessage(MyMessage);
-      debugger
       const player: IPlayer = this.getPlayerByIdentity(playerIdentity.pseudo, playerIdentity.id, playerIdentity.secretId);
       if (player) {
         player.isConnected = false;
