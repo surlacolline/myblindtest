@@ -40,6 +40,13 @@ io.sockets.on('connection', function (socket: any) {
 
   });
 
+  socket.on('quitGame', (playerIdentity: IPlayerIdentity) => {
+    const i = allPlayers.indexOf(socket);
+    allPlayers.splice(i, 1);
+    io.in(socket.idPartie).emit('user_leave', { pseudo: socket.pseudo, id: socket.idPlayer, secretId: socket.secretIdPlayer });
+
+  });
+
   // Dès qu'on reçoit un message, on récupère le pseudo de son auteur et on le transmet aux autres personnes
   socket.on('message', function (message: IMessage) {
     console.log(message.message);

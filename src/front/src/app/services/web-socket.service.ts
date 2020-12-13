@@ -21,6 +21,10 @@ export class WebSocketService {
     this.socket.emit('nouveau_joueur', playerAndGameIdentity);
   }
 
+  disconnect(playerIdentity: IPlayerIdentity) {
+    this.socket.emit('quitGame', playerIdentity);
+  }
+
   public sendMessage(message: IMessage): void {
     this.socket.emit('message', message);
   }
