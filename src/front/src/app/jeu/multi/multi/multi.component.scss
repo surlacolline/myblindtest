@@ -13,11 +13,13 @@
 #textArea {
   background-color: white;
   color: black;
-  height: 400px;
-  width: 100%;
+  flex-grow: 4;
+
   overflow-y: auto;
   padding: 5px;
 }
+
+
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -35,13 +37,17 @@
   display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap;
-
-  section{
-    height: fit-content;
-  }
+}
+#sendMessage {
+  display: flex;
+  justify-content: space-between;
 }
 #chat {
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-items: stretch;
+  align-content: space-between;
+  gap: 1em;
 }
 .recapJoueurs {
   font-size: medium;

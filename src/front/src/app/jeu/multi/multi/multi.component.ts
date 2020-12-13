@@ -114,7 +114,7 @@ export class MultiComponent implements OnInit, OnDestroy {
     }
     // ask for name
     this.getPseudo();
-    debugger
+
     this.IsInitCardDisplayed = this.IsInit && this.blMaitre && !this.FinishedGame;
   }
 

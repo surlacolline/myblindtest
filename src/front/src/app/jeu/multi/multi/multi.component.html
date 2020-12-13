@@ -55,7 +55,6 @@
       </div>
     </div>
 
-    <br>
     <div #textArea [scrollTop]="textArea.scrollHeight" id="textArea" class="collapse">
       <div *ngFor="let message of messages">
         <span *ngIf="message.isUserMessage" class="chatMessage">
@@ -66,10 +65,12 @@
         </span>
       </div>
     </div>
-    <br />
-    <input class="textTry" [(ngModel)]="message" (keyup)="$event.keyCode == 13 && sendMessage()"
-      type="search" />&nbsp;&nbsp;
-    <app-simple-button title="Envoyer message" (click)="sendMessage()"></app-simple-button>
+
+    <div #sendMessage> <input class="textTry" [(ngModel)]="message" (keyup)="$event.keyCode == 13 && sendMessage()"
+        type="search" />&nbsp;&nbsp;
+      <app-simple-button title="Envoyer message" (click)="sendMessage()"></app-simple-button>
+    </div>
+
   </section>
 </div>
 <app-info-button></app-info-button>
