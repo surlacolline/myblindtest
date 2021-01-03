@@ -21,21 +21,29 @@ const allPlayers: any[] = [];
 io.sockets.on('connection', function (socket: any) {
 
   // Dès qu'on nous donne un pseudo, on le stocke en variable de session et on informe les autres personnes
-  socket.on('nouveau_joueur', function (data: { pseudo: string, idPlayer: number, idCurrentPlaylist: string, idCurrentGame: string }) {
+  socket.on('nouveau_joueur', function (data: { pseudo: string, idPlayer: number, secretIdPlayer: string, idCurrentPlaylist: string, idCurrentGame: string }) {
     socket.idPlayer = data.idPlayer;
+    socket.secretIdPlayer = data.secretIdPlayer;
     socket.pseudo = data.pseudo;
     socket.idPlaylist = data.idCurrentPlaylist;
     socket.idPartie = data.idCurrentGame;
     allPlayers.push(socket);
 
     socket.join(socket.idPartie);
-    socket.in(socket.idPartie).emit('nouveau_joueur', { pseudo: socket.pseudo, id: socket.idPlayer });
+    socket.in(socket.idPartie).emit('nouveau_joueur', { pseudo: socket.pseudo, id: socket.idPlayer, secretId: socket.secretIdPlayer });
   });
 
   socket.on('disconnect', (event: any) => {
     const i = allPlayers.indexOf(socket);
     allPlayers.splice(i, 1);
-    io.in(socket.idPartie).emit('user_leave', { pseudo: socket.pseudo, id: socket.idPlayer });
+    io.in(socket.idPartie).emit('user_leave', { pseudo: socket.pseudo, id: socket.idPlayer, secretId: socket.secretIdPlayer });
+
+  });
+
+  socket.on('quitGame', (playerIdentity: IPlayerIdentity) => {
+    const i = allPlayers.indexOf(socket);
+    allPlayers.splice(i, 1);
+    io.in(socket.idPartie).emit('user_leave', { pseudo: socket.pseudo, id: socket.idPlayer, secretId: socket.secretIdPlayer });
 
   });
 
@@ -83,5 +91,6 @@ io.sockets.on('connection', function (socket: any) {
   socket.on('playerIdentity', function (playerIdentity: IPlayerIdentity) {
     socket.idPlayer = playerIdentity.id;
     socket.pseudo = playerIdentity.pseudo;
+    socket.secretIdPlayer = playerIdentity.secretId;
   });
 });

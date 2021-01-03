@@ -5,9 +5,11 @@ export interface IPlayer {
     score: number;
     currentSong: number;
     isConnected: boolean;
+    secretId: string;
 }
 
 export interface IPlayerIdentity {
     id: number;
     pseudo: string;
+    secretId: string;
 }

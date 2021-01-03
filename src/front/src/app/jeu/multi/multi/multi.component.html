@@ -1,7 +1,7 @@
 <div id="container">
   <section id="jeu">
     <h1>{{currentPlaylist?.name}}</h1>
-    <div *ngIf="IsInit" id="Initialisation">
+    <div *ngIf="IsInitCardDisplayed" id="Initialisation">
       <mat-card class="example-card">
         <mat-card-header>
           <div mat-card-avatar class="example-header-image"></div>
@@ -36,17 +36,15 @@
     </form>
 
     <div class="wrapbtn">
-      <app-simple-button [isDisable]="arePlayBtnDisabled" [title]="tryButtonTitle"
-        (click)="checkAnswer($event, tryValue.value)"></app-simple-button>
-      <app-simple-button [isDisable]="arePlayBtnDisabled" [title]="chansonSuivanteTitle"
-        (click)="chansonSuivante(false)">
+      <app-simple-button [isDisable]="IsInit" [title]="tryButtonTitle" (click)="checkAnswer($event, tryValue.value)">
       </app-simple-button>
+      <!-- <app-simple-button [isDisable]="IsInit" [title]="chansonSuivanteTitle" (click)="chansonSuivante(false)">
+      </app-simple-button> -->
     </div>
     <div id="resultat">{{ resultat }}</div>
     <div id="score">score : {{ score }}/20</div>
 
     <app-simple-button title=" Quitter la partie" (click)="RetourChoixPlaylist()"></app-simple-button>
-    <br />
   </section>
   <section id="chat">
     <div class="recapJoueurs">
@@ -56,7 +54,6 @@
       </div>
     </div>
 
-    <br>
     <div #textArea [scrollTop]="textArea.scrollHeight" id="textArea" class="collapse">
       <div *ngFor="let message of messages">
         <span *ngIf="message.isUserMessage" class="chatMessage">
@@ -67,10 +64,12 @@
         </span>
       </div>
     </div>
-    <br />
-    <input class="textTry" [(ngModel)]="message" (keyup)="$event.keyCode == 13 && sendMessage()"
-      type="search" />&nbsp;&nbsp;
-    <app-simple-button title="Envoyer message" (click)="sendMessage()"></app-simple-button>
+
+    <div #sendMessage> <input class="textTry" [(ngModel)]="message" (keyup)="$event.keyCode == 13 && sendMessage()"
+        type="search" />&nbsp;&nbsp;
+      <app-simple-button title="Envoyer message" (click)="sendMessage()"></app-simple-button>
+    </div>
+
   </section>
 </div>
 <app-info-button></app-info-button>

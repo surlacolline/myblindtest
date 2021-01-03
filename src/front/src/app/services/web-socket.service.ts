@@ -14,11 +14,15 @@ export class WebSocketService {
 
   constructor() { }
 
-  setupSocketConnection(playerAndGameIdentity: { pseudo: string, idPlayer: number, idCurrentPlaylist: string, idCurrentGame: string }): void {
+  setupSocketConnection(playerAndGameIdentity: { pseudo: string, idPlayer: number, secretIdPlayer: string, idCurrentPlaylist: string, idCurrentGame: string }): void {
     this.socket = io(
       environment.production ? window.location.origin : environment.ws_url
     );
     this.socket.emit('nouveau_joueur', playerAndGameIdentity);
+  }
+
+  disconnect(playerIdentity: IPlayerIdentity) {
+    this.socket.emit('quitGame', playerIdentity);
   }
 
   public sendMessage(message: IMessage): void {
