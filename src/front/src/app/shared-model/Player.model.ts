@@ -5,11 +5,13 @@ export interface IPlayer {
   score: number;
   currentSong: number;
   isConnected: boolean;
+  secretId: string;
 }
 
 export interface IPlayerIdentity {
   id: number;
   pseudo: string;
+  secretId: string;
 }
 
 class Player implements IPlayer {
@@ -19,6 +21,7 @@ class Player implements IPlayer {
   public score!: number;
   public currentSong;
   public isConnected: boolean;
+  public secretId: string;
 
   constructor(joueur?: IPlayer) {
     if (joueur) {
@@ -28,8 +31,10 @@ class Player implements IPlayer {
       this.score = joueur.score;
       this.currentSong = joueur.currentSong;
       this.isConnected = joueur.isConnected;
+      this.secretId = joueur.secretId;
     }
   }
+
 }
 
 export default Player;
