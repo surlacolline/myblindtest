@@ -193,7 +193,7 @@ export class MultiComponent implements OnInit, OnDestroy {
       this.currentPlaylist = JSON.parse(stringPlaylist); // todo remplacer string par object et typé back et front
       this.currentGame.playlistName = this.currentPlaylist.name;
 
-      this.socketService.sendDataPlaylist(stringPlaylist);
+      this.socketService.sendDataPlaylist(this.currentPlaylist);
 
       this.setUpdatedCurrentGameInCookie();
 

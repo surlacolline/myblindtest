@@ -5,6 +5,7 @@ import { IMessage } from 'src/app/shared-model/Message.model';
 import { environment } from '../../environments/environment';
 import { IGame } from '../shared-model/Game.model';
 import { IPlayerIdentity } from '../shared-model/Player.model';
+import { IPlaylist } from '../shared-model/Playlist.model';
 
 
 @Injectable()
@@ -25,15 +26,15 @@ export class WebSocketService {
     this.socket.emit('quitGame', playerIdentity);
   }
 
-  public sendMessage(message: IMessage): void {
+  sendMessage(message: IMessage): void {
     this.socket.emit('message', message);
   }
 
-  public sendDataPlaylist(dataPlaylist): void {
+  sendDataPlaylist(dataPlaylist: IPlaylist): void {
     this.socket.emit('dataPlaylist', dataPlaylist);
   }
 
-  public sendJoueurs(dataGame: IGame): void {
+  sendJoueurs(dataGame: IGame): void {
     this.socket.emit('dataJoueurs', dataGame);
   }
 
@@ -107,7 +108,7 @@ export class WebSocketService {
 
   public getDataPlaylist = () => {
     return new Observable((observer) => {
-      this.socket.on('dataPlaylist', (data) => {
+      this.socket.on('dataPlaylist', (data: IPlaylist) => {
         observer.next(data);
       });
     });
