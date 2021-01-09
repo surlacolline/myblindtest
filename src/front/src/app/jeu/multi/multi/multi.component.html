@@ -65,7 +65,7 @@
       </div>
     </div>
 
-    <div #sendMessage> <input class="textTry" [(ngModel)]="message" (keyup)="$event.keyCode == 13 && sendMessage()"
+    <div id="sendMessage"> <input class="textTry" [(ngModel)]="message" (keyup)="$event.keyCode == 13 && sendMessage()"
         type="search" />&nbsp;&nbsp;
       <app-simple-button title="Envoyer message" (click)="sendMessage()"></app-simple-button>
     </div>

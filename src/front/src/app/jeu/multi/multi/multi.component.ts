@@ -270,16 +270,15 @@ export class MultiComponent implements OnInit, OnDestroy {
       if (this.blMaitre) {
         return;
       }
-      const playlistJson = dataPlaylist.dataPlaylist.JSON;
 
 
       this.cookieService.setCookie(
-        dataPlaylist.id.toString(),
-        dataPlaylist.dataPlaylist
+        dataPlaylist?.dataPlaylist?.id?.toString(),
+        dataPlaylist?.dataPlaylist
       );
 
-      this.idCurrentPlaylist = dataPlaylist.id.toString();
-      this.currentPlaylist = JSON.parse(dataPlaylist.dataPlaylist);
+      this.idCurrentPlaylist = dataPlaylist?.dataPlaylist?.id?.toString();
+      this.currentPlaylist = dataPlaylist?.dataPlaylist;
     }));
 
     this.subscription.add(this.socketService.getDataJoueurs().subscribe((dataGame: any) => {

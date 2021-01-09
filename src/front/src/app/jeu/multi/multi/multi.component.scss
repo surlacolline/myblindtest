@@ -19,11 +19,9 @@
   padding: 5px;
 }
 
-
 ::-webkit-scrollbar {
   width: 10px;
 }
-
 
 ::-webkit-scrollbar-track {
   background-color: rgba(0, 0, 0, 0.2);
@@ -41,6 +39,7 @@
 #sendMessage {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 #chat {
   padding: 10px;
@@ -86,12 +85,12 @@
   font-size: 20px;
 }
 
-.recapJoueurs{
+.recapJoueurs {
   border: solid;
   padding: 4px;
 }
 
-.isDisconnected{
+.isDisconnected {
   font-style: italic;
 }
 
@@ -149,5 +148,3 @@
     opacity: 0;
   }
 }
-
-
