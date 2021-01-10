@@ -73,7 +73,7 @@ export class MultiComponent implements OnInit, OnDestroy {
     private helperService: HelperService
   ) {
     this.tryAnswer = new FormControl('', [Validators.required]);
-    this.singlePlayForm = builder.group({ tryAnwser: this.tryAnswer });
+    this.singlePlayForm = this.builder.group({ tryAnwser: this.tryAnswer });
   }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
@@ -92,7 +92,6 @@ export class MultiComponent implements OnInit, OnDestroy {
     if (this.blMaitre) {
       // Si reconnexion de Master alors isInit = false
       this.partageLien = window.location.href;
-
 
       if (!this.currentGame) {
         this.IsInit = true;
@@ -137,8 +136,7 @@ export class MultiComponent implements OnInit, OnDestroy {
     }
 
     this.socketService.setupSocketConnection(
-      // todo remplacer par objet et transmettre id aussi
-      // this.playerIdentity.pseudo + '/' + this.idCurrentPlaylist + '/' + this.idCurrentGame
+      // todo ecire model objet
       {
         pseudo: this.playerIdentity.pseudo,
         idPlayer: this.playerIdentity.id,
@@ -150,7 +148,6 @@ export class MultiComponent implements OnInit, OnDestroy {
 
     document.title = this.playerIdentity.pseudo + ' - Blindtest';
 
-    // pseudo et id (manque id)
     this.cookieService.setCookie('pseudo', JSON.stringify(this.playerIdentity));
 
     // Quand un nouveau joueur se connecte, on affiche l'information
@@ -178,10 +175,7 @@ export class MultiComponent implements OnInit, OnDestroy {
         }
         const maxPlayer = this.currentGame.players.reduce((prev, current) => (prev.id > current.id) ? prev : current);
 
-
-        // Maj identity chez le joueur en question?
         // Master ajoute le nouveau joueur, il incremente l'id
-        // Verifie si existe déjà ( = doit recevoir pseudo + id du back)
         const nouveauJoueur = new Player({
           pseudo: newPlayerIdentity.pseudo,
           score: 0,
@@ -199,11 +193,10 @@ export class MultiComponent implements OnInit, OnDestroy {
       this.currentPlaylist = JSON.parse(stringPlaylist); // todo remplacer string par object et typé back et front
       this.currentGame.playlistName = this.currentPlaylist.name;
 
-      this.socketService.sendDataPlaylist(stringPlaylist);
+      this.socketService.sendDataPlaylist(this.currentPlaylist);
 
       this.setUpdatedCurrentGameInCookie();
 
-      // this.socketService.sendJoueurs(JSON.stringify(this.currentGame));
       this.socketService.sendJoueurs(this.currentGame);
     }));
 
@@ -277,16 +270,15 @@ export class MultiComponent implements OnInit, OnDestroy {
       if (this.blMaitre) {
         return;
       }
-      const playlistJson = dataPlaylist.dataPlaylist.JSON;
 
 
       this.cookieService.setCookie(
-        dataPlaylist.id.toString(),
-        dataPlaylist.dataPlaylist
+        dataPlaylist?.dataPlaylist?.id?.toString(),
+        dataPlaylist?.dataPlaylist
       );
 
-      this.idCurrentPlaylist = dataPlaylist.id.toString();
-      this.currentPlaylist = JSON.parse(dataPlaylist.dataPlaylist);
+      this.idCurrentPlaylist = dataPlaylist?.dataPlaylist?.id?.toString();
+      this.currentPlaylist = dataPlaylist?.dataPlaylist;
     }));
 
     this.subscription.add(this.socketService.getDataJoueurs().subscribe((dataGame: any) => {
@@ -296,7 +288,7 @@ export class MultiComponent implements OnInit, OnDestroy {
       }
       // New player get back is identity
       this.currentGame = dataGame;
-      const id = this.getPlayerByPseudo(this.playerIdentity.pseudo).id;
+      const id = this.getPlayerBySecretId(this.playerIdentity.secretId).id;
       this.playerIdentity.id = id;
       this.setUpdatedCurrentGameInCookie();
 
@@ -346,7 +338,6 @@ export class MultiComponent implements OnInit, OnDestroy {
         JSON.stringify(this.currentGame)
       );
     }
-
   }
 
   getCurrentGameFromCookie(): void {
@@ -355,12 +346,14 @@ export class MultiComponent implements OnInit, OnDestroy {
       this.currentGame = JSON.parse(game);
     }
   }
+
   getCurrentPlaylistFromCookie(): void {
     const playlist = this.cookieService.get(this.idCurrentPlaylist);
     if (playlist) {
       this.currentPlaylist = JSON.parse(playlist);
     }
   }
+
   getURLData(): void {
     // Utiliser activatedroute (voir timesheet)
     this.adresseActuelle = window.location;
@@ -376,8 +369,7 @@ export class MultiComponent implements OnInit, OnDestroy {
     this.idCurrentPlaylist = temp[1];
   }
 
-  getPlayerByPseudo(pseudo: string): IPlayer {
-    // add ID
+  getPlayerBySecretId(secretId: string): IPlayer {
     if (!this.currentGame) {
       return;
     }
@@ -387,7 +379,7 @@ export class MultiComponent implements OnInit, OnDestroy {
       return b.id - a.id;
     });
 
-    const result = array1.filter((joueur) => joueur.pseudo === pseudo)[0];
+    const result = array1.filter((joueur) => joueur.secretId === secretId)[0];
 
     if (result) {
       return result;
@@ -396,10 +388,7 @@ export class MultiComponent implements OnInit, OnDestroy {
     }
   }
 
-
-
   getPlayerByIdentity(pseudo: string, id: number, secretId: string): IPlayer {
-
     if (!this.currentGame) {
       return;
     }
@@ -414,11 +403,6 @@ export class MultiComponent implements OnInit, OnDestroy {
       return null;
     }
   }
-
-
-
-
-
 
   sendMessage(): void {
     const myMessage = new Message();
@@ -490,6 +474,7 @@ export class MultiComponent implements OnInit, OnDestroy {
     this.currentGame.currentSong++;
 
     this.setUpdatedCurrentGameInCookie();
+
     if (this.currentGame.currentSong < this.currentPlaylist.tracks.length) {
       this.src = this.currentPlaylist.tracks[this.currentGame.currentSong].preview_url;
       this.autoplay = true;
@@ -527,6 +512,7 @@ export class MultiComponent implements OnInit, OnDestroy {
     // send playpausepressed, declenche click chez les autres
     this.socketService.sendPlay(this.playerIdentity.pseudo);
   }
+
   onAudioEnded(): void {
     this.chansonSuivante(true);
   }
@@ -537,7 +523,6 @@ export class MultiComponent implements OnInit, OnDestroy {
     }
     this.currentGame.userPseudo = this.playerIdentity.pseudo;
     this.socketService.sendChansonSuivant(this.currentGame, isAudioEnded);
-    // this.lecturePlaylist();
   }
 
   checkAnswer(event, ValueToTry: string): void {

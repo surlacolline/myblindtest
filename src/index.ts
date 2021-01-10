@@ -1,6 +1,7 @@
 import { IGame } from './entities/Game';
 import Message, { IMessage } from './entities/Message';
 import { IPlayerIdentity } from './entities/Player';
+import { IPlaylist } from './entities/Playlist';
 import './LoadEnv'; // Must be the first import
 import app from './Server';
 import logger from './shared/Logger';
@@ -25,25 +26,26 @@ io.sockets.on('connection', function (socket: any) {
     socket.idPlayer = data.idPlayer;
     socket.secretIdPlayer = data.secretIdPlayer;
     socket.pseudo = data.pseudo;
+    socket.playerIdentity = { pseudo: socket.pseudo, id: socket.idPlayer, secretId: socket.secretIdPlayer }
     socket.idPlaylist = data.idCurrentPlaylist;
     socket.idPartie = data.idCurrentGame;
     allPlayers.push(socket);
 
     socket.join(socket.idPartie);
-    socket.in(socket.idPartie).emit('nouveau_joueur', { pseudo: socket.pseudo, id: socket.idPlayer, secretId: socket.secretIdPlayer });
+    socket.in(socket.idPartie).emit('nouveau_joueur', socket.playerIdentity);
   });
 
   socket.on('disconnect', (event: any) => {
     const i = allPlayers.indexOf(socket);
     allPlayers.splice(i, 1);
-    io.in(socket.idPartie).emit('user_leave', { pseudo: socket.pseudo, id: socket.idPlayer, secretId: socket.secretIdPlayer });
+    io.in(socket.idPartie).emit('user_leave', socket.playerIdentity);
 
   });
 
   socket.on('quitGame', (playerIdentity: IPlayerIdentity) => {
     const i = allPlayers.indexOf(socket);
     allPlayers.splice(i, 1);
-    io.in(socket.idPartie).emit('user_leave', { pseudo: socket.pseudo, id: socket.idPlayer, secretId: socket.secretIdPlayer });
+    io.in(socket.idPartie).emit('user_leave', playerIdentity);
 
   });
 
@@ -77,10 +79,9 @@ io.sockets.on('connection', function (socket: any) {
     socket.to(socket.idPartie).emit('start', mymessage);
   });
 
-  socket.on('dataPlaylist', function (dataPlaylist: any) {
+  socket.on('dataPlaylist', function (dataPlaylist: IPlaylist) {
     io.in(socket.idPartie).emit('dataPlaylist', {
-      id: socket.idPlaylist,
-      dataPlaylist,
+      dataPlaylist
     });
   });
 
@@ -92,5 +93,6 @@ io.sockets.on('connection', function (socket: any) {
     socket.idPlayer = playerIdentity.id;
     socket.pseudo = playerIdentity.pseudo;
     socket.secretIdPlayer = playerIdentity.secretId;
+    socket.playerIdentity = { pseudo: socket.pseudo, id: socket.idPlayer, secretId: socket.secretIdPlayer }
   });
 });
