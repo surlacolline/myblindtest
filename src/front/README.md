@@ -1,6 +1,6 @@
-Start back dev: npm run start:dev
+Start back-end dev: npm run start:dev
 
-Start front: ...\myblindtest\src\front\src\app> ng serve -o
+Start front-end: ...\myblindtest\src\front\src\app> ng serve -o
 
 Build and deploy : npm run build:prod, commit, push puis Heroku
 # Front

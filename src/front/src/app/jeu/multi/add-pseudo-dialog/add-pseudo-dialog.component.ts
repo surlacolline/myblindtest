@@ -19,5 +19,9 @@ export class AddPseudoDialogComponent implements OnInit {
   onNoClick(): void {
     this.dialogRef.close();
   }
+  submitClicked(): void {
+    // close modal and trasmit form values to parent
+    this.dialogRef.close(this.pseudo);
+  }
 
 }
