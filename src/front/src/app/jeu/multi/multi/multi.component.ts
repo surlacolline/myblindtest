@@ -116,8 +116,7 @@ export class MultiComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.IsInit = true;
     } else {
       this.IsInit = false;
-      this.addMessage("Reprise de la partie à la prochaine chanson");
-      this.addMessage("dans environ 20 secondes");
+      this.addMessage("Reprise de la partie à la prochaine chanson dans environ 20 secondes.");
       if (this.blMaitre) {
         if (!this.isOtherConnectedPlayers()) {
           this.IsInit = true;
