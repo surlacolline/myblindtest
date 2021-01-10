@@ -194,7 +194,8 @@ export class MultiComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.currentGame.players.push(nouveauJoueur);
         this.setUpdatedCurrentGameInCookie();
       }
-      const stringPlaylist = this.cookieService.get(this.idCurrentPlaylist);
+      //const stringPlaylist = this.cookieService.get(this.idCurrentPlaylist);
+      const stringPlaylist = sessionStorage.getItem(this.idCurrentPlaylist);
 
       this.currentPlaylist = JSON.parse(stringPlaylist); // todo remplacer string par object et typé back et front
       this.currentGame.playlistName = this.currentPlaylist.name;
@@ -278,9 +279,15 @@ export class MultiComponent implements OnInit, OnDestroy, AfterViewChecked {
       }
 
 
-      this.cookieService.setCookie(
+      // this.cookieService.setCookie(
+      //   dataPlaylist?.dataPlaylist?.id?.toString(),
+      //   dataPlaylist?.dataPlaylist
+      // );
+
+
+      sessionStorage.setItem(
         dataPlaylist?.dataPlaylist?.id?.toString(),
-        dataPlaylist?.dataPlaylist
+        JSON.stringify(dataPlaylist?.dataPlaylist)
       );
 
       this.idCurrentPlaylist = dataPlaylist?.dataPlaylist?.id?.toString();
@@ -354,7 +361,8 @@ export class MultiComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   getCurrentPlaylistFromCookie(): void {
-    const playlist = this.cookieService.get(this.idCurrentPlaylist);
+    // const playlist = this.cookieService.get(this.idCurrentPlaylist);
+    const playlist = sessionStorage.getItem(this.idCurrentPlaylist);
     if (playlist) {
       this.currentPlaylist = JSON.parse(playlist);
     }
@@ -449,8 +457,8 @@ export class MultiComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   getPlaylistFromSessionStorage(id): IPlaylist {
-    // const playlist = JSON.parse(sessionStorage.getItem(id));
-    const playlist = JSON.parse(this.cookieService.get(id));
+    const playlist = JSON.parse(sessionStorage.getItem(id));
+    // const playlist = JSON.parse(this.cookieService.get(id));
 
     this.currentPlaylist = playlist;
     if (!playlist) {
@@ -572,6 +580,7 @@ export class MultiComponent implements OnInit, OnDestroy, AfterViewChecked {
   RetourChoixPlaylist(): void {
     this.cookieService.delete(this.idCurrentGame);
     this.cookieService.delete(this.idCurrentPlaylist);
+    sessionStorage.removeItem(this.idCurrentPlaylist);
     this.socketService.disconnect(this.playerIdentity);
     this.router.navigate(['/choix-playlist']);
   }

@@ -136,14 +136,14 @@ export class ChoixPlaylistComponent implements OnInit, AfterViewInit {
     const isMulti: boolean = params.isMulti;
     console.log(playlist.name);
     const playlistJson = playlist;
-    // sessionStorage.setItem(
-    //   playlistJson.id.toString(),
-    //   JSON.stringify(playlistJson)
-    // );
-    this.cookieService.setCookie(
+    sessionStorage.setItem(
       playlistJson.id.toString(),
       JSON.stringify(playlistJson)
     );
+    // this.cookieService.setCookie(
+    //   playlistJson.id.toString(),
+    //   JSON.stringify(playlistJson)
+    // );
     if (isMulti) {
       const code = this.generateRandomString(5);
       // sessionStorage.setItem('master', code.toString());
