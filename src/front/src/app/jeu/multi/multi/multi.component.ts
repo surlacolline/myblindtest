@@ -112,18 +112,23 @@ export class MultiComponent implements OnInit, OnDestroy, AfterViewChecked {
       }
       this.setUpdatedCurrentGameInCookie();
     }
+    let isWaitingNextSong = false;
     if (!this.currentGame || this.currentGame?.currentSong === 0) {
       this.IsInit = true;
     } else {
       this.IsInit = false;
-      this.addMessage("Reprise de la partie à la prochaine chanson dans environ 20 secondes.");
+      isWaitingNextSong = true;
+
       if (this.blMaitre) {
         if (!this.isOtherConnectedPlayers()) {
           this.IsInit = true;
+          isWaitingNextSong = false;
         }
 
       }
-
+      if (isWaitingNextSong) {
+        this.addMessage("Reprise de la partie à la prochaine chanson dans environ 20 secondes.");
+      }
     }
     // ask for name
     this.getPseudo();
