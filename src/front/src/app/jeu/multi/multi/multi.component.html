@@ -54,7 +54,7 @@
       </div>
     </div>
 
-    <div #textArea [scrollTop]="textArea.scrollHeight" id="textArea" class="collapse">
+    <div #textArea id="textArea" class="collapse">
       <div *ngFor="let message of messages">
         <span *ngIf="message.isUserMessage" class="chatMessage">
           <b> {{ message.pseudo }} </b>: {{ message.message }}
