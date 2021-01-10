@@ -1,4 +1,5 @@
 import {
+  AfterViewChecked,
   Component,
   ElementRef, OnDestroy, OnInit,
   ViewChild
@@ -28,7 +29,7 @@ import { AddPseudoDialogComponent } from './../add-pseudo-dialog/add-pseudo-dial
   templateUrl: './multi.component.html',
   styleUrls: ['./multi.component.scss'],
 })
-export class MultiComponent implements OnInit, OnDestroy {
+export class MultiComponent implements OnInit, OnDestroy, AfterViewChecked {
   resultat: string;
   score = 0;
   avancement: string;
@@ -58,6 +59,7 @@ export class MultiComponent implements OnInit, OnDestroy {
   currentGame: IGame;
   private subscription = new Subscription();
 
+  @ViewChild('textArea') textArea: ElementRef;
   @ViewChild('tryValue') tryValue: ElementRef;
   @ViewChild(AudioPlayerComponent) player: AudioPlayerComponent;
 
@@ -75,13 +77,17 @@ export class MultiComponent implements OnInit, OnDestroy {
     this.tryAnswer = new FormControl('', [Validators.required]);
     this.singlePlayForm = this.builder.group({ tryAnwser: this.tryAnswer });
   }
+
+  ngAfterViewChecked(): void {
+    this.textArea.nativeElement.scrollTop = this.textArea.nativeElement.scrollHeight;
+  }
+
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     this.getURLData();
-
 
     this.blMaitre =
       this.cookieService.get('master') === this.idCurrentGame ? true : false;
@@ -405,6 +411,8 @@ export class MultiComponent implements OnInit, OnDestroy {
   }
 
   sendMessage(): void {
+    if (!this.message) return;
+
     const myMessage = new Message();
     myMessage.message = this.message;
     myMessage.pseudo = this.playerIdentity.pseudo;
