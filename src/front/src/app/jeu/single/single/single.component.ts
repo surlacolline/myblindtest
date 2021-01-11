@@ -77,9 +77,8 @@ export class SingleComponent implements OnInit {
   }
 
   getPlaylistFromSessionStorage(id): IPlaylist {
-    // const playlist = JSON.parse(sessionStorage.getItem(id));
-
-    const playlist = this.cookieService.get(id);
+    const playlist = sessionStorage.getItem(id);
+    //const playlist = this.cookieService.get(id);
 
     this.currentPlaylist = JSON.parse(playlist);
     if (!playlist) {

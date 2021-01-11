@@ -55,13 +55,13 @@
     </div>
 
     <div #textArea id="textArea" class="collapse">
-      <div *ngFor="let message of messages">
-        <span *ngIf="message.isUserMessage" class="chatMessage">
+      <div class="messageLine" *ngFor="let message of messages">
+        <div *ngIf="message.isUserMessage" class="chatMessage messageLine">
           <b> {{ message.pseudo }} </b>: {{ message.message }}
-        </span>
-        <span *ngIf="message.isUserMessage === false" class="computerMessage">
+        </div>
+        <div *ngIf="message.isUserMessage === false" class="computerMessage messageLine">
           {{ message.message }}
-        </span>
+        </div>
       </div>
     </div>
 
