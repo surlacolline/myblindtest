@@ -6,12 +6,17 @@
     "npm": "6.x"
   },
   "scripts": {
-    "build": "node ./util/build.js && npm run transpile",
+    "build": "npm run build:angular && npm run log && npm run build:node",
+    "log": "dir",
+    "build:angular": "cd ./src/front && npm install && npm run build:prod",
+    "build:node": "node ./util/build.js && npm run transpile",
     "tsc": "tsc --build tsconfig.prod.json",
     "transpile": "npm run tsc",
     "lint": "tslint --project \"tsconfig.json\"",
     "start": "node -r ./dist",
     "start:dev": "nodemon --config nodemon.json",
+    "start:both": "concurrently --kill-others-on-fail \"npm run start:angular\" \"nodemon --config nodemon.json \"",
+    "start:angular": "cd ./src/front && ng serve -o",
     "test": "nodemon --config nodemon.test.json",
     "debug": "nodemon --config nodemon.json"
   },
