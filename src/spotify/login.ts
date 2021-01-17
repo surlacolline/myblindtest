@@ -7,11 +7,10 @@
 //  * https://developer.spotify.com/web-api/authorization-guide/#authorization_code_flow
 //  */
 
-import app from '../Server';
-import express, { Response, Router } from 'express';
 import request from 'es6-request';
-import Playlist, { ITrack, Track } from '../entities/Playlist';
+import { Response } from 'express';
 import PlaylistDao from '../daos/Playlist/PlaylistDao';
+import Playlist, { ITrack, Track } from '../entities/Playlist';
 
 // let cors = require('cors');
 const querystring = require('querystring');
@@ -20,16 +19,12 @@ const cookieParser = require('cookie-parser');
 const playlistDao = new PlaylistDao();
 
 // tslint:disable: variable-name
-const client_id = 'f6cd9756638b411bb4f994de4e33bd16'; // Your client id
-const client_secret = '01ac2e104d5a45dcae46448da7cb2e97'; // Your secret
+
+const client_id = process.env.CLIENT_ID; // Your client id
+const client_secret = process.env.CLIENT_SECRET; // Your secret
 const stateKey = 'spotify_auth_state';
 const stateKeyAPI = 'spotify_auth_state';
-let redirect_uri = '';
-if (process.env.NODE_ENV === 'development') {
-  redirect_uri = 'http://localhost:4200/api/spotify/callback'; // Your redirect uri
-} else if (process.env.NODE_ENV === 'production') {
-  redirect_uri = 'https://myblindtest-dev.herokuapp.com/api/spotify/callback'; // Your redirect uri
-}
+const redirect_uri = process.env.REDIRECT_URI; // Your redirect uri
 const TokenAPI: string = '';
 const RefreshTokenAPI: string = '';
 /**
