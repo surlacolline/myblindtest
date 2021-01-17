@@ -8,7 +8,7 @@
   "scripts": {
     "build": "npm run build:angular && npm run log && npm run build:node",
     "log": "dir",
-    "build:angular": "cd ./src/front && npm run build:prod",
+    "build:angular": "cd ./src/front && npm install && npm run build:prod",
     "build:node": "node ./util/build.js && npm run transpile",
     "tsc": "tsc --build tsconfig.prod.json",
     "transpile": "npm run tsc",
