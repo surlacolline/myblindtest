@@ -1,6 +1,8 @@
 # myblindtest
 My.Blind.Test. permet de créer tes propres Blindtest à partir de tes playlists Spotify
 
+npm run start:both
+
 
 Start back-end dev: npm run start:dev
 
