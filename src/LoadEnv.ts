@@ -17,10 +17,8 @@ if (options.env === 'development') {
     envConfigResult = dotenv.config({
         path: `./env/development.env`,
     });
-} else {
-    envConfigResult = dotenv.config();
-}
 
-if (envConfigResult.error) {
-    throw envConfigResult.error;
+    if (envConfigResult.error) {
+        throw envConfigResult.error;
+    }
 }
