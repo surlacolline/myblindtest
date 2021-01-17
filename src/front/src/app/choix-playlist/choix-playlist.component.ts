@@ -177,8 +177,13 @@ export class ChoixPlaylistComponent implements OnInit, AfterViewInit {
         .subscribe((data: any) => {
           if (data === undefined) {
           } else {
-            const playlistAPI = data.data;
-            this.playlistSelected({ item: JSON.parse(playlistAPI), isMulti });
+            const playlistAPIString = data.data;
+            const playlist: IPlaylist = JSON.parse(playlistAPIString);
+
+            if (playlist.tracks.length === 20) {
+              this.playlistSelected({ item: JSON.parse(playlistAPIString), isMulti });
+            }
+
           }
         })
     );
