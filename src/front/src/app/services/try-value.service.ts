@@ -1,24 +1,47 @@
 import { Injectable } from '@angular/core';
+import * as elasticlunr from 'elasticlunr';
 import { ITrack } from '../shared-model/Playlist.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TryValueService {
-  constructor() {}
+  constructor() { }
 
   tryValue(valueToTry: string, track: ITrack, blModeSoiree: boolean): boolean {
     if (blModeSoiree) {
       return true;
     }
+
+    const index = elasticlunr(function () {
+      this.addField('name');
+      this.addField('artist');
+      this.setRef('id');
+    });
+
+    const trackDoc = {
+      "id": 1,
+      "name": track.name,
+      "artist": track.artist
+    }
+
+    index.addDoc(trackDoc);
+
+    const searchResult = index.search(valueToTry);
+    console.log(searchResult);
+
+    if (searchResult.length === 1 && searchResult[0].score > 0.05) {
+      return true;
+    }
+
     if (
       this.comparaisonSouple(valueToTry, track.name) ||
       this.comparaisonSouple(valueToTry, track.artist)
     ) {
       return true;
-    } else {
-      return false;
     }
+
+    return false;
   }
 
   comparaisonSouple(valueToTry, valueToCompare): boolean {
