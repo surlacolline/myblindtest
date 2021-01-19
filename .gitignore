@@ -52,3 +52,4 @@ dist/routes/public/index.js
 .vs/VSWorkspaceState.json
 .vs/MyBlindTest/v16/.suo
 logs/combined.log
+src/front/debug.log

@@ -75,7 +75,7 @@ export class ChoixPlaylistComponent implements OnInit, AfterViewInit {
     this.subscription.add(
       this.examplePlaylistsService.getAllUserPlaylists(offset).subscribe(
         (data: any) => {
-          if (data.data.items === undefined) {
+          if (data === undefined) {
             this.userName = 'Connexion';
             // todo supprimer cookie
 
@@ -83,9 +83,9 @@ export class ChoixPlaylistComponent implements OnInit, AfterViewInit {
             this.showUserPlaylists = false;
             element.close();
           } else {
-            this.userPlaylists = data.data.items;
-            this.offsetUserPlaylists = data.data.offset;
-            this.totalCountUserPlaylists = data.data.total;
+            this.userPlaylists = data.playlists;
+            this.offsetUserPlaylists = data.offset;
+            this.totalCountUserPlaylists = data.total;
           }
         },
         (err) => console.log(err)
@@ -130,6 +130,7 @@ export class ChoixPlaylistComponent implements OnInit, AfterViewInit {
       )
     );
   }
+
   playlistSelected(params: any): void {
     const playlist: any = params.item;
 
@@ -188,6 +189,7 @@ export class ChoixPlaylistComponent implements OnInit, AfterViewInit {
         })
     );
   }
+
   categoriesSelected(event: any): void {
     this.showCategoryPlaylists = false;
     const categorie = event.item;
@@ -209,6 +211,7 @@ export class ChoixPlaylistComponent implements OnInit, AfterViewInit {
       )
     );
   }
+
   showNextCategoryPlaylists(event: any): void {
     this.offsetCategoryPlaylists = this.offsetCategoryPlaylists + 50;
     if (this.offsetCategoryPlaylists >= this.totalCountCategoryPlaylists) {

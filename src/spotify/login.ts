@@ -12,6 +12,7 @@ import { Response } from 'express';
 import PlaylistDao from '../daos/Playlist/PlaylistDao';
 import Playlist, { ITrack, Track } from '../entities/Playlist';
 
+
 // let cors = require('cors');
 const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
@@ -69,10 +70,7 @@ function login(
 
 export function callback(
   req: any,
-  // res2: {
-  //   redirect: (arg0: string) => void;
-  //   clearCookie: (arg0: string) => void;
-  // },
+
   res: Response
 ) {
   // your application requests refresh and access tokens
@@ -144,12 +142,7 @@ export function callback(
           res.cookie('RefreshToken', refresh_token);
           res.redirect('/');
 
-          //  +
-          //     querystring.stringify({
-          //       access_token,
-          //       refresh_token,
-          //     })
-          // );
+
         } else {
           res.redirect(
             '/#' +
@@ -162,59 +155,9 @@ export function callback(
   }
 }
 
-// function getRefreshToken() {
-//   let req: Request;
-//   let res: Response;
-//   // requesting access token from refresh token
-//   // const refresh_token = req.cookies.refresh_token;
-//   const authOptions = {
-//     url: 'https://accounts.spotify.com/api/token',
-//     headers: {
-//       Authorization:
-//         'Basic ' +
-//         new Buffer(client_id + ':' + client_secret).toString('base64'),
-//     },
-//     form: {
-//       grant_type: 'refresh_token',
-//       refresh_token,
-//     },
-//     json: true,
-//   };
-
-//   request
-//     .post('https://accounts.spotify.com/api/token', authOptions)
-//     .then(([bodyString, response]) => {
-//       // BodyType, http.IncomingMessageo
-//       if (response.statusCode === 200) {
-//         const body = JSON.parse(bodyString as string);
-//         const access_token = body.access_token;
-//         const refresh_token = body.refresh_token;
-
-//         const options = {
-//           url: 'https://api.spotify.com/v1/me',
-//           headers: { Authorization: 'Bearer ' + access_token },
-//           json: true,
-//         };
-
-//         // response.cookie('token', access_token);
-//         // we can also pass the token to the browser to make requests from there
-//         res.cookie('token', access_token);
-//       } else {
-//         res.redirect(
-//           '/#' +
-//             querystring.stringify({
-//               error: 'invalid_token',
-//             })
-//         );
-//       }
-//     });
-// }
-
 export function APILogin(
   req: any,
-  // res2: {
-  //   redirect: (arg0: string) => void;
-  //   clearCookie: (arg0: string) => void;
+
   // },
   res: Response
 ) {
@@ -253,7 +196,6 @@ export function APILogin(
           json: true,
         };
 
-        // response.cookie('token', access_token);
         // we can also pass the token to the browser to make requests from there
         res.cookie('tokenAPI', access_token, {
           expires: new Date(Date.now() + 3600000),
@@ -270,28 +212,52 @@ export function APILogin(
     });
 }
 
-export function getPlaylists(req: any, res: any, indexStart: string) {
+export async function getPlaylists(req: any, res: any, indexStart: string) {
   // requesting access token from refresh token
+  try {
 
-  const Token = req.cookies.token;
-  const authOptions = {
-    url: `https://api.spotify.com/v1/users/${req.cookies.id}/playlists`,
-    headers: { Authorization: 'Bearer ' + Token },
-    json: true,
-  };
 
-  request
-    .get(
-      `https://api.spotify.com/v1/users/${req.cookies.id}/playlists?limit=50&offset=${indexStart}`,
-      authOptions
-    )
-    .then((body: any) => {
-      const access_token = body.access_token;
+    const Token = req.cookies.token;
+    const authOptions = {
+      url: `https://api.spotify.com/v1/users/${req.cookies.id}/playlists`,
+      headers: { Authorization: 'Bearer ' + Token },
+      json: true,
+    };
+    const body = await request
+      .get(
+        `https://api.spotify.com/v1/users/${req.cookies.id}/playlists?limit=50&offset=${indexStart}`,
+        authOptions
+      );
 
-      res.send({
-        data: JSON.parse(body ? body[0] : undefined),
-      });
+    // lire le body et ecrire un nouveau json
+    const playlists: Playlist[] = [];
+    const playlists2 = JSON.parse(body[0] as string);
+
+    const addPlaylistPromises = new Array<Promise<boolean>>();
+    for (let i = 0; i < playlists2?.items?.length; i++) {
+      // Requete get playlist 
+      const promise = playlistHasEnoughTracks(playlists2.items[i].id.toString(), req.cookies.token);
+      addPlaylistPromises.push(promise);
+    }
+
+    const hasPlaylistEnoughTracks = await Promise.all(addPlaylistPromises);
+
+    if (hasPlaylistEnoughTracks) {
+      for (let i = 0; i < hasPlaylistEnoughTracks.length; i++) {
+        if (hasPlaylistEnoughTracks[i]) {
+          playlists.push(playlists2.items[i]);
+        }
+      }
+    }
+
+    res.send({
+      playlists: playlists ? playlists : undefined,
+      offset: playlists2.offset,
+      total: playlists2.total
     });
+  } catch (error) {
+    const a = 5
+  }
 }
 
 export function getCategories(req: any, res: any, indexStart: string) {
@@ -386,6 +352,48 @@ function getPlaylist(playlistSpotify: string): Playlist {
     }
   }
   return playlist;
+}
+
+async function playlistHasEnoughTracks(idPlaylist: string, Token: string): Promise<boolean> {
+  let blHasEnoughtTracks = false;
+
+  // HM
+  const fields = "tracks.items(track(preview_url))";
+  //const fields = "";
+
+  const authOptions = {
+    url: `https://api.spotify.com/v1/playlists/${idPlaylist}?fields=${fields}`,
+    headers: { Authorization: 'Bearer ' + Token },
+    json: true,
+  };
+
+  const body = await request.get(authOptions.url, authOptions);
+
+  let playlist: Playlist = new Playlist();
+
+  const MyData: any = JSON.parse(body[0]?.toString());
+
+  // lire le body et ecrire un nouveau json
+
+  // Boucle pour parcourir les tracks
+  // tslint:disable-next-line: forin
+
+  if (!MyData?.tracks?.items) {
+    return false;
+  }
+
+  for (const track of MyData?.tracks?.items) {
+    const myTrack: ITrack = new Track();
+
+    if (track?.track?.preview_url) {
+      playlist.tracks.push(myTrack);
+    }
+    if (playlist?.tracks?.length === 10) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 export function getUserPlaylist(req: any, res: any) {
