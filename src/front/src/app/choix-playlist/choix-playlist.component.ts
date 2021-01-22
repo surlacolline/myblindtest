@@ -181,8 +181,10 @@ export class ChoixPlaylistComponent implements OnInit, AfterViewInit {
             const playlistAPIString = data.data;
             const playlist: IPlaylist = JSON.parse(playlistAPIString);
 
-            if (playlist.tracks.length === 20) {
+            if (playlist.tracks.length >= 20) {
               this.playlistSelected({ item: JSON.parse(playlistAPIString), isMulti });
+            } else {
+              alert('Oups, cette playlist ne contient pas suffisement de morceau avec extait audio. Essayez une autre playlist.');
             }
 
           }
