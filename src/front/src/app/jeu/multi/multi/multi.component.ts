@@ -106,14 +106,14 @@ export class MultiComponent implements OnInit, OnDestroy, AfterViewChecked {
           idPlaylist: this.idCurrentPlaylist,
           playlistName: this.currentPlaylist?.name,
           players: [],
-          currentSong: 0,
+          currentSong: -1,
           userPseudo: '',
         });
       }
       this.setUpdatedCurrentGameInCookie();
     }
     let isWaitingNextSong = false;
-    if (!this.currentGame || this.currentGame?.currentSong === 0) {
+    if (!this.currentGame || this.currentGame?.currentSong === -1) {
       this.IsInit = true;
     } else {
       this.IsInit = false;
@@ -152,7 +152,7 @@ export class MultiComponent implements OnInit, OnDestroy, AfterViewChecked {
         score: 0,
         statut: this.blMaitre ? 'master' : 'guest',
         id: 1,
-        currentSong: 0,
+        currentSong: -1,
         isConnected: true,
         secretId: this.playerIdentity.secretId
       });
@@ -208,7 +208,7 @@ export class MultiComponent implements OnInit, OnDestroy, AfterViewChecked {
           score: 0,
           statut: 'guest',
           id: maxPlayer.id + 1,
-          currentSong: 0,
+          currentSong: -1,
           isConnected: true,
           secretId: newPlayerIdentity.secretId
         });
@@ -261,7 +261,7 @@ export class MultiComponent implements OnInit, OnDestroy, AfterViewChecked {
       message.isUserMessage = false;
       this.addMessage(message);
       this.IsInit = false;
-      this.currentGame.currentSong = 0;
+      this.currentGame.currentSong = -1;
       this.setUpdatedCurrentGameInCookie();
       this.jouerOnePlaylist();
     }));
@@ -334,7 +334,7 @@ export class MultiComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.setUpdatedCurrentGameInCookie();
 
       this.currentGame.currentSong = this.currentGame.currentSong;
-      if (this.currentGame.currentSong > 0) {
+      if (this.currentGame.currentSong >= 0) {
         this.IsInit = false;
 
       }
@@ -497,7 +497,7 @@ export class MultiComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
     this.resultat = '';
     this.singlePlayForm.reset();
-    if (this.currentGame.currentSong > 0) {
+    if (this.currentGame.currentSong >= 0) {
       this.snackBar.open(
         `C'était ${this.currentPlaylist.tracks[this.currentGame.currentSong].name} de ${this.currentPlaylist.tracks[this.currentGame.currentSong].artist
         }  `,

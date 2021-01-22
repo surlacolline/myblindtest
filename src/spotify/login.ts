@@ -344,7 +344,19 @@ function getPlaylist(playlistSpotify: string): Playlist {
     const myTrack: ITrack = new Track();
     myTrack.name = track.track.name;
     myTrack.artist = track.track.artists[0].name;
+    myTrack.artists = track.track.artists.map((x: any) => x.name);
     myTrack.preview_url = track.track.preview_url;
+    myTrack.id = track.track.id;
+    myTrack.url = track.track?.extarnal_urls?.spotify;
+    myTrack.apiUrl = track.track.href;
+    let artistscount = 0;
+    if (track.track.artists.length > 1) {
+      artistscount++;
+    }
+    if (artistscount) {
+      const t = "";
+    }
+
     if (myTrack.preview_url) {
       playlist.tracks.push(myTrack);
     }

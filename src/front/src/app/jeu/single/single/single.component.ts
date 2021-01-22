@@ -57,7 +57,7 @@ export class SingleComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.compteurTrack = 0;
+    this.compteurTrack = -1;
     this.lecteurAudio = document.getElementById('lecteurAudio');
     this.jouerOnePlaylist();
   }
