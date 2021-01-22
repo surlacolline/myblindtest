@@ -75,7 +75,7 @@ export class ChoixPlaylistComponent implements OnInit, AfterViewInit {
     this.subscription.add(
       this.examplePlaylistsService.getAllUserPlaylists(offset).subscribe(
         (data: any) => {
-          if (data === undefined) {
+          if (data === undefined || data.errorCode === "401") {
             this.userName = 'Connexion';
             // todo supprimer cookie
 

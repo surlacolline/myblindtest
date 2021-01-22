@@ -215,8 +215,6 @@ export function APILogin(
 export async function getPlaylists(req: any, res: any, indexStart: string) {
   // requesting access token from refresh token
   try {
-
-
     const Token = req.cookies.token;
     const authOptions = {
       url: `https://api.spotify.com/v1/users/${req.cookies.id}/playlists`,
@@ -230,23 +228,26 @@ export async function getPlaylists(req: any, res: any, indexStart: string) {
       );
 
     // lire le body et ecrire un nouveau json
-    const playlists: Playlist[] = [];
+    const playlists = [];
     const playlists2 = JSON.parse(body[0] as string);
+    if (!(playlists2)) {
+      return; // Todo send error
+    }
+    if (!(playlists2.items)) {
+      if (playlists2?.error.status === 401) {
+        res.send({
+          errorCode: "401",
+          errorMessage: "not connected to spotify"
+        });
 
-    const addPlaylistPromises = new Array<Promise<boolean>>();
-    for (let i = 0; i < playlists2?.items?.length; i++) {
-      // Requete get playlist 
-      const promise = playlistHasEnoughTracks(playlists2.items[i].id.toString(), req.cookies.token);
-      addPlaylistPromises.push(promise);
+      } else {
+        return;
+      }
     }
 
-    const hasPlaylistEnoughTracks = await Promise.all(addPlaylistPromises);
-
-    if (hasPlaylistEnoughTracks) {
-      for (let i = 0; i < hasPlaylistEnoughTracks.length; i++) {
-        if (hasPlaylistEnoughTracks[i]) {
-          playlists.push(playlists2.items[i]);
-        }
+    for (let i = 0; i < playlists2?.items?.length; i++) {
+      if (playlists2.items[i].tracks.total >= 20) {
+        playlists.push(playlists2.items[i]);
       }
     }
 
