@@ -432,7 +432,8 @@ export function getUserPlaylist(req: any, res: any) {
 
 export function getAPIPlaylist(req: any, res: any) {
   const idPlaylist = req.query.idPlaylist;
-  const Token = req.cookies.tokenAPI;
+  const Token = req.cookies.tokenAPI ?? req.cookies.token;
+
   const authOptions = {
     url: 'https://api.spotify.com/v1/playlists/' + idPlaylist,
     headers: { Authorization: 'Bearer ' + Token },
@@ -440,6 +441,7 @@ export function getAPIPlaylist(req: any, res: any) {
   };
 
   request.get(authOptions.url, authOptions).then((body: any) => {
+    // Get playlist if no TokenAPI: get token first
     let playlist: Playlist = new Playlist();
     playlist = getPlaylist(body[0]);
 
