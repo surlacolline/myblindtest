@@ -17,6 +17,7 @@ import {
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { CookieService2 } from 'src/app/services/cookie.service';
+import { LoginSpotifyService } from 'src/app/services/spotify/login-spotify.service';
 import { TryValueService } from './../../../services/try-value.service';
 import { IPlaylist } from './../../../shared-model/Playlist.model';
 
@@ -50,14 +51,15 @@ export class SingleComponent implements OnInit {
     private router: Router,
     private _snackBar: MatSnackBar,
     private builder: FormBuilder,
-    private cookieService: CookieService2
+    private cookieService: CookieService2,
+    private spotifySerivce: LoginSpotifyService
   ) {
     this.tryAnswer = new FormControl('', [Validators.required]);
     this.singlePlayForm = builder.group({ tryAnwser: this.tryAnswer });
   }
 
   ngOnInit(): void {
-    this.compteurTrack = 0;
+    this.compteurTrack = -1;
     this.lecteurAudio = document.getElementById('lecteurAudio');
     this.jouerOnePlaylist();
   }
@@ -77,15 +79,40 @@ export class SingleComponent implements OnInit {
   }
 
   getPlaylistFromSessionStorage(id): IPlaylist {
-    const playlist = sessionStorage.getItem(id);
+    let playlist = sessionStorage.getItem(id);
     //const playlist = this.cookieService.get(id);
 
     this.currentPlaylist = JSON.parse(playlist);
     if (!playlist) {
-      return;
+      // if no playlist in sessionstorage, get playlist with id from url
+      // todo 1 : id provenant de la première liste déroulante 
+      // todo 2 : get API token if no token
+      this.spotifySerivce.getPlaylist(id).subscribe((data: any) => {
+        if (data === undefined) {
+        }
+        else {
+          const playlistResult: IPlaylist = JSON.parse(data.data);
+
+          if (playlistResult.tracks.length >= 20) {
+            sessionStorage.setItem(
+              playlistResult.id.toString(),
+              JSON.stringify(playlistResult)
+            );
+            playlist = sessionStorage.getItem(id);
+          }
+        };
+        if (!playlist) {
+          return;
+        }
+        this.lecturePlaylist();
+        return this.currentPlaylist;
+      })
+
+    } else {
+      this.lecturePlaylist();
+      return this.currentPlaylist;
     }
-    this.lecturePlaylist();
-    return this.currentPlaylist;
+
   }
 
   lecturePlaylist(): void {
