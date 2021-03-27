@@ -21,6 +21,7 @@ import Game, { IGame } from 'src/app/shared-model/Game.model';
 import Message, { IMessage } from 'src/app/shared-model/Message.model';
 import Player, { IPlayer, IPlayerIdentity } from 'src/app/shared-model/Player.model';
 import { IPlaylist } from 'src/app/shared-model/Playlist.model';
+import { SocketData } from 'src/app/shared-model/socket-data.model';
 import { AudioPlayerComponent } from 'src/app/shared/audio-player/audio-player.component';
 import { AddPseudoDialogComponent } from './../add-pseudo-dialog/add-pseudo-dialog.component';
 
@@ -160,17 +161,15 @@ export class MultiComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.currentGame?.players.push(this.joueur);
       this.setUpdatedCurrentGameInCookie();
     }
+    const socketData: SocketData = {
+      pseudo: this.playerIdentity.pseudo,
+      idPlayer: this.playerIdentity.id,
+      secretIdPlayer: this.playerIdentity.secretId,
+      idCurrentPlaylist: this.idCurrentPlaylist,
+      idCurrentGame: this.idCurrentGame
+    };
 
-    this.socketService.setupSocketConnection(
-      // todo ecire model objet
-      {
-        pseudo: this.playerIdentity.pseudo,
-        idPlayer: this.playerIdentity.id,
-        secretIdPlayer: this.playerIdentity.secretId,
-        idCurrentPlaylist: this.idCurrentPlaylist,
-        idCurrentGame: this.idCurrentGame
-      }
-    );
+    this.socketService.setupSocketConnection(socketData);
 
     document.title = this.playerIdentity.pseudo + ' - Blindtest';
 
@@ -215,10 +214,9 @@ export class MultiComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.currentGame.players.push(nouveauJoueur);
         this.setUpdatedCurrentGameInCookie();
       }
-      //const stringPlaylist = this.cookieService.get(this.idCurrentPlaylist);
       const stringPlaylist = sessionStorage.getItem(this.idCurrentPlaylist);
 
-      this.currentPlaylist = JSON.parse(stringPlaylist); // todo remplacer string par object et typé back et front
+      this.currentPlaylist = JSON.parse(stringPlaylist);
       this.currentGame.playlistName = this.currentPlaylist.name;
 
       this.socketService.sendDataPlaylist(this.currentPlaylist);
@@ -348,21 +346,17 @@ export class MultiComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.playerIdentity = JSON.parse(maybeIdentity);
     }
 
-
-
     const dialogRef = this.dialog.open(AddPseudoDialogComponent, {
       width: '400px',
-
       data: this.playerIdentity.pseudo
     });
-    // Todo verifie existence pseudo ou incrémente pseudo existant
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
       this.playerIdentity.pseudo = result;
       this.getSocketGame();
+      this.tryValue?.nativeElement.focus();
     });
-
   }
 
   setUpdatedCurrentGameInCookie(): void {
@@ -382,7 +376,6 @@ export class MultiComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   getCurrentPlaylistFromCookie(): void {
-    // const playlist = this.cookieService.get(this.idCurrentPlaylist);
     const playlist = sessionStorage.getItem(this.idCurrentPlaylist);
     if (playlist) {
       this.currentPlaylist = JSON.parse(playlist);
@@ -390,7 +383,7 @@ export class MultiComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   getURLData(): void {
-    // Utiliser activatedroute (voir timesheet)
+    // todo Utiliser activatedroute (voir timesheet)
     this.adresseActuelle = window.location;
     this.adresseActuelleSplited = this.adresseActuelle.pathname.split(';');
     const temp = this.adresseActuelleSplited[

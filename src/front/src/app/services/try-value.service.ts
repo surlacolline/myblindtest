@@ -28,7 +28,6 @@ export class TryValueService {
     index.addDoc(trackDoc);
 
     const searchResult = index.search(valueToTry);
-    console.log(searchResult);
 
     if (searchResult.length === 1 && searchResult[0].score > 0.05) {
       return true;

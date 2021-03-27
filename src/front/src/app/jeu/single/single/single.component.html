@@ -6,18 +6,19 @@
     (audioEndedEvent)="onAudioEnded()"></app-audio-player>
   <div id="lecteur"></div>
   <form [formGroup]="singlePlayForm" (submit)="checkAnswer($event, tryValue.value)">
-    <div class="group">
-      <input [formControl]="tryAnswer" #tryValue type="search" class="textTry" id="valueToTry"
-        [placeholder]="placeholder" size="50" [readOnly]="modeSoiree" (click)="showResult()" />
-    </div>
+    <div>{{label}} </div>
+    <input [formControl]="tryAnswer" #tryValue type="search" class="textTry" id="valueToTry" autofocus size="50"
+      [placeholder]="placeholder" [readOnly]="modeSoiree" (click)="showResult()" />
+
   </form>
 
   <div class="wrapbtn">
-    <app-simple-button [title]="tryButtonTitle" (click)="checkAnswer($event, tryValue.value)"></app-simple-button>
+    <app-simple-button [title]="tryButtonTitle" (click)="checkAnswer($event, tryValue.value)">
+    </app-simple-button>
     <app-simple-button [title]="chansonSuivanteTitle" (click)="chansonSuivante()"></app-simple-button>
   </div>
   <div id="resultat">{{ resultat }}</div>
-  <div id="score">score : {{ score }}/20</div>
+  <h1 id="score">Score : {{ score }}/20</h1>
 
   <app-simple-button title=" Changer de playlist" (click)="RetourChoixPlaylist()"></app-simple-button>
   <br />

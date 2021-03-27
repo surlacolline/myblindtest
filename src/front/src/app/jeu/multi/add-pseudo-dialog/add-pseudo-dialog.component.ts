@@ -13,6 +13,7 @@ export class AddPseudoDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<AddPseudoDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: string) {
+    dialogRef.disableClose = true;
     this.pseudo = data ? data : '';
     this.alreadySetPseudo = data ? data : undefined;
   }

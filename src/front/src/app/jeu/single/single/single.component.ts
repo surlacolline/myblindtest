@@ -37,9 +37,10 @@ export class SingleComponent implements OnInit {
   idCurrentPlaylist: any;
   src: string;
   autoplay: boolean;
-  placeholder = 'Une idée du nom de la chanson ou de l\'artiste?';
+  label = 'Une idée du nom de la chanson ou de l\'artiste?';
+  placeholder = '';
   tryButtonTitle = 'Je me lance!';
-  chansonSuivanteTitle = 'Aucune idée , Chanson suivante!';
+  chansonSuivanteTitle = 'Aucune idée, Chanson suivante!';
   modeSoiree = false;
   tryAnswer: FormControl;
   singlePlayForm: FormGroup;
@@ -62,6 +63,7 @@ export class SingleComponent implements OnInit {
     this.compteurTrack = -1;
     this.lecteurAudio = document.getElementById('lecteurAudio');
     this.jouerOnePlaylist();
+    this.tryValue?.nativeElement.focus();
   }
 
   jouerOnePlaylist(): void {
@@ -80,7 +82,6 @@ export class SingleComponent implements OnInit {
 
   getPlaylistFromSessionStorage(id): IPlaylist {
     let playlist = sessionStorage.getItem(id);
-    //const playlist = this.cookieService.get(id);
 
     this.currentPlaylist = JSON.parse(playlist);
     if (!playlist) {
@@ -88,19 +89,19 @@ export class SingleComponent implements OnInit {
       // todo 1 : id provenant de la première liste déroulante 
       // todo 2 : get API token if no token
       this.spotifySerivce.getPlaylist(id).subscribe((data: any) => {
-        if (data === undefined) {
+        if (!data) {
+          return;
         }
-        else {
-          const playlistResult: IPlaylist = JSON.parse(data.data);
+        const playlistResult: IPlaylist = JSON.parse(data.data);
 
-          if (playlistResult.tracks.length >= 20) {
-            sessionStorage.setItem(
-              playlistResult.id.toString(),
-              JSON.stringify(playlistResult)
-            );
-            playlist = sessionStorage.getItem(id);
-          }
-        };
+        if (playlistResult.tracks.length >= 20) {
+          sessionStorage.setItem(
+            playlistResult.id.toString(),
+            JSON.stringify(playlistResult)
+          );
+          playlist = sessionStorage.getItem(id);
+        }
+
         if (!playlist) {
           return;
         }
@@ -133,10 +134,12 @@ export class SingleComponent implements OnInit {
       this.resultat =
         'La partie est finie! Bravo, votre score  est de ' + `${this.score}/20`;
     }
+    this.tryValue?.nativeElement.focus();
   }
 
   playPausePressed(): void {
     console.log('Play Pause Pressed');
+    this.tryValue?.nativeElement.focus();
   }
   onAudioEnded(): void {
     this.chansonSuivante();
@@ -196,10 +199,12 @@ export class SingleComponent implements OnInit {
     console.log(this.modeSoiree);
     if (this.modeSoiree) {
       this.placeholder = `Clique ici pour voir la réponse`;
+      this.label = '';
       this.tryButtonTitle = `J'ai la bonne réponse!`;
       this.chansonSuivanteTitle = 'Raté !';
     } else {
-      this.placeholder = 'Une idée du nom de la chanson ou de l\'artiste?';
+      this.label = 'Une idée du nom de la chanson ou de l\'artiste?';
+      this.placeholder = ``;
       this.tryButtonTitle = 'Je me lance!';
       this.chansonSuivanteTitle = 'Aucune idée, chanson suivante';
     }

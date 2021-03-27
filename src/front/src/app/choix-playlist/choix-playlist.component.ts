@@ -77,7 +77,6 @@ export class ChoixPlaylistComponent implements OnInit, AfterViewInit {
         (data: any) => {
           if (data === undefined || data.errorCode === "401") {
             this.userName = 'Connexion';
-            // todo supprimer cookie
 
             alert('Veuillez d\'abord vous connecter à votre compte spotify');
             this.showUserPlaylists = false;
@@ -92,7 +91,6 @@ export class ChoixPlaylistComponent implements OnInit, AfterViewInit {
       )
     );
   }
-
 
   displayCategories(offset = 0): void {
     if (!this.isCategoriesInit) {
