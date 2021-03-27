@@ -14,7 +14,9 @@
   width: 0;
   height: 0;
 }
-
+.title {
+  position: absolute;
+}
 /* The slider */
 .slider {
   position: absolute;
@@ -23,14 +25,14 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(255, 249, 249, 0.5);
+  background-color: rgb(255, 249, 249);
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
 
 .slider:before {
   position: absolute;
-  content: '';
+  content: "";
   height: 26px;
   width: 26px;
   left: 4px;
@@ -39,11 +41,15 @@
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
-.slider:before {
-  background-color: var(--pink);
-}
+// .slider:after {
+//   background-color: var(--pink);
+// }
 input:checked + .slider {
   background-color: var(--purple);
+}
+
+input:checked + .slider:before {
+  background-color: var(--pink);
 }
 
 input:focus + .slider {

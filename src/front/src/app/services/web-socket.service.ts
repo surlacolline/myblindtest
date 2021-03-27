@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 import { IGame } from '../shared-model/Game.model';
 import { IPlayerIdentity } from '../shared-model/Player.model';
 import { IPlaylist } from '../shared-model/Playlist.model';
+import { SocketData } from '../shared-model/socket-data.model';
 
 
 @Injectable()
@@ -15,7 +16,7 @@ export class WebSocketService {
 
   constructor() { }
 
-  setupSocketConnection(playerAndGameIdentity: { pseudo: string, idPlayer: number, secretIdPlayer: string, idCurrentPlaylist: string, idCurrentGame: string }): void {
+  setupSocketConnection(playerAndGameIdentity: SocketData): void {
     this.socket = io(
       environment.production ? window.location.origin : environment.ws_url
     );

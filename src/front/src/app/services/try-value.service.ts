@@ -28,10 +28,6 @@ export class TryValueService {
     index.addDoc(trackDoc);
 
     const searchResult = index.search(valueToTry);
-    console.log(searchResult);
-    // Todo séparer try titre et try artiste
-    // Si morceau = + de 3 mot alors il faut + d'un mot pour réussir 
-    // get array artists
 
     if (searchResult.length === 1 && searchResult[0].score > 0.05) {
       return true;
